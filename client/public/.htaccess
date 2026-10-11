@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Check if it's a social media bot
+  RewriteCond %{HTTP_USER_AGENT} (bot|crawler|spider|facebookexternalhit|WhatsApp|Twitterbot|LinkedInBot) [NC]
+  RewriteRule ^stories/([a-z0-9-]+)$ https://admin.beyondfinishline.com/api/stories/$1/meta [P,L]
+
+
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-l
+  RewriteRule . /index.html [L]
+</IfModule>

@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {
+      "source": "/stories/:slug",
+      "destination": "https://admin.beyondfinishline.com/api/stories/:slug/meta"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/stories/:slug",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow"
+        }
+      ]
+    }
+  ]
+}

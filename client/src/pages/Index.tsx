@@ -1,0 +1,33 @@
+import Navigation from "@/components/Navigation";
+import HeroSection from "@/components/HeroSection";
+import FeaturedAthletes from "@/components/FeaturedAthletes";
+import Stories from "@/components/Stories";
+import WomenSpotlight from "@/components/WomenSpotlight";
+import ClimateInitiative from "@/components/ClimateInitiative";
+import UpcomingRaces from "@/components/UpcomingRaces";
+import VideoGallery from "@/components/VideoGallery";
+import GetInvolved from "@/components/GetInvolved";
+import Partners from "@/components/Partners";
+import Footer from "@/components/Footer";
+
+const Index = () => {
+  return (
+    <div className="min-h-screen">
+      <Navigation />
+      <main>
+        <HeroSection />
+        <FeaturedAthletes />
+        <Stories />
+        <WomenSpotlight />
+        <ClimateInitiative />
+        <UpcomingRaces />
+        <VideoGallery />
+        <GetInvolved />
+        <Partners />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Index;
