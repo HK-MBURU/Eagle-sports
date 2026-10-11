@@ -3,14 +3,15 @@ import { Facebook, Twitter, Instagram, Youtube, Mail, MapPin } from "lucide-reac
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   
-  // Structured data for LocalBusiness schema
+  // Structured data for SportsOrganization schema
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "SportsOrganization",
-    "name": "Beyond the Finish Line",
+    "name": "Eagle Sports",
+    "alternateName": "Eagle Sports — Beyond the Finish Line",
     "description": "Celebrating Kenyan athletes' journeys beyond competition, inspiring the next generation through stories of resilience, leadership, and community impact.",
-    "url": "https://beyondfinishline.com",
-    "logo": "https://beyondfinishline.com/logo.png",
+    "url": "https://eaglesports.beyondfinishline.com",
+    "logo": "https://eaglesports.beyondfinishline.com/images/eagle-sports-logo.png",
     "email": "info@beyondfinishline.com",
     "address": {
       "@type": "PostalAddress",
@@ -86,15 +87,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-12">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-12 h-12 rounded-full bg-accent-gold flex items-center justify-center" aria-hidden="true">
-                <span className="text-2xl font-bold text-accent-gold-foreground">B</span>
-              </div>
-              <div>
-                <h2 className="text-lg font-bold">Beyond the Finish Line</h2>
-                <p className="text-xs text-primary-foreground/80">Every Medal Tells a Beginning</p>
-              </div>
+            <div className="flex items-center space-x-3 mb-4">
+              <img
+                src="/images/eagle-sports-logo.png"
+                alt="Eagle Sports"
+                className="h-14 w-auto"
+              />
             </div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent-gold mb-1">Beyond the Finish Line</p>
             <p className="text-primary-foreground/80 mb-6 text-sm leading-relaxed">
               Celebrating Kenyan athletes' journeys beyond competition, inspiring the next generation through stories of resilience, leadership, and community impact.
             </p>
@@ -242,7 +242,7 @@ const Footer = () => {
         <div className="border-t border-primary-foreground/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-primary-foreground/80">
-              © {currentYear} Beyond the Finish Line. All rights reserved.
+              © {currentYear} Eagle Sports. All rights reserved.
             </p>
             <nav aria-label="Legal links">
               <div className="flex gap-6">

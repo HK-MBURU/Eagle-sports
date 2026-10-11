@@ -1,11 +1,11 @@
 {
-  "name": "Beyond the Finish Line",
-  "short_name": "BTF Line",
-  "description": "Celebrating Kenyan athletes' journeys beyond competition",
+  "name": "Eagle Sports",
+  "short_name": "Eagle Sports",
+  "description": "Eagle Sports — Beyond the Finish Line. Celebrating Kenyan athletes' journeys.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#FF6600",
+  "theme_color": "#1A3470",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

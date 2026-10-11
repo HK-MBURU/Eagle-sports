@@ -23,17 +23,17 @@ import { Link } from "react-router-dom";
 const About = () => {
   return (
     <PageTemplate
-      title="About Beyond the Finish Line"
-      description="Where Every Athlete's Story Matters"
+      title="About Eagle Sports"
+      description="Beyond the Finish Line — Where Every Athlete's Story Matters"
     >
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Introduction Section */}
         <section className="text-center">
         
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Beyond The Finish Line is a digital storytelling platform that highlights athletics beyond competition. 
-            We focus on athlete journeys, education pathways, human impact stories, and comprehensive track & field coverage 
-            from Kenya and around the world.
+            Eagle Sports is a digital storytelling platform that highlights athletics beyond competition.
+            We focus on athlete journeys, education pathways, human impact stories, and comprehensive track & field coverage
+            from Kenya and around the world — always going beyond the finish line.
           </p>
         </section>
 
@@ -42,7 +42,7 @@ const About = () => {
           <Card className="border-2 border-gray-200">
             <CardContent className="p-8">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-[#FF6600] flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#D43028] flex items-center justify-center">
                   <Target className="text-white" size={24} />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900">Our Mission</h3>
@@ -57,8 +57,8 @@ const About = () => {
           <Card className="border-2 border-gray-200">
             <CardContent className="p-8">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 bg-[#FFBF00] flex items-center justify-center">
-                  <Eye className="text-black" size={24} />
+                <div className="w-12 h-12 bg-[#4A7CC0] flex items-center justify-center">
+                  <Eye className="text-white" size={24} />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900">Our Vision</h3>
               </div>
@@ -76,7 +76,7 @@ const About = () => {
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="border border-gray-200">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-[#FF6600] flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#D43028] flex items-center justify-center mx-auto mb-4">
                   <BookOpen className="text-white" size={28} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Storytelling Platform</h3>
@@ -89,8 +89,8 @@ const About = () => {
 
             <Card className="border border-gray-200">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-[#FFBF00] flex items-center justify-center mx-auto mb-4">
-                  <Award className="text-black" size={28} />
+                <div className="w-16 h-16 bg-[#4A7CC0] flex items-center justify-center mx-auto mb-4">
+                  <Award className="text-white" size={28} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Scholarship Pathways</h3>
                 <p className="text-gray-600 text-sm">
@@ -102,7 +102,7 @@ const About = () => {
 
             <Card className="border border-gray-200">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-[#0F3E22] flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-[#1A3470] flex items-center justify-center mx-auto mb-4">
                   <Globe className="text-white" size={28} />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Global Exposure</h3>
@@ -121,7 +121,7 @@ const About = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Our Focus Areas</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center">
-                <div className="w-12 h-12 bg-[#FF6600] flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-[#D43028] flex items-center justify-center mx-auto mb-3">
                   <Users className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Women in Athletics</h4>
@@ -131,8 +131,8 @@ const About = () => {
               </div>
 
               <div className="text-center">
-                <div className="w-12 h-12 bg-[#FFBF00] flex items-center justify-center mx-auto mb-3">
-                  <Heart className="text-black" size={24} />
+                <div className="w-12 h-12 bg-[#4A7CC0] flex items-center justify-center mx-auto mb-3">
+                  <Heart className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Youth Development</h4>
                 <p className="text-sm text-gray-600">
@@ -141,7 +141,7 @@ const About = () => {
               </div>
 
               <div className="text-center">
-                <div className="w-12 h-12 bg-[#0F3E22] flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-[#1A3470] flex items-center justify-center mx-auto mb-3">
                   <Lightbulb className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Social Impact</h4>
@@ -151,7 +151,7 @@ const About = () => {
               </div>
 
               <div className="text-center">
-                <div className="w-12 h-12 bg-[#FF6600] flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-[#D43028] flex items-center justify-center mx-auto mb-3">
                   <Globe className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Climate & Environment</h4>
@@ -167,27 +167,27 @@ const About = () => {
         <section>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Who We Serve</h2>
           <div className="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-            <div className="border-l-4 border-[#FF6600] pl-4 py-2">
+            <div className="border-l-4 border-[#D43028] pl-4 py-2">
               <h4 className="font-bold text-gray-900">Athletes</h4>
               <p className="text-sm text-gray-600">Track & field competitors at all levels</p>
             </div>
-            <div className="border-l-4 border-[#FFBF00] pl-4 py-2">
+            <div className="border-l-4 border-[#4A7CC0] pl-4 py-2">
               <h4 className="font-bold text-gray-900">Coaches & Scouts</h4>
               <p className="text-sm text-gray-600">Talent developers and recruiters</p>
             </div>
-            <div className="border-l-4 border-[#0F3E22] pl-4 py-2">
+            <div className="border-l-4 border-[#1A3470] pl-4 py-2">
               <h4 className="font-bold text-gray-900">Sports Fans</h4>
               <p className="text-sm text-gray-600">Athletics enthusiasts worldwide</p>
             </div>
-            <div className="border-l-4 border-[#FF6600] pl-4 py-2">
+            <div className="border-l-4 border-[#D43028] pl-4 py-2">
               <h4 className="font-bold text-gray-900">Media</h4>
               <p className="text-sm text-gray-600">Journalists and sports writers</p>
             </div>
-            <div className="border-l-4 border-[#FFBF00] pl-4 py-2">
+            <div className="border-l-4 border-[#4A7CC0] pl-4 py-2">
               <h4 className="font-bold text-gray-900">Scholarship Seekers</h4>
               <p className="text-sm text-gray-600">Athletes pursuing education opportunities</p>
             </div>
-            <div className="border-l-4 border-[#0F3E22] pl-4 py-2">
+            <div className="border-l-4 border-[#1A3470] pl-4 py-2">
               <h4 className="font-bold text-gray-900">Development Partners</h4>
               <p className="text-sm text-gray-600">Organizations supporting sports growth</p>
             </div>
@@ -200,7 +200,7 @@ const About = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Get In Touch</h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="w-12 h-12 bg-[#FF6600] flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-[#D43028] flex items-center justify-center mx-auto mb-3">
                   <Mail className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Email</h4>
@@ -210,8 +210,8 @@ const About = () => {
               </div>
 
               <div className="text-center">
-                <div className="w-12 h-12 bg-[#FFBF00] flex items-center justify-center mx-auto mb-3">
-                  <Phone className="text-black" size={24} />
+                <div className="w-12 h-12 bg-[#4A7CC0] flex items-center justify-center mx-auto mb-3">
+                  <Phone className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">WhatsApp</h4>
                 <a href="https://wa.me/254722851458" className="text-sm text-gray-600 hover:text-[#FF6600]">
@@ -220,7 +220,7 @@ const About = () => {
               </div>
 
               <div className="text-center">
-                <div className="w-12 h-12 bg-[#0F3E22] flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-[#1A3470] flex items-center justify-center mx-auto mb-3">
                   <MapPin className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Location</h4>
@@ -273,10 +273,10 @@ const About = () => {
             or a fan of athletics, we'd love to hear from you.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button asChild className="bg-[#FF6600] text-white px-8 py-6 text-base">
+            <Button asChild className="bg-[#D43028] text-white px-8 py-6 text-base">
               <Link to="/submit-story">Share Your Story</Link>
             </Button>
-            <Button asChild variant="outline" className="border-2 border-[#FF6600] text-[#FF6600] px-8 py-6 text-base">
+            <Button asChild variant="outline" className="border-2 border-[#D43028] text-[#FF6600] px-8 py-6 text-base">
               <Link to="/partners">Partner With Us</Link>
             </Button>
           </div>

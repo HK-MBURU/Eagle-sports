@@ -14,8 +14,7 @@ const Navigation = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout>();
 
-  const logo = '/images/logo1.png';
-  const logo3 = '/images/logo3.png';
+  const eagleLogo = '/images/eagle-sports-logo.png';
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -97,9 +96,10 @@ const Navigation = () => {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b border-gray-200 transition-colors duration-300"
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b transition-colors duration-300"
         style={{
-          backgroundColor: isScrolled ? 'rgba(245, 244, 240, 0.98)' : 'rgba(245, 244, 240, 0.95)',
+          backgroundColor: isScrolled ? 'rgba(247, 249, 253, 0.98)' : 'rgba(247, 249, 253, 0.95)',
+          borderBottomColor: isScrolled ? 'hsl(220 15% 87%)' : 'transparent',
           transform: 'translateZ(0)',
           WebkitTransform: 'translateZ(0)'
         }}
@@ -109,21 +109,13 @@ const Navigation = () => {
             {/* Logo */}
             <a
               href="/"
-              className="flex items-center gap-2 md:gap-3 px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg transition-all duration-200 group flex-shrink-0"
-              style={{ backgroundColor: '#0F3E22' }}
+              className="flex items-center flex-shrink-0 group transition-opacity duration-200 hover:opacity-90"
             >
               <img
-                src={logo}
-                alt="Logo"
-                className="h-9 w-9 md:h-11 md:w-11 transition-transform group-hover:scale-105"
+                src={eagleLogo}
+                alt="Eagle Sports — Beyond the Finish Line"
+                className="h-10 md:h-12 w-auto transition-transform duration-200 group-hover:scale-105"
               />
-              <div className="hidden sm:block">
-                <img
-                  src={logo3}
-                  alt="Beyond the Finish Line"
-                  className="h-9 md:h-11"
-                />
-              </div>
             </a>
 
             {/* Desktop Navigation */}
