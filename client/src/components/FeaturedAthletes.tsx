@@ -84,7 +84,7 @@ const FeaturedAthletes = () => {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
-            Athletes <span className="text-gradient-gold">Hall of Excellence</span>
+            Athletes <span className="text-accent-orange">Hall of Excellence</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Celebrating champions who continue to inspire beyond the finish line
@@ -127,7 +127,7 @@ const FeaturedAthletes = () => {
                     <h3 className="text-lg font-bold text-foreground mb-1.5">
                       {athlete.name}
                     </h3>
-                    <p className="text-sm text-[#FF6600] font-semibold mb-2">
+                    <p className="text-sm text-accent-orange font-semibold mb-2">
                       {athlete.title}
                     </p>
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
@@ -151,7 +151,7 @@ const FeaturedAthletes = () => {
             <div className="flex justify-center mb-12">
               <Button
                 onClick={() => navigate('/stories/profiles')}
-                className="bg-gradient-to-r from-[#FF6600] to-[#FFBF00] hover:from-[#E55A00] hover:to-[#E5AB00] text-white font-semibold px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all duration-300 group"
+                className="bg-accent-orange hover:bg-accent-terracotta text-white font-semibold px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all duration-300 group"
               >
                 View All Athletes
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -161,30 +161,30 @@ const FeaturedAthletes = () => {
             {/* Stats Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <div className="text-center p-6 bg-card border border-border">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#FFBF00]/10 mb-3">
-                  <Award size={28} className="text-[#FFBF00]" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent-orange/10 mb-3">
+                  <Award size={28} className="text-accent-orange" />
                 </div>
-                <div className="text-3xl font-bold mb-1" style={{ color: '#FFBF00' }}>
+                <div className="text-3xl font-bold mb-1 text-accent-orange">
                   {stats.total}+
                 </div>
                 <p className="text-sm text-muted-foreground">Athletes Featured</p>
               </div>
-              
+
               <div className="text-center p-6 bg-card border border-border">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#FF6600]/10 mb-3">
-                  <Users size={28} className="text-[#FF6600]" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-3">
+                  <Users size={28} className="text-primary" />
                 </div>
-                <div className="text-3xl font-bold mb-1" style={{ color: '#FF6600' }}>
+                <div className="text-3xl font-bold mb-1 text-primary">
                   {stats.active}+
                 </div>
                 <p className="text-sm text-muted-foreground">Active Athletes</p>
               </div>
-              
+
               <div className="text-center p-6 bg-card border border-border">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-[#0F3D22]/10 mb-3">
-                  <Heart size={28} className="text-[#0F3D22]" />
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent-gold/10 mb-3">
+                  <Heart size={28} className="text-accent-gold" />
                 </div>
-                <div className="text-3xl font-bold mb-1" style={{ color: '#0F3D22' }}>
+                <div className="text-3xl font-bold mb-1 text-accent-gold">
                   {stats.featured}+
                 </div>
                 <p className="text-sm text-muted-foreground">Featured Champions</p>

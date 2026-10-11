@@ -115,7 +115,7 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fade-up animation-delay-200 px-4">
             <Button
               size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-[#D43028] to-[#1A3470] hover:from-[#B52820] hover:to-[#0F1F45] text-white font-semibold text-sm sm:text-base px-6 sm:px-8 py-5 sm:py-6 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-lg"
+              className="w-full sm:w-auto bg-accent-orange hover:bg-accent-terracotta text-white font-semibold text-sm sm:text-base px-6 sm:px-8 py-5 sm:py-6 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-lg"
               onClick={handleReadStory}
             >
               {heroStories.length > 0 ? 'Read This Story' : 'Share Your Story'}

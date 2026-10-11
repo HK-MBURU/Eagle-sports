@@ -290,7 +290,7 @@ const CommentSection = ({ storyId, commentsCount, onCommentAdded, onCommentDelet
     <div className={`${isReply ? 'ml-12' : ''}`}>
       <div className="flex items-start gap-3">
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF6600] to-[#FFBF00] flex items-center justify-center font-semibold text-white flex-shrink-0">
+        <div className="w-10 h-10 rounded-full bg-accent-orange flex items-center justify-center font-semibold text-white flex-shrink-0">
           {comment.author.initials}
         </div>
 
@@ -408,7 +408,7 @@ const CommentSection = ({ storyId, commentsCount, onCommentAdded, onCommentDelet
                 <Button
                   size="sm"
                   onClick={() => handleSubmitReply(comment.id)}
-                  className="bg-[#FF6600] hover:bg-[#FF6600]/90"
+                  className="bg-[#D43028] hover:bg-[#D43028]/90"
                   disabled={submitting}
                 >
                   {submitting ? (
@@ -472,7 +472,7 @@ const CommentSection = ({ storyId, commentsCount, onCommentAdded, onCommentDelet
             <Button
               onClick={handleSubmitComment}
               disabled={!newComment.trim() || submitting}
-              className="bg-[#FF6600] hover:bg-[#FF6600]/90"
+              className="bg-[#D43028] hover:bg-[#D43028]/90"
             >
               {submitting ? (
                 <>

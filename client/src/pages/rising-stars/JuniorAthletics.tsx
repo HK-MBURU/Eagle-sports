@@ -62,7 +62,7 @@ const JuniorAthletics: React.FC = () => {
             <div className="text-2xl font-bold text-purple-600 mb-1">15</div>
             <div className="text-sm text-gray-600">Training Centers</div>
           </div>
-          <div className="text-center p-4 bg-orange-50 rounded-lg border border-orange-200">
+          <div className="text-center p-4 bg-red-50 rounded-lg border border-orange-200">
             <div className="text-2xl font-bold text-orange-600 mb-1">50+</div>
             <div className="text-sm text-gray-600">Qualified Coaches</div>
           </div>

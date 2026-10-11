@@ -81,7 +81,7 @@ const WomenSpotlight = () => {
             <Sparkles size={32} />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Women <span className="text-gradient-gold">Breaking Barriers</span>
+            Women <span className="text-accent-orange">Breaking Barriers</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Celebrating female athletes who are reshaping the landscape of Kenyan athletics

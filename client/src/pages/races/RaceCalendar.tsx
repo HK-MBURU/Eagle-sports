@@ -127,7 +127,7 @@ const RaceCalendar = () => {
         <div className="grid gap-6 md:grid-cols-2">
           {filtered.map((race) => (
             <Card key={race.id} className="hover:shadow-medium transition-all duration-200 border-border">
-              <div className="h-2 bg-gradient-to-r from-accent-gold to-accent-orange" />
+              <div className="h-2 bg-accent-orange" />
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-start justify-between gap-3">
                   <div>

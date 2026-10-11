@@ -22,7 +22,7 @@ const PageTemplate = ({
       
       {/* Hero Section - Only shows if showHero is true AND title exists */}
       {showHero && title && (
-        <section className="pt-24 pb-8 bg-gradient-to-br from-accent-orange/10 to-accent-gold/10">
+        <section className="pt-24 pb-8 bg-accent-orange/10">
           <div className="container mx-auto px-4">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
               {title}

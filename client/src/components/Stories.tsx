@@ -121,7 +121,7 @@ const Stories = () => {
         {/* Header */}
         <div className="mb-4">
           <div className="inline-block">
-            <span className="text-xs font-semibold text-[#FF6600] uppercase tracking-wider bg-orange-50 px-3 py-1 rounded">
+            <span className="text-xs font-semibold text-[#D43028] uppercase tracking-wider bg-red-50 px-3 py-1 rounded">
               Beyond The Track
             </span>
           </div>
@@ -148,7 +148,7 @@ const Stories = () => {
                       loading="lazy"
                     />
                     <div className="absolute top-4 left-4">
-                      <span className="inline-block bg-[#FF6600] text-white text-xs font-semibold px-3 py-1.5 rounded">
+                      <span className="inline-block bg-[#D43028] text-white text-xs font-semibold px-3 py-1.5 rounded">
                         {featured.category}
                       </span>
                     </div>
@@ -183,7 +183,7 @@ const Stories = () => {
                       </div>
 
                       <div className="pt-2">
-                        <span className="inline-flex items-center gap-2 text-[#FF6600] text-sm font-semibold group">
+                        <span className="inline-flex items-center gap-2 text-[#D43028] text-sm font-semibold group">
                           Read Full Story
                           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </span>
@@ -209,7 +209,7 @@ const Stories = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
-                    <span className="absolute top-3 left-3 inline-block bg-[#FF6600] text-white text-xs font-semibold px-2.5 py-1 rounded">
+                    <span className="absolute top-3 left-3 inline-block bg-[#D43028] text-white text-xs font-semibold px-2.5 py-1 rounded">
                       {story.category}
                     </span>
                   </div>
@@ -220,7 +220,7 @@ const Stories = () => {
                   )}
 
                   <div className={`p-5 ${story.image_attribution ? "pt-3" : ""}`}>
-                    <h3 className="text-lg font-bold mb-2 text-gray-900 line-clamp-2 min-h-[3.5rem] group-hover:text-[#FF6600] transition-colors">
+                    <h3 className="text-lg font-bold mb-2 text-gray-900 line-clamp-2 min-h-[3.5rem] group-hover:text-[#D43028] transition-colors">
                       {story.title}
                     </h3>
                     <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed min-h-[4rem]">
@@ -232,7 +232,7 @@ const Stories = () => {
                         <Clock className="w-3.5 h-3.5" />
                         <span>{story.read_time} min</span>
                       </div>
-                      <span className="text-[#FF6600] font-semibold inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                      <span className="text-[#D43028] font-semibold inline-flex items-center gap-1 group-hover:gap-2 transition-all">
                         Read More
                         <ArrowRight className="w-3.5 h-3.5" />
                       </span>
@@ -252,7 +252,7 @@ const Stories = () => {
         <div className="flex justify-center">
           <Button
             onClick={() => navigate('/stories/inspire')}
-            className="bg-[#FF6600] text-white font-semibold px-4 py-2 text-base rounded-sm hover:bg-[#E55A00] transition-colors"
+            className="bg-[#D43028] text-white font-semibold px-4 py-2 text-base rounded-sm hover:bg-[#B52820] transition-colors"
           >
             Explore More Inspiring Stories
             <ArrowRight className="ml-2 h-5 w-5" />

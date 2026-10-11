@@ -556,7 +556,7 @@ const StoryDetail = () => {
           {/* Desktop Title - Inside Image (md+ screens) */}
           <div className="hidden md:block absolute bottom-0 left-0 right-0 p-8 lg:p-12">
             <div className="container mx-auto max-w-4xl">
-              <Badge className="mb-4 bg-[#FF6600] text-white border-[#FF6600]">
+              <Badge className="mb-4 bg-[#D43028] text-white border-[#D43028]">
                 {story.category}
               </Badge>
               <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight">
@@ -594,7 +594,7 @@ const StoryDetail = () => {
         {/* Mobile Title - Below Image (< md screens) */}
         <div className="block md:hidden bg-white px-4 sm:px-6 py-6">
           <div className="container mx-auto max-w-4xl">
-            <Badge className="mb-3 bg-[#FF6600] text-white border-[#FF6600]">
+            <Badge className="mb-3 bg-[#D43028] text-white border-[#D43028]">
               {story.category}
             </Badge>
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">
@@ -665,7 +665,7 @@ const StoryDetail = () => {
           {/* Article Content */}
           <article className="lg:col-span-7 order-1 lg:order-2">
             {/* Excerpt */}
-            <div className="mb-8 p-6 bg-muted/50 border-l-4 border-[#FF6600] rounded-r-lg">
+            <div className="mb-8 p-6 bg-muted/50 border-l-4 border-[#D43028] rounded-r-lg">
               <p className="text-lg text-gray-700 italic leading-relaxed font-serif">
                 {story.excerpt}
               </p>

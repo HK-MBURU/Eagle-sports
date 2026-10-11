@@ -49,9 +49,9 @@ const RedemptionStories: React.FC = () => {
         </div>
 
         {/* Hero Message */}
-        <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-8 mb-12 border border-green-200">
+        <div className="bg-primary/5 rounded-xl p-8 mb-12 border border-primary/20">
           <div className="text-center max-w-3xl mx-auto">
-            <Heart className="w-12 h-12 text-green-600 mx-auto mb-4" />
+            <Heart className="w-12 h-12 text-accent-orange mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Second Chances Done Right</h2>
             <p className="text-gray-700 leading-relaxed">
               Every athlete deserves a path to redemption. These stories showcase the power of resilience, 

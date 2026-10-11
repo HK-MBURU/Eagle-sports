@@ -39,7 +39,7 @@ const ClimateInitiative = () => {
             <Leaf size={32} />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Running for <span className="text-gradient-earth">Our Planet</span>
+            Running for <span className="text-primary">Our Planet</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Kenyan athletes leading the charge in environmental conservation and climate action

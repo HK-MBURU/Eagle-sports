@@ -86,8 +86,8 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }: LoginModalProps) =>
           <div className="p-8">
             {/* Logo/Header */}
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-[#FF6600] to-[#FFBF00] rounded-full mx-auto mb-4 flex items-center justify-center">
-                <span className="text-white font-bold text-xl">BFL</span>
+              <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                <img src="/images/eagle-sports-logo.png" alt="Eagle Sports" className="h-14 w-auto" />
               </div>
               <h2 className="text-2xl font-bold mb-2">Sign in to continue</h2>
               <p className="text-sm text-muted-foreground">
@@ -107,7 +107,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }: LoginModalProps) =>
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                  className="w-full px-4 py-2.5 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                   placeholder="your.email@example.com"
                   required
                   autoFocus
@@ -124,7 +124,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }: LoginModalProps) =>
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                  className="w-full px-4 py-2.5 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                   placeholder="••••••••"
                   required
                 />
@@ -135,7 +135,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }: LoginModalProps) =>
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-[#FF6600] to-[#FFBF00] hover:from-[#E55A00] hover:to-[#E6AB00] text-white font-semibold py-2.5"
+                  className="w-full bg-accent-orange hover:bg-accent-terracotta text-white font-semibold py-2.5"
                 >
                   {isLoading ? (
                     <>
@@ -170,7 +170,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, message }: LoginModalProps) =>
                   onClose();
                   navigate('/register');
                 }}
-                className="text-[#FF6600] font-semibold hover:underline"
+                className="text-[#D43028] font-semibold hover:underline"
               >
                 Sign up
               </button>

@@ -1,0 +1,91 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: beyondfi_adminbfline
+      MYSQL_USER: beyondfi_adminbfline
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - eagle-mysql-data:/var/lib/mysql
+    networks:
+      - eagle-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  laravel:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      APP_NAME: "Eagle Sports"
+      APP_ENV: production
+      APP_KEY: ${APP_KEY}
+      APP_DEBUG: "false"
+      APP_URL: https://eaglesports.beyondfinishline.com
+      FRONTEND_URL: https://eaglesports.beyondfinishline.com
+      APP_FRONTEND_URL: https://eaglesports.beyondfinishline.com
+      APP_CLIENT_URL: https://eaglesports.beyondfinishline.com
+      FRONTEND_DOMAIN: https://eaglesports.beyondfinishline.com
+
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: beyondfi_adminbfline
+      DB_USERNAME: beyondfi_adminbfline
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      SESSION_DRIVER: database
+      CACHE_STORE: file
+      QUEUE_CONNECTION: database
+      FILESYSTEM_DISK: public
+
+      TINYMCE_API_KEY: ${TINYMCE_API_KEY}
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID}
+
+      LOG_CHANNEL: stack
+      LOG_STACK: single
+      LOG_LEVEL: warning
+
+      TRUSTED_PROXIES: "*"
+    volumes:
+      - eagle-storage:/var/www/html/storage/app/public
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8120:80"
+    networks:
+      - eagle-network
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: https://eaglesports.beyondfinishline.com/api
+        VITE_SITE_URL: https://eaglesports.beyondfinishline.com
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8121:80"
+    networks:
+      - eagle-network
+
+volumes:
+  eagle-mysql-data:
+  eagle-storage:
+
+networks:
+  eagle-network:
+    driver: bridge

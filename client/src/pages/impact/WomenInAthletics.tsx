@@ -129,10 +129,10 @@ const WomenInAthletics = () => {
         {!loading && !error && (
           <div className="flex items-center justify-center gap-4 mb-8 text-center">
             <div className="flex items-center gap-2 text-gray-600">
-              <Sparkles size={20} className="text-[#FF6600]" />
+              <Sparkles size={20} className="text-[#D43028]" />
               <span>
-                Showing <span className="font-bold text-[#FF6600]">{filteredStories.length}</span> of{" "}
-                <span className="font-bold text-[#FF6600]">{totalStories}</span> inspiring women
+                Showing <span className="font-bold text-[#D43028]">{filteredStories.length}</span> of{" "}
+                <span className="font-bold text-[#D43028]">{totalStories}</span> inspiring women
               </span>
             </div>
           </div>
@@ -142,7 +142,7 @@ const WomenInAthletics = () => {
         {loading && (
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
-              <Loader2 className="w-12 h-12 animate-spin text-[#FF6600] mx-auto mb-4" />
+              <Loader2 className="w-12 h-12 animate-spin text-[#D43028] mx-auto mb-4" />
               <p className="text-gray-600">Loading inspiring stories...</p>
             </div>
           </div>
@@ -152,7 +152,7 @@ const WomenInAthletics = () => {
         {error && !loading && (
           <div className="text-center py-12">
             <p className="text-red-500 mb-4">{error}</p>
-            <Button onClick={fetchStories} className="bg-[#FF6600] text-white">
+            <Button onClick={fetchStories} className="bg-[#D43028] text-white">
               Try Again
             </Button>
           </div>
@@ -187,7 +187,7 @@ const WomenInAthletics = () => {
 
              
                       {/* Icon Badge */}
-                      <div className="absolute top-4 left-4 w-10 h-10 bg-[#FF6600] flex items-center justify-center text-white">
+                      <div className="absolute top-4 left-4 w-10 h-10 bg-[#D43028] flex items-center justify-center text-white">
                         <Icon size={20} />
                       </div>
 
@@ -213,7 +213,7 @@ const WomenInAthletics = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="text-[#FF6600] border-[#FF6600] font-semibold"
+                          className="text-[#D43028] border-[#D43028] font-semibold"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleStoryClick(story.id);
@@ -226,7 +226,7 @@ const WomenInAthletics = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="text-[#FF6600]"
+                            className="text-[#D43028]"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleWatchVideo(story.video_url!, story.title, story.name);
@@ -278,7 +278,7 @@ const WomenInAthletics = () => {
                         onClick={() => handlePageChange(pageNum)}
                         className={
                           currentPage === pageNum
-                            ? "bg-[#FF6600] text-white border-0"
+                            ? "bg-[#D43028] text-white border-0"
                             : "border-gray-300"
                         }
                       >
@@ -307,7 +307,7 @@ const WomenInAthletics = () => {
         {!loading && !error && filteredStories.length === 0 && (
           <div className="text-center py-16">
             <div className="inline-flex items-center justify-center w-24 h-24 bg-gray-100 mb-6">
-              <Sparkles size={48} className="text-[#FF6600]" />
+              <Sparkles size={48} className="text-[#D43028]" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">No Stories Found</h3>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
@@ -318,7 +318,7 @@ const WomenInAthletics = () => {
             {searchQuery && (
               <Button
                 onClick={() => setSearchQuery("")}
-                className="bg-[#FF6600] text-white"
+                className="bg-[#D43028] text-white"
               >
                 Clear Search
               </Button>

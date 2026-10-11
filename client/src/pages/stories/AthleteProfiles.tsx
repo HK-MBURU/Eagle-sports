@@ -73,7 +73,7 @@ const AthleteProfiles = () => {
                 placeholder="Search athletes by name or achievement..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 pr-4 py-6 text-base rounded-full border-2 border-gray-200 focus:border-[#FF6600] transition-colors"
+                className="pl-12 pr-4 py-6 text-base rounded-full border-2 border-gray-200 focus:border-[#D43028] transition-colors"
               />
             </div>
           </form>
@@ -83,8 +83,8 @@ const AthleteProfiles = () => {
         {!loading && !error && (
           <div className="text-center mb-8">
             <p className="text-gray-600">
-              Showing <span className="font-semibold text-[#FF6600]">{athletes.length}</span> of{" "}
-              <span className="font-semibold text-[#FF6600]">{totalAthletes}</span> athletes
+              Showing <span className="font-semibold text-[#D43028]">{athletes.length}</span> of{" "}
+              <span className="font-semibold text-[#D43028]">{totalAthletes}</span> athletes
             </p>
           </div>
         )}
@@ -92,7 +92,7 @@ const AthleteProfiles = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center min-h-[400px]">
-            <Loader2 className="w-12 h-12 animate-spin text-[#FF6600]" />
+            <Loader2 className="w-12 h-12 animate-spin text-[#D43028]" />
           </div>
         )}
 
@@ -100,7 +100,7 @@ const AthleteProfiles = () => {
         {error && !loading && (
           <div className="text-center py-12">
             <p className="text-red-500 mb-4">{error}</p>
-            <Button onClick={fetchAthletes} className="bg-[#FF6600] hover:bg-[#E55A00]">
+            <Button onClick={fetchAthletes} className="bg-[#D43028] hover:bg-[#B52820]">
               Try Again
             </Button>
           </div>
@@ -162,7 +162,7 @@ const AthleteProfiles = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-full text-[#FF6600] hover:bg-[#FF6600] hover:text-white transition-all duration-200 font-semibold group/btn"
+                      className="w-full text-[#D43028] hover:bg-[#D43028] hover:text-white transition-all duration-200 font-semibold group/btn"
                     >
                       View Full Profile
                       <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -207,7 +207,7 @@ const AthleteProfiles = () => {
                         onClick={() => handlePageChange(pageNum)}
                         className={
                           currentPage === pageNum
-                            ? "bg-[#FF6600] hover:bg-[#E55A00] text-white"
+                            ? "bg-[#D43028] hover:bg-[#B52820] text-white"
                             : ""
                         }
                       >
@@ -250,7 +250,7 @@ const AthleteProfiles = () => {
                   setSearchQuery("");
                   setCurrentPage(1);
                 }}
-                className="bg-[#FF6600] hover:bg-[#E55A00]"
+                className="bg-[#D43028] hover:bg-[#B52820]"
               >
                 Clear Search
               </Button>

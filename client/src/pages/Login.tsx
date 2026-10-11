@@ -44,17 +44,17 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-secondary/30 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         {/* Card */}
         <div className="bg-card rounded-2xl shadow-xl p-8 border">
           {/* Logo/Header */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#FF6600] to-[#FFBF00] rounded-full mx-auto mb-4 flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">BFL</span>
+            <div className="mx-auto mb-4 flex items-center justify-center">
+              <img src="/images/eagle-sports-logo.png" alt="Eagle Sports" className="h-16 w-auto" />
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">Welcome Back</h1>
-            <p className="text-muted-foreground">Sign in to continue to Beyond Finish Line</p>
+            <p className="text-muted-foreground">Sign in to continue to Eagle Sports</p>
           </div>
 
           {/* Login Form */}
@@ -69,7 +69,7 @@ const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                 placeholder="your.email@example.com"
                 required
               />
@@ -85,7 +85,7 @@ const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                 placeholder="••••••••"
                 required
               />
@@ -97,7 +97,7 @@ const Login = () => {
                 <input type="checkbox" className="rounded border-input" />
                 <span className="text-muted-foreground">Remember me</span>
               </label>
-              <Link to="/forgot-password" className="text-[#FF6600] hover:underline">
+              <Link to="/forgot-password" className="text-[#D43028] hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -106,7 +106,7 @@ const Login = () => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-[#FF6600] to-[#FFBF00] hover:from-[#E55A00] hover:to-[#E6AB00] text-white font-semibold py-3 text-base"
+              className="w-full bg-[#D43028] hover:bg-[#B52820] text-white font-semibold py-3 text-base"
             >
               {isLoading ? (
                 <>
@@ -125,7 +125,7 @@ const Login = () => {
           {/* Sign Up Link */}
           <div className="mt-6 text-center text-sm">
             <span className="text-muted-foreground">Don't have an account? </span>
-            <Link to="/register" className="text-[#FF6600] font-semibold hover:underline">
+            <Link to="/register" className="text-[#D43028] font-semibold hover:underline">
               Sign up
             </Link>
           </div>

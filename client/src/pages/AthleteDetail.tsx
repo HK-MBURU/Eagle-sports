@@ -81,7 +81,7 @@ const AthleteDetail = () => {
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
               {athlete.name}
             </h1>
-            <p className="text-2xl text-[#FF6600] font-semibold mb-2">
+            <p className="text-2xl text-[#D43028] font-semibold mb-2">
               {athlete.title}
             </p>
             <p className="text-xl text-white/90">{athlete.description}</p>

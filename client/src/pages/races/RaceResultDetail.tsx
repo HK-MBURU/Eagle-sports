@@ -343,7 +343,7 @@ const RaceResultDetail = () => {
           <div className="flex flex-col sm:flex-row gap-3 mt-6 pt-6 border-t border-gray-100">
             <button
               onClick={handleDownload}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#FF6600] to-[#FFBF00] hover:from-[#E55A00] hover:to-[#E6AB00] text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#D43028] hover:bg-[#B52820] text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
             >
               <Download className="w-4 h-4" />
               Download Result

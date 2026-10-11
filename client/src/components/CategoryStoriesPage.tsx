@@ -168,7 +168,7 @@ const CategoryStoriesPage = ({
               <Button
                 type="submit"
                 size="sm"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#FF6600] text-white"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#D43028] text-white"
               >
                 Search
               </Button>
@@ -193,8 +193,8 @@ const CategoryStoriesPage = ({
                   disabled={loading}
                   className={
                     selectedCategory === category
-                      ? "bg-[#FF6600] text-white border-0"
-                      : "bg-white text-gray-700 border border-gray-300 hover:border-[#FF6600]"
+                      ? "bg-[#D43028] text-white border-0"
+                      : "bg-white text-gray-700 border border-gray-300 hover:border-[#D43028]"
                   }
                 >
                   {category}
@@ -207,11 +207,11 @@ const CategoryStoriesPage = ({
         {/* Active Filters & Results Count */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <BookOpen size={18} className="text-[#FF6600]" />
+            <BookOpen size={18} className="text-[#D43028]" />
             {!loading && (
               <span>
-                Showing <span className="font-bold text-[#FF6600]">{stories.length}</span> of{" "}
-                <span className="font-bold text-[#FF6600]">{totalStories}</span> {totalStories === 1 ? 'story' : 'stories'}
+                Showing <span className="font-bold text-[#D43028]">{stories.length}</span> of{" "}
+                <span className="font-bold text-[#D43028]">{totalStories}</span> {totalStories === 1 ? 'story' : 'stories'}
               </span>
             )}
           </div>
@@ -221,7 +221,7 @@ const CategoryStoriesPage = ({
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="text-gray-600 hover:text-[#FF6600]"
+              className="text-gray-600 hover:text-[#D43028]"
             >
               <X size={16} className="mr-1" />
               Clear filters
@@ -233,7 +233,7 @@ const CategoryStoriesPage = ({
         {loading && (
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
-              <Loader2 className="w-12 h-12 animate-spin text-[#FF6600] mx-auto mb-4" />
+              <Loader2 className="w-12 h-12 animate-spin text-[#D43028] mx-auto mb-4" />
               <p className="text-gray-600">Loading stories...</p>
             </div>
           </div>
@@ -243,7 +243,7 @@ const CategoryStoriesPage = ({
         {error && !loading && (
           <div className="text-center py-12 bg-red-50 rounded-lg border border-red-200">
             <p className="text-red-600 mb-4 font-medium">{error}</p>
-            <Button onClick={fetchStories} className="bg-[#FF6600] text-white hover:bg-[#E55A00]">
+            <Button onClick={fetchStories} className="bg-[#D43028] text-white hover:bg-[#B52820]">
               Try Again
             </Button>
           </div>
@@ -269,7 +269,7 @@ const CategoryStoriesPage = ({
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
                     {/* Category Badge */}
-                    <Badge className="absolute top-3 left-3 bg-[#FF6600] text-white border-0 text-xs">
+                    <Badge className="absolute top-3 left-3 bg-[#D43028] text-white border-0 text-xs">
                       {story.category}
                     </Badge>
 
@@ -305,16 +305,16 @@ const CategoryStoriesPage = ({
                     <div className="flex items-center justify-between text-xs text-gray-500 mb-4 pb-4 border-b border-gray-100">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1">
-                          <User size={14} className="text-[#FF6600]" />
+                          <User size={14} className="text-[#D43028]" />
                           <span className="font-medium">{story.author_name}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Clock size={14} className="text-[#FF6600]" />
+                          <Clock size={14} className="text-[#D43028]" />
                           <span>{story.read_time} min</span>
                         </div>
                       </div>
                       {story.likes_count > 0 && (
-                        <div className="flex items-center gap-1 text-[#FF6600]">
+                        <div className="flex items-center gap-1 text-[#D43028]">
                           <Heart size={14} fill="currentColor" />
                           <span className="font-semibold">{story.likes_count}</span>
                         </div>
@@ -325,7 +325,7 @@ const CategoryStoriesPage = ({
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full text-[#FF6600] border-[#FF6600] hover:bg-[#FF6600] hover:text-white font-semibold transition-colors"
+                      className="w-full text-[#D43028] border-[#D43028] hover:bg-[#D43028] hover:text-white font-semibold transition-colors"
                     >
                       Read Full Story
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -370,8 +370,8 @@ const CategoryStoriesPage = ({
                         onClick={() => handlePageChange(pageNum)}
                         className={
                           currentPage === pageNum
-                            ? "bg-[#FF6600] text-white border-0 min-w-[40px]"
-                            : "border-gray-300 hover:border-[#FF6600] min-w-[40px]"
+                            ? "bg-[#D43028] text-white border-0 min-w-[40px]"
+                            : "border-gray-300 hover:border-[#D43028] min-w-[40px]"
                         }
                       >
                         {pageNum}
@@ -399,7 +399,7 @@ const CategoryStoriesPage = ({
         {!loading && !error && stories.length === 0 && (
           <div className="text-center py-20 bg-gray-50 rounded-lg">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white shadow-sm mb-6">
-              <BookOpen size={48} className="text-[#FF6600]" />
+              <BookOpen size={48} className="text-[#D43028]" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">No Stories Found</h3>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
@@ -412,7 +412,7 @@ const CategoryStoriesPage = ({
             {hasActiveFilters && (
               <Button
                 onClick={clearFilters}
-                className="bg-[#FF6600] text-white hover:bg-[#E55A00]"
+                className="bg-[#D43028] text-white hover:bg-[#B52820]"
               >
                 View All Stories
               </Button>

@@ -139,14 +139,6 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  .text-gradient-gold {
-    @apply bg-gradient-to-r from-[hsl(var(--accent-orange))] to-[hsl(var(--primary))] bg-clip-text text-transparent;
-  }
-
-  .text-gradient-earth {
-    @apply bg-gradient-to-r from-[hsl(var(--primary))] to-[hsl(var(--accent-blue))] bg-clip-text text-transparent;
-  }
-
   .animate-fade-up {
     animation: fadeUp 0.6s ease-out;
   }

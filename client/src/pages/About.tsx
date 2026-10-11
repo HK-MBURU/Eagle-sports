@@ -204,7 +204,7 @@ const About = () => {
                   <Mail className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Email</h4>
-                <a href="mailto:kibetesq@gmail.com" className="text-sm text-gray-600 hover:text-[#FF6600]">
+                <a href="mailto:kibetesq@gmail.com" className="text-sm text-gray-600 hover:text-[#D43028]">
                   kibetesq@gmail.com
                 </a>
               </div>
@@ -214,7 +214,7 @@ const About = () => {
                   <Phone className="text-white" size={24} />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">WhatsApp</h4>
-                <a href="https://wa.me/254722851458" className="text-sm text-gray-600 hover:text-[#FF6600]">
+                <a href="https://wa.me/254722851458" className="text-sm text-gray-600 hover:text-[#D43028]">
                   +254 722 851458
                 </a>
               </div>
@@ -276,7 +276,7 @@ const About = () => {
             <Button asChild className="bg-[#D43028] text-white px-8 py-6 text-base">
               <Link to="/submit-story">Share Your Story</Link>
             </Button>
-            <Button asChild variant="outline" className="border-2 border-[#D43028] text-[#FF6600] px-8 py-6 text-base">
+            <Button asChild variant="outline" className="border-2 border-[#D43028] text-[#D43028] px-8 py-6 text-base">
               <Link to="/partners">Partner With Us</Link>
             </Button>
           </div>

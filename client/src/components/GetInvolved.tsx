@@ -29,7 +29,7 @@ const GetInvolved = () => {
   ];
 
   return (
-    <section id="involved" className="pt-12 pb-24 bg-gradient-to-b from-background to-accent">
+    <section id="involved" className="pt-12 pb-24 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-up">
@@ -37,7 +37,7 @@ const GetInvolved = () => {
             <Heart size={32} />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Get <span className="text-gradient-gold">Involved</span>
+            Get <span className="text-accent-orange">Involved</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Join our community and be part of something bigger than yourself

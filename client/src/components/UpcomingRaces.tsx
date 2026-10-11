@@ -88,7 +88,7 @@ const UpcomingRaces = () => {
               <Calendar size={32} />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Upcoming <span className="text-gradient-gold">Races</span>
+              Upcoming <span className="text-accent-orange">Races</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Loading exciting race events across Kenya...
@@ -111,7 +111,7 @@ const UpcomingRaces = () => {
               <Calendar size={32} />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Upcoming <span className="text-gradient-gold">Races</span>
+              Upcoming <span className="text-accent-orange">Races</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               {error}
@@ -137,7 +137,7 @@ const UpcomingRaces = () => {
               <Calendar size={32} />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Upcoming <span className="text-gradient-gold">Races</span>
+              Upcoming <span className="text-accent-orange">Races</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               No upcoming races at the moment. Check back soon for new events!
@@ -157,7 +157,7 @@ const UpcomingRaces = () => {
             <Calendar size={32} />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Upcoming <span className="text-gradient-gold">Races</span>
+            Upcoming <span className="text-accent-orange">Races</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Join the running community at these exciting events across Kenya
@@ -172,7 +172,7 @@ const UpcomingRaces = () => {
               className="group overflow-hidden hover:shadow-strong transition-all duration-300 hover:-translate-y-2 border-border animate-fade-up"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="h-2 bg-gradient-to-r from-accent-gold to-accent-orange" />
+              <div className="h-2 bg-accent-orange" />
               <CardContent className="p-6">
                 <h3 className="text-2xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
                   {race.title}

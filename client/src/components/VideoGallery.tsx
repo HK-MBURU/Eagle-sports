@@ -97,7 +97,7 @@ const VideoGallery = () => {
               <Youtube size={32} />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Video <span className="text-gradient-gold">Gallery</span>
+              Video <span className="text-accent-orange">Gallery</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Loading inspiring videos...
@@ -120,7 +120,7 @@ const VideoGallery = () => {
               <Youtube size={32} />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Video <span className="text-gradient-gold">Gallery</span>
+              Video <span className="text-accent-orange">Gallery</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               {error}
@@ -156,7 +156,7 @@ const VideoGallery = () => {
             <Youtube size={32} />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Video <span className="text-gradient-gold">Gallery</span>
+            Video <span className="text-accent-orange">Gallery</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Watch inspiring stories, training insights, and athlete interviews

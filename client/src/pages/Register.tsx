@@ -66,17 +66,17 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-secondary/30 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md">
         {/* Card */}
         <div className="bg-card rounded-2xl shadow-xl p-8 border">
           {/* Logo/Header */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#FF6600] to-[#FFBF00] rounded-full mx-auto mb-4 flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">BFL</span>
+            <div className="mx-auto mb-4 flex items-center justify-center">
+              <img src="/images/eagle-sports-logo.png" alt="Eagle Sports" className="h-16 w-auto" />
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>
-            <p className="text-muted-foreground">Join Beyond Finish Line today</p>
+            <p className="text-muted-foreground">Join Eagle Sports today</p>
           </div>
 
           {/* Register Form */}
@@ -91,7 +91,7 @@ const Register = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                 placeholder="John Doe"
                 required
               />
@@ -107,7 +107,7 @@ const Register = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                 placeholder="your.email@example.com"
                 required
               />
@@ -123,7 +123,7 @@ const Register = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                 placeholder="••••••••"
                 minLength={8}
                 required
@@ -143,7 +143,7 @@ const Register = () => {
                 type="password"
                 value={passwordConfirmation}
                 onChange={(e) => setPasswordConfirmation(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#FF6600] focus:border-transparent"
+                className="w-full px-4 py-3 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#D43028] focus:border-transparent"
                 placeholder="••••••••"
                 minLength={8}
                 required
@@ -159,11 +159,11 @@ const Register = () => {
               />
               <label className="text-muted-foreground">
                 I agree to the{' '}
-                <Link to="/terms" className="text-[#FF6600] hover:underline">
+                <Link to="/terms" className="text-[#D43028] hover:underline">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link to="/privacy" className="text-[#FF6600] hover:underline">
+                <Link to="/privacy" className="text-[#D43028] hover:underline">
                   Privacy Policy
                 </Link>
               </label>
@@ -173,7 +173,7 @@ const Register = () => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-[#FF6600] to-[#FFBF00] hover:from-[#E55A00] hover:to-[#E6AB00] text-white font-semibold py-3 text-base"
+              className="w-full bg-[#D43028] hover:bg-[#B52820] text-white font-semibold py-3 text-base"
             >
               {isLoading ? (
                 <>
@@ -192,7 +192,7 @@ const Register = () => {
           {/* Login Link */}
           <div className="mt-6 text-center text-sm">
             <span className="text-muted-foreground">Already have an account? </span>
-            <Link to="/login" className="text-[#FF6600] font-semibold hover:underline">
+            <Link to="/login" className="text-[#D43028] font-semibold hover:underline">
               Sign in
             </Link>
           </div>

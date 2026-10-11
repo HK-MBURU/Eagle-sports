@@ -41,7 +41,7 @@ export const VideoModal = ({ isOpen, onClose, videoUrl, title, athleteName }: Vi
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-5xl w-[95vw] p-0 overflow-hidden bg-black border-0">
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-accent-orange to-accent-terracotta p-4 md:p-6">
+        <div className="relative bg-accent-orange p-4 md:p-6">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2 transition-colors z-10"
