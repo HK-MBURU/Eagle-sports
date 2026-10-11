@@ -1,3 +1,11 @@
+# ── Stage 0: Node.js — build Vite assets ──────────────────────────────────────
+FROM node:20-alpine AS assets
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
 # ── Stage 1: Composer dependencies ───────────────────────────────────────────
 FROM composer:2 AS vendor
 WORKDIR /app
@@ -42,6 +50,7 @@ RUN docker-php-ext-configure gd && \
 WORKDIR /var/www/html
 
 COPY --from=vendor /app .
+COPY --from=assets /app/public/build ./public/build
 
 COPY docker/php.ini          /usr/local/etc/php/conf.d/zz-app.ini
 COPY docker/php-fpm.conf     /usr/local/etc/php-fpm.d/zz-www.conf
