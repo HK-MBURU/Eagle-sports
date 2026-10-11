@@ -32,5 +32,10 @@ class DatabaseSeeder extends Seeder
 
         // Optional: Create additional test users
         // User::factory(10)->create();
+
+        $this->call([
+            VideoSeeder::class,
+            WomenRunningSeeder::class,
+        ]);
     }
 }
