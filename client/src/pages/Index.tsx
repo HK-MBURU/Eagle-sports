@@ -2,6 +2,7 @@ import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
 import FeaturedAthletes from "@/components/FeaturedAthletes";
 import Stories from "@/components/Stories";
+import FlagshipEvent from "@/components/FlagshipEvent";
 import WomenSpotlight from "@/components/WomenSpotlight";
 import ClimateInitiative from "@/components/ClimateInitiative";
 import UpcomingRaces from "@/components/UpcomingRaces";
@@ -18,6 +19,7 @@ const Index = () => {
         <HeroSection />
         <FeaturedAthletes />
         <Stories />
+        <FlagshipEvent />
         <WomenSpotlight />
         <ClimateInitiative />
         <UpcomingRaces />

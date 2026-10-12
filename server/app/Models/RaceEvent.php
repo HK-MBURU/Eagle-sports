@@ -23,13 +23,22 @@ class RaceEvent extends Model
         'is_featured',
         'is_active',
         'created_by',
+        'is_flagship',
+        'eyebrow_text',
+        'subtitle',
+        'coverage_description',
+        'art_image_url',
+        'art_caption',
+        'quick_links',
     ];
 
     protected $casts = [
-        'event_date' => 'date',
-        'start_time' => 'datetime:H:i',
+        'event_date'  => 'date',
+        'start_time'  => 'datetime:H:i',
         'is_featured' => 'boolean',
-        'is_active' => 'boolean',
+        'is_active'   => 'boolean',
+        'is_flagship' => 'boolean',
+        'quick_links' => 'array',
     ];
 
     /**
@@ -96,5 +105,13 @@ class RaceEvent extends Model
     {
         return $query->where('event_date', '<', now()->toDateString())
                      ->orderBy('event_date', 'desc');
+    }
+
+    /**
+     * Scope for the flagship/featured coverage event
+     */
+    public function scopeFlagship($query)
+    {
+        return $query->where('is_flagship', true);
     }
 }

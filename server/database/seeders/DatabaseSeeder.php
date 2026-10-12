@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             VideoSeeder::class,
             WomenRunningSeeder::class,
+            FlagshipEventSeeder::class,
         ]);
     }
 }

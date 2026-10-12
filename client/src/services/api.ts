@@ -254,6 +254,15 @@ export const raceEventsAPI = {
     return response.json();
   },
 
+  // Get the flagship/coverage event (e.g. Dakar 2026)
+  getFlagshipEvent: async () => {
+    const response = await fetch(`${API_BASE_URL}/race-events/flagship/current`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error('No flagship event found');
+    return response.json();
+  },
+
   // Get featured events
   getFeaturedEvents: async () => {
     const response = await fetch(`${API_BASE_URL}/race-events/featured/all`, {

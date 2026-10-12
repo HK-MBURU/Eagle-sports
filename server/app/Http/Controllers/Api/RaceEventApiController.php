@@ -106,6 +106,37 @@ class RaceEventApiController extends Controller
     }
 
     /**
+     * Return the single active flagship/coverage event.
+     */
+    public function flagship(): JsonResponse
+    {
+        try {
+            $event = RaceEvent::where('is_flagship', true)
+                ->where('is_active', true)
+                ->first();
+
+            if (!$event) {
+                return response()->json([
+                    'success' => false,
+                    'data'    => null,
+                    'message' => 'No flagship event configured',
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data'    => $this->transformEvent($event),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch flagship event',
+                'error'   => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
+    /**
      * Display featured race events for API consumption.
      */
     public function featured(): JsonResponse
@@ -397,34 +428,46 @@ class RaceEventApiController extends Controller
      */
     private function transformEvent(RaceEvent $event): array
     {
+        $startTimeRaw = $event->start_time
+            ? $event->start_time->format('H:i:s')
+            : '09:00:00';
+
         return [
-            'id' => $event->id,
-            'title' => $event->title,
-            'event_date' => $event->event_date,
-            'event_date_formatted' => $event->event_date->format('F j, Y'),
-            'location' => $event->location,
-            'start_time' => $event->start_time,
-            'start_time_formatted' => $event->start_time ? date('g:i A', strtotime($event->start_time)) : null,
-            'expected_runners' => $event->expected_runners,
-            'distance_options' => $event->distance_options,
-            'image' => $event->image ? Storage::disk('public')->url($event->image) : null,
-            'image_thumbnail' => $event->image ? Storage::disk('public')->url($event->image) : null, // You can add thumbnail logic here
-            'description' => $event->description,
-            'registration_link' => $event->registration_link,
-            'is_featured' => $event->is_featured,
-            'is_active' => $event->is_active,
-            'created_by' => $event->created_by,
-            'creator' => $event->creator ? [
-                'id' => $event->creator->id,
-                'name' => $event->creator->name,
+            'id'                    => $event->id,
+            'title'                 => $event->title,
+            'subtitle'              => $event->subtitle,
+            'eyebrow_text'          => $event->eyebrow_text,
+            'coverage_description'  => $event->coverage_description,
+            'art_image_url'         => $event->art_image_url,
+            'art_caption'           => $event->art_caption,
+            'quick_links'           => $event->quick_links ?? [],
+            'event_date'            => $event->event_date->format('Y-m-d'),
+            'event_date_formatted'  => $event->event_date->format('F j, Y'),
+            'event_datetime_iso'    => $event->event_date->format('Y-m-d') . 'T' . $startTimeRaw,
+            'location'              => $event->location,
+            'start_time'            => $startTimeRaw,
+            'start_time_formatted'  => $event->start_time ? $event->start_time->format('g:i A') . ' EAT' : null,
+            'expected_runners'      => $event->expected_runners,
+            'distance_options'      => $event->distance_options,
+            'image'                 => $event->image ? Storage::disk('public')->url($event->image) : null,
+            'image_thumbnail'       => $event->image ? Storage::disk('public')->url($event->image) : null,
+            'description'           => $event->description,
+            'registration_link'     => $event->registration_link,
+            'is_featured'           => $event->is_featured,
+            'is_flagship'           => $event->is_flagship,
+            'is_active'             => $event->is_active,
+            'created_by'            => $event->created_by,
+            'creator'               => $event->creator ? [
+                'id'    => $event->creator->id,
+                'name'  => $event->creator->name,
                 'email' => $event->creator->email,
             ] : null,
-            'created_at' => $event->created_at,
-            'created_at_formatted' => $event->created_at->format('F j, Y g:i A'),
-            'updated_at' => $event->updated_at,
-            'updated_at_formatted' => $event->updated_at->format('F j, Y g:i A'),
-            'is_upcoming' => $event->event_date >= now()->format('Y-m-d'),
-            'days_until_event' => now()->diffInDays($event->event_date, false),
+            'created_at'            => $event->created_at,
+            'created_at_formatted'  => $event->created_at->format('F j, Y g:i A'),
+            'updated_at'            => $event->updated_at,
+            'updated_at_formatted'  => $event->updated_at->format('F j, Y g:i A'),
+            'is_upcoming'           => $event->event_date->format('Y-m-d') >= now()->format('Y-m-d'),
+            'days_until_event'      => now()->diffInDays($event->event_date, false),
         ];
     }
 }

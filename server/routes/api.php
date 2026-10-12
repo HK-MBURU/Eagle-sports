@@ -269,10 +269,11 @@ Route::prefix('race-results')->group(function () {
 Route::apiResource('quotes', QuoteApiController::class);
 Route::get('/quotes/random/one', [QuoteApiController::class, 'random']);
 
-Route::apiResource('race-events', RaceEventApiController::class);
+Route::get('/race-events/flagship/current', [RaceEventApiController::class, 'flagship']);
 Route::get('/race-events/featured/all', [RaceEventApiController::class, 'featured']);
 Route::get('/race-events/upcoming/list', [RaceEventApiController::class, 'upcoming']);
 Route::get('/race-events/date-range/filter', [RaceEventApiController::class, 'byDateRange']);
+Route::apiResource('race-events', RaceEventApiController::class);
 
 Route::apiResource('videos', VideoApiController::class);
 Route::get('/videos/featured/all', [VideoApiController::class, 'featured']);
