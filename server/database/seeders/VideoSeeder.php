@@ -10,7 +10,7 @@ class VideoSeeder extends Seeder
 {
     public function run(): void
     {
-        $adminUserId = DB::table('users')->where('email', 'admin@beyondfinishline.com')->value('id') ?? 1;
+        $adminUserId = DB::table('users')->where('email', 'admin@eaglesports.co.ke')->value('id') ?? 1;
 
         $videos = [
             [

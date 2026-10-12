@@ -81,7 +81,7 @@ const StoryDetail = () => {
     updateMetaTag('twitter:description', metaTags.description);
     updateMetaTag('twitter:image', metaTags.image);
     updateMetaTag('twitter:url', metaTags.url);
-    updateMetaTag('twitter:creator', '@beyondfinishline');
+    updateMetaTag('twitter:creator', '@bfline001');
 
     // Update canonical URL
     updateLinkTag('canonical', metaTags.url);
@@ -106,10 +106,10 @@ const StoryDetail = () => {
       },
       "publisher": {
         "@type": "Organization",
-        "name": "Beyond the Finish Line",
+        "name": "Eagle Sports",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://beyondfinishline.com/logo.png"
+          "url": "https://eaglesports.co.ke/images/eagle-sports-logo.png"
         }
       },
       "datePublished": metaTags.published_time,
@@ -415,7 +415,7 @@ const StoryDetail = () => {
         <meta name="twitter:title" content={story.meta_title || story.title} />
         <meta name="twitter:description" content={story.meta_description || story.excerpt} />
         <meta name="twitter:image" content={story.og_image_url || story.image_url} />
-        <meta name="twitter:creator" content="@beyondfinishline" />
+        <meta name="twitter:creator" content="@bfline001" />
 
         {/* Canonical */}
         <link rel="canonical" href={window.location.href} />

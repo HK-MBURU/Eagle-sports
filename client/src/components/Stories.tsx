@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { Clock, User, ArrowRight, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { storiesAPI } from "@/services/api";
 import type { Story } from "@/types/story";
 import { Link, useNavigate } from "react-router-dom";
+
+const RED  = "#d62835";
+const NAVY = "#10284a";
+const LINE = "#e2e7ef";
 
 interface HomepageStoriesResponse {
   success: boolean;
@@ -21,73 +23,42 @@ const Stories = () => {
     regular: Story[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError]     = useState<string | null>(null);
 
-  // Fetch optimized homepage stories
   useEffect(() => {
     const fetchHomepageStories = async () => {
       try {
         setLoading(true);
         setError(null);
-
         const response: HomepageStoriesResponse = await storiesAPI.getHomepageStories();
-
-        if (response.success) {
-          setHomepageStories(response.data);
-        }
+        if (response.success) setHomepageStories(response.data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load stories');
-        console.error('Error fetching homepage stories:', err);
+        setError(err instanceof Error ? err.message : "Failed to load stories");
+        console.error("Error fetching homepage stories:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchHomepageStories();
   }, []);
 
-  // Loading state with skeleton
+  /* ── Skeleton ── */
   if (loading) {
     return (
-      <section id="stories" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 max-w-7xl">
-          {/* Skeleton Header */}
-          <div className="mb-4">
-            <div className="inline-block mb-4">
-              <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
-            </div>
-            <div className="h-8 w-64 bg-gray-200 rounded animate-pulse mb-3"></div>
-            <div className="h-4 w-96 bg-gray-200 rounded animate-pulse"></div>
+      <section id="stories" style={{ background: "#f4f6f9", padding: "48px 0" }}>
+        <div style={{ width: "min(1180px,92%)", margin: "0 auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 24 }}>
+            <div style={{ height: 28, width: 200, background: "#dde3eb", borderRadius: 4 }} className="animate-pulse" />
+            <div style={{ height: 14, width: 100, background: "#dde3eb", borderRadius: 4 }} className="animate-pulse" />
           </div>
-
-          {/* Skeleton Featured Story */}
-          <div className="mb-16">
-            <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-              <div className="grid md:grid-cols-5 gap-0">
-                <div className="relative md:col-span-2 h-[280px] md:h-[400px] bg-gray-200 animate-pulse"></div>
-                <div className="md:col-span-3 p-6 md:p-8 lg:p-10">
-                  <div className="space-y-4">
-                    <div className="h-6 w-3/4 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Skeleton Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="border border-gray-200 rounded-lg overflow-hidden bg-white h-full">
-                <div className="h-48 bg-gray-200 animate-pulse"></div>
-                <div className="p-5">
-                  <div className="h-5 w-full bg-gray-200 rounded animate-pulse mb-2"></div>
-                  <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse mb-4"></div>
-                  <div className="flex items-center justify-between">
-                    <div className="h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
-                    <div className="h-3 w-20 bg-gray-200 rounded animate-pulse"></div>
-                  </div>
+              <div key={i} style={{ border: `1px solid ${LINE}`, borderRadius: 10, overflow: "hidden", background: "#fff" }}>
+                <div style={{ height: 180, background: "#dde3eb" }} className="animate-pulse" />
+                <div style={{ padding: "16px 18px" }}>
+                  <div style={{ height: 10, width: 60,  background: "#dde3eb", borderRadius: 3, marginBottom: 8 }} className="animate-pulse" />
+                  <div style={{ height: 20, width: "90%", background: "#dde3eb", borderRadius: 3, marginBottom: 6 }} className="animate-pulse" />
+                  <div style={{ height: 20, width: "65%", background: "#dde3eb", borderRadius: 3 }} className="animate-pulse" />
                 </div>
               </div>
             ))}
@@ -97,17 +68,18 @@ const Stories = () => {
     );
   }
 
-  // Error state
+  /* ── Error ── */
   if (error) {
     return (
-      <section id="stories" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center py-12">
-            <p className="text-red-600 mb-4 text-sm">{error}</p>
-            <Button onClick={() => window.location.reload()} className="bg-gray-900 text-white">
-              Try Again
-            </Button>
-          </div>
+      <section id="stories" style={{ background: "#f4f6f9", padding: "48px 0" }}>
+        <div style={{ width: "min(1180px,92%)", margin: "0 auto", textAlign: "center", padding: "48px 0" }}>
+          <p style={{ color: RED, marginBottom: 16, fontSize: 14 }}>{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ background: NAVY, color: "#fff", border: "none", padding: "10px 24px", borderRadius: 5, cursor: "pointer", fontWeight: 700 }}
+          >
+            Try Again
+          </button>
         </div>
       </section>
     );
@@ -116,151 +88,176 @@ const Stories = () => {
   const { featured, regular } = homepageStories || {};
 
   return (
-    <section id="stories" className="py-16 bg-white">
-      <div className="container mx-auto px-4 max-w-7xl">
-        {/* Header */}
-        <div className="mb-4">
-          <div className="inline-block">
-            <span className="text-xs font-semibold text-[#D43028] uppercase tracking-wider bg-red-50 px-3 py-1 rounded">
-              Beyond The Track
-            </span>
+    <section id="stories" style={{ background: "#f4f6f9", padding: "48px 0" }}>
+      <style>{`
+        .es-card { transition: transform .15s, box-shadow .15s; }
+        .es-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(20,39,71,0.08); }
+        .es-featured { transition: box-shadow .15s; }
+        .es-featured:hover { box-shadow: 0 12px 32px rgba(20,39,71,0.1); }
+        @media (max-width: 900px) {
+          .es-cards-grid { grid-template-columns: repeat(2,1fr) !important; }
+        }
+        @media (max-width: 600px) {
+          .es-cards-grid { grid-template-columns: 1fr !important; }
+          .es-featured { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+
+      <div style={{ width: "min(1180px,92%)", margin: "0 auto" }}>
+
+        {/* ── Section head ── */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 24 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 900, color: RED, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 5 }}>
+              LATEST FROM EAGLE SPORTS
+            </div>
+            <h2 style={{ fontSize: "clamp(22px,3vw,28px)", fontWeight: 900, color: NAVY, margin: 0, letterSpacing: "-0.5px" }}>
+              News &amp; Stories
+            </h2>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-gray-900">
-            Stories That Inspire
-          </h2>
-          <p className="text-base text-gray-600 max-w-2xl">
-            Real journeys of athletes who transformed their victories into lasting impact
-          </p>
+          <Link
+            to="/stories/inspire"
+            style={{ fontSize: 12, color: RED, fontWeight: 900, textDecoration: "none", letterSpacing: "0.5px", whiteSpace: "nowrap" }}
+          >
+            ALL STORIES →
+          </Link>
         </div>
 
-        {/* Featured Story */}
+        {/* ── Featured story ── */}
         {featured && (
-          <div className="mb-16">
-            <Link to={`/stories/${featured.slug}`}>
-              <article className="border border-gray-200 rounded-lg overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300">
-                <div className="grid md:grid-cols-5 gap-0">
-                <div className="md:col-span-2">
-                  <div className="relative h-[280px] md:h-[400px] overflow-hidden bg-gray-100">
-                    <img
-                      src={featured.image_url}
-                      alt={featured.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <span className="inline-block bg-[#D43028] text-white text-xs font-semibold px-3 py-1.5 rounded">
-                        {featured.category}
-                      </span>
-                    </div>
-                  </div>
-                  {featured.image_attribution && (
-                    <p className="px-4 py-2 text-xs italic text-gray-500">
-                      {featured.image_attribution}
-                    </p>
-                  )}
+          <div style={{ marginBottom: 24 }}>
+            <Link to={`/stories/${featured.slug}`} style={{ textDecoration: "none" }}>
+              <article
+                className="es-featured"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1.5fr",
+                  border: `1px solid ${LINE}`,
+                  borderLeft: `5px solid ${RED}`,
+                  borderRadius: 12,
+                  overflow: "hidden",
+                  background: "#fff",
+                }}
+              >
+                <div style={{ height: 300, overflow: "hidden", background: "#dde3eb" }}>
+                  <img
+                    src={featured.image_url}
+                    alt={featured.title}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    loading="lazy"
+                  />
                 </div>
 
-                  <div className="md:col-span-3 p-6 md:p-8 lg:p-10 flex flex-col justify-center">
-                    <div className="space-y-4">
-                      <h3 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight text-gray-900">
-                        {featured.title}
-                      </h3>
-
-                      <p className="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-3">
-                        {featured.excerpt}
-                      </p>
-
-                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-gray-500 pt-3 border-t border-gray-100">
-                        <div className="flex items-center gap-1.5">
-                          <User className="w-3.5 h-3.5" />
-                          <span>{featured.author_name}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5" />
-                          <span>{featured.read_time} min read</span>
-                        </div>
-                        <span>{featured.formatted_date}</span>
-                      </div>
-
-                      <div className="pt-2">
-                        <span className="inline-flex items-center gap-2 text-[#D43028] text-sm font-semibold group">
-                          Read Full Story
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                      </div>
-                    </div>
+                <div style={{ padding: "28px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                  <div style={{ fontSize: 10, fontWeight: 900, color: RED, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 10 }}>
+                    FEATURED · {featured.category}
                   </div>
+                  <h3 style={{ fontSize: "clamp(20px,2.4vw,28px)", fontWeight: 900, color: NAVY, margin: "0 0 12px", lineHeight: 1.2, letterSpacing: "-0.5px" }}>
+                    {featured.title}
+                  </h3>
+                  <p style={{ color: "#4a5568", fontSize: 14, lineHeight: 1.65, margin: "0 0 18px" }}>
+                    {featured.excerpt.length > 200 ? featured.excerpt.slice(0, 200) + "…" : featured.excerpt}
+                  </p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 18px", fontSize: 11, color: "#8896a5", borderTop: `1px solid ${LINE}`, paddingTop: 14, marginBottom: 16 }}>
+                    {featured.author_name  && <span>By {featured.author_name}</span>}
+                    {featured.read_time    && <span>{featured.read_time} min read</span>}
+                    {featured.formatted_date && <span>{featured.formatted_date}</span>}
+                  </div>
+                  <span style={{ fontSize: 13, color: RED, fontWeight: 800, letterSpacing: "0.3px" }}>
+                    READ FULL STORY →
+                  </span>
                 </div>
               </article>
             </Link>
           </div>
         )}
 
-        {/* Story Grid */}
+        {/* ── Card grid ── */}
         {regular && regular.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {regular.map((story) => (
-              <Link to={`/stories/${story.slug}`} key={story.id}>
-                <article className="border border-gray-200 rounded-lg overflow-hidden bg-white h-full hover:shadow-md transition-shadow duration-300 group">
-                  <div className="relative h-48 overflow-hidden bg-gray-100">
-                    <img
-                      src={story.image_url}
-                      alt={story.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                    />
-                    <span className="absolute top-3 left-3 inline-block bg-[#D43028] text-white text-xs font-semibold px-2.5 py-1 rounded">
-                      {story.category}
-                    </span>
-                  </div>
-                  {story.image_attribution && (
-                    <p className="px-5 pt-2 text-[11px] italic text-gray-500">
-                      {story.image_attribution}
-                    </p>
-                  )}
+          <>
+            <div
+              className="es-cards-grid"
+              style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18, marginBottom: 32 }}
+            >
+              {regular.map(story => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
 
-                  <div className={`p-5 ${story.image_attribution ? "pt-3" : ""}`}>
-                    <h3 className="text-lg font-bold mb-2 text-gray-900 line-clamp-2 min-h-[3.5rem] group-hover:text-[#D43028] transition-colors">
-                      {story.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed min-h-[4rem]">
-                      {story.excerpt}
-                    </p>
-
-                    <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100">
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>{story.read_time} min</span>
-                      </div>
-                      <span className="text-[#D43028] font-semibold inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                        Read More
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              </Link>
-            ))}
-          </div>
+            <div style={{ textAlign: "center" }}>
+              <button
+                onClick={() => navigate("/stories/inspire")}
+                style={{
+                  background: NAVY,
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: 5,
+                  padding: "12px 32px",
+                  fontWeight: 800,
+                  fontSize: 13,
+                  letterSpacing: "0.4px",
+                  cursor: "pointer",
+                  transition: "background 0.15s",
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = RED; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = NAVY; }}
+              >
+                EXPLORE MORE STORIES →
+              </button>
+            </div>
+          </>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg border border-gray-200">
-            <p className="text-gray-500 text-sm">No stories found.</p>
+          <div style={{ textAlign: "center", padding: "48px 0", color: "#8896a5", fontSize: 14 }}>
+            No stories found.
           </div>
         )}
 
-        {/* Explore More Button */}
-        <div className="flex justify-center">
-          <Button
-            onClick={() => navigate('/stories/inspire')}
-            className="bg-[#D43028] text-white font-semibold px-4 py-2 text-base rounded-sm hover:bg-[#B52820] transition-colors"
-          >
-            Explore More Inspiring Stories
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </div>
       </div>
     </section>
   );
 };
+
+/* ── Story card ── */
+const StoryCard = ({ story }: { story: Story }) => (
+  <Link to={`/stories/${story.slug}`} style={{ textDecoration: "none", display: "block", height: "100%" }}>
+    <article
+      className="es-card"
+      style={{
+        border: `1px solid ${LINE}`,
+        borderRadius: 10,
+        overflow: "hidden",
+        background: "#fff",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div style={{ height: 180, overflow: "hidden", background: "#dde3eb", flexShrink: 0 }}>
+        <img
+          src={story.image_url}
+          alt={story.title}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          loading="lazy"
+        />
+      </div>
+
+      <div style={{ padding: "16px 18px", flex: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "1px", color: RED, fontWeight: 900, marginBottom: 6 }}>
+          {story.category}
+        </div>
+        <h3 style={{ fontSize: 17, lineHeight: 1.25, color: NAVY, margin: "0 0 8px", fontWeight: 800 }}>
+          {story.title.length > 80 ? story.title.slice(0, 80) + "…" : story.title}
+        </h3>
+        <p style={{ fontSize: 13, color: "#667085", lineHeight: 1.55, margin: "0 0 14px", flex: 1 }}>
+          {story.excerpt.length > 110 ? story.excerpt.slice(0, 110) + "…" : story.excerpt}
+        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11, color: "#8896a5", borderTop: `1px solid ${LINE}`, paddingTop: 10 }}>
+          {story.read_time ? <span>{story.read_time} min read</span> : <span />}
+          <span style={{ color: RED, fontWeight: 800 }}>READ MORE →</span>
+        </div>
+      </div>
+    </article>
+  </Link>
+);
 
 export default Stories;

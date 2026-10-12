@@ -37,8 +37,8 @@ const PrivacyPolicy = () => {
           <p>
             You can request edits or removal of your story, and you can opt out of newsletters at any time.
             For data requests, email{" "}
-            <a href="mailto:info@beyondfinishline.com" className="text-foreground underline">
-              info@beyondfinishline.com
+            <a href="mailto:info@eaglesports.co.ke" className="text-foreground underline">
+              info@eaglesports.co.ke
             </a>.
           </p>
         </section>

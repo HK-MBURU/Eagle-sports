@@ -10,7 +10,7 @@ import type {
   CommentReportPayload
 } from '@/types/story';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://admin.beyondfinishline.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://eaglesports.co.ke/api';
 
 const getAuthToken = () => {
   return localStorage.getItem('auth_token');

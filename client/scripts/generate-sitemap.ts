@@ -7,8 +7,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const API_BASE_URL = 'https://admin.beyondfinishline.com/api';
-const SITE_URL = 'https://beyondfinishline.com';
+const API_BASE_URL = 'https://eaglesports.co.ke/api';
+const SITE_URL = 'https://eaglesports.co.ke';
 
 interface Story {
   id: number;
@@ -184,7 +184,7 @@ function safeArray<T>(data: any): T[] {
 }
 
 async function generateSitemap() {
-  console.log('🚀 Starting sitemap generation for Beyond Finish Line...');
+  console.log('🚀 Starting sitemap generation for Eagle Sports...');
   console.log(`📍 API: ${API_BASE_URL}`);
   console.log(`🌐 Site: ${SITE_URL}`);
   console.log('');

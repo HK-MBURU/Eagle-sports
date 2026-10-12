@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         // Create Admin User
         User::create([
             'name' => 'Admin',
-            'email' => 'admin@beyondfinishline.com',
+            'email' => 'admin@eaglesports.co.ke',
             'password' => Hash::make('12345678'), // Change this to a secure password
             'email_verified_at' => now(),
         ]);

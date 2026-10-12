@@ -56,8 +56,8 @@ const TermsOfService = () => {
           <h2 className="text-xl font-semibold text-foreground">6. Contact</h2>
           <p>
             Questions about these terms? Email us at{" "}
-            <a href="mailto:info@beyondfinishline.com" className="text-foreground underline">
-              info@beyondfinishline.com
+            <a href="mailto:info@eaglesports.co.ke" className="text-foreground underline">
+              info@eaglesports.co.ke
             </a>.
           </p>
         </section>

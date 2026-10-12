@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await fetch('https://admin.beyondfinishline.com/api/auth/login', {
+    const response = await fetch('https://eaglesports.co.ke/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Add register function
   const register = async (name: string, email: string, password: string, password_confirmation: string) => {
-    const response = await fetch('https://admin.beyondfinishline.com/api/auth/register', {
+    const response = await fetch('https://eaglesports.co.ke/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

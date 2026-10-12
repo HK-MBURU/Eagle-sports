@@ -198,7 +198,7 @@
                         <h6 class="text-muted mb-2">Share URL</h6>
                         <div class="input-group">
                             @php
-                                $frontendDomain = env('FRONTEND_DOMAIN', 'https://beyondfinishline.com');
+                                $frontendDomain = env('FRONTEND_DOMAIN', 'https://eaglesports.co.ke');
                                 $shareUrl = "{$frontendDomain}/stories/{$story->slug}";
                             @endphp
                             <input type="text" class="form-control" id="shareUrl"

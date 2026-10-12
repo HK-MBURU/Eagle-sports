@@ -51,7 +51,7 @@ return [
          */
         'defaults' => [
             'card' => 'summary_large_image',
-            'site' => '@beyondfinishline',
+            'site' => '@bfline001',
         ],
     ],
     'json-ld' => [

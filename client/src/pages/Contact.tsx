@@ -9,8 +9,8 @@ import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 const contactOptions = [
   {
     title: "Email",
-    detail: "info@beyondfinishline.com",
-    href: "mailto:info@beyondfinishline.com",
+    detail: "info@eaglesports.co.ke",
+    href: "mailto:info@eaglesports.co.ke",
     icon: Mail,
   },
   {

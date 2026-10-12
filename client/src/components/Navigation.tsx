@@ -1,405 +1,287 @@
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, ChevronRight, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronDown, Search, X } from "lucide-react";
 import { navigationData, NavItem } from "@/data/navigationData";
 import SearchBar from "@/components/SearchBar";
-import { useSearchNavigation } from '@/hooks/useSearchNavigation';
-import { SearchResult } from '@/types/search';
+import { useSearchNavigation } from "@/hooks/useSearchNavigation";
+import { SearchResult } from "@/types/search";
+
+/* ─── Brand colours (matching mockup exactly) ─── */
+const NAVY   = "#10284a";
+const NAVY_DARK = "#091a31";
+const NAVY2  = "#173a67";
+const RED    = "#d62835";
+const INK    = "#172235";
+const MUTED  = "#667085";
+
+/* ─────────────────────────────────────────────── */
 
 const Navigation = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [activeMobileMenu, setActiveMobileMenu] = useState<string[]>([]);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const dropdownTimeoutRef = useRef<NodeJS.Timeout>();
-
-  const eagleLogo = '/images/eagle-sports-logo.png';
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Handle scroll detection
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Lock body scroll and prevent overflow when mobile menu is open
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    } else {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-    };
-  }, [isMobileMenuOpen]);
-
-  const toggleMobileSubmenu = (itemName: string) => {
-    setActiveMobileMenu(prev =>
-      prev.includes(itemName)
-        ? prev.filter(name => name !== itemName)
-        : [...prev, itemName]
-    );
-  };
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-    setActiveMobileMenu([]);
-  };
+  const [mobileOpen, setMobileOpen]           = useState(false);
+  const [openDesktopDD, setOpenDesktopDD]     = useState<string | null>(null);
+  const [openMobileItems, setOpenMobileItems] = useState<string[]>([]);
+  const ddTimer = useRef<NodeJS.Timeout>();
+  const eagleLogo = "/images/eagle-sports-logo.png";
 
   const { handleSearchResultClick } = useSearchNavigation();
-
-  const handleSearchResultSelection = (result: SearchResult) => {
+  const handleSearchResult = (result: SearchResult) => {
     handleSearchResultClick(result);
-    closeMobileMenu();
+    setMobileOpen(false);
   };
 
-  // Improved dropdown handlers with delay
-  const handleDropdownEnter = (itemName: string) => {
-    if (dropdownTimeoutRef.current) {
-      clearTimeout(dropdownTimeoutRef.current);
+  /* lock body scroll when mobile menu open */
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
-    setActiveDropdown(itemName);
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
+  /* desktop dropdown open / close with small hover delay */
+  const ddEnter = (name: string) => {
+    clearTimeout(ddTimer.current);
+    setOpenDesktopDD(name);
+  };
+  const ddLeave = () => {
+    ddTimer.current = setTimeout(() => setOpenDesktopDD(null), 140);
   };
 
-  const handleDropdownLeave = () => {
-    dropdownTimeoutRef.current = setTimeout(() => {
-      setActiveDropdown(null);
-    }, 150); // Small delay to allow moving to dropdown
-  };
-
-  const handleDropdownClick = (itemName: string) => {
-    setActiveDropdown(activeDropdown === itemName ? null : itemName);
-  };
+  const toggleMobileItem = (name: string) =>
+    setOpenMobileItems(prev =>
+      prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]
+    );
 
   return (
     <>
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md border-b transition-colors duration-300"
-        style={{
-          backgroundColor: isScrolled ? 'rgba(247, 249, 253, 0.98)' : 'rgba(247, 249, 253, 0.95)',
-          borderBottomColor: isScrolled ? 'hsl(220 15% 87%)' : 'transparent',
-          transform: 'translateZ(0)',
-          WebkitTransform: 'translateZ(0)'
-        }}
-      >
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <a
-              href="/"
-              className="flex items-center flex-shrink-0 group transition-opacity duration-200 hover:opacity-90"
-            >
-              <img
-                src={eagleLogo}
-                alt="Eagle Sports — Beyond the Finish Line"
-                className="h-10 md:h-12 w-auto transition-transform duration-200 group-hover:scale-105"
-              />
-            </a>
-
-            {/* Desktop Navigation */}
-            <div
-              className="hidden lg:flex items-center space-x-1"
-              ref={dropdownRef}
-              onMouseLeave={handleDropdownLeave}
-            >
-              {navigationData.map((item) => (
-                <DesktopNavItem
-                  key={item.name}
-                  item={item}
-                  activeDropdown={activeDropdown}
-                  onMouseEnter={handleDropdownEnter}
-                  onMouseLeave={handleDropdownLeave}
-                  onClick={handleDropdownClick}
-                />
-              ))}
-            </div>
-
-            {/* Desktop Search Bar - Always Visible */}
-            <div className="hidden lg:flex items-center flex-1 max-w-md ml-8">
-              <SearchBar
-                onResultClick={handleSearchResultSelection}
-                placeholder="Search stories, athletes, events..."
-                variant="desktop"
-              />
-            </div>
-
-            {/* Mobile Search and Menu Button */}
-            <div className="flex lg:hidden items-center space-x-3">
-              {/* Mobile Search - Integrated in Navigation */}
-              <div className="flex-1 max-w-xs">
-                <SearchBar
-                  onResultClick={handleSearchResultSelection}
-                  placeholder="Search..."
-                  variant="mobile"
-                />
-              </div>
-
-              {/* Modern Mobile Menu Button */}
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="relative w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-200 focus:outline-none"
-                style={{
-                  backgroundColor: isMobileMenuOpen ? 'rgba(0, 0, 0, 0.05)' : 'transparent'
-                }}
-                aria-label="Toggle menu"
-                aria-expanded={isMobileMenuOpen}
-              >
-                <div className="w-5 h-4 flex flex-col justify-between">
-                  <span
-                    className={`block h-0.5 w-full bg-gray-700 rounded-full transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-[7px]' : ''
-                      }`}
-                  />
-                  <span
-                    className={`block h-0.5 w-full bg-gray-700 rounded-full transition-all duration-200 ${isMobileMenuOpen ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
-                      }`}
-                  />
-                  <span
-                    className={`block h-0.5 w-full bg-gray-700 rounded-full transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-[7px]' : ''
-                      }`}
-                  />
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Navigation Overlay */}
+      {/* ═══════════════ TOP LINE ═══════════════ */}
       <div
-        className={`fixed inset-0 z-40 lg:hidden transition-all duration-300 ${isMobileMenuOpen ? 'visible' : 'invisible'
-          }`}
+        className="hidden sm:flex justify-between items-center flex-wrap gap-3 text-[11px] font-semibold tracking-wide"
+        style={{ background: NAVY_DARK, color: "#dbe5f2", padding: "7px 5%" }}
       >
-        {/* Backdrop */}
-        <div
-          className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'
-            }`}
-          onClick={closeMobileMenu}
-        />
+        <span>INDEPENDENT ATHLETICS JOURNALISM</span>
+        <span>KENYA · AFRICA · THE WORLD</span>
+        <span className="opacity-80">eaglesports.co.ke</span>
+      </div>
 
-        {/* Mobile Menu Panel - Slides from Right */}
+      {/* ═══════════════ MASTHEAD ═══════════════ */}
+      <div className="bg-white border-b border-gray-100">
         <div
-          className={`fixed top-16 md:top-20 right-0 bottom-0 w-full sm:w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
-          style={{
-            transform: isMobileMenuOpen ? 'translateX(0) translateZ(0)' : 'translateX(100%) translateZ(0)',
-            WebkitTransform: isMobileMenuOpen ? 'translateX(0) translateZ(0)' : 'translateX(100%) translateZ(0)'
-          }}
+          className="flex items-center justify-between gap-5"
+          style={{ width: "min(1180px, 92%)", margin: "0 auto", padding: "14px 0" }}
         >
-          <div className="h-full flex flex-col">
-            {/* Search Bar in Mobile Menu */}
-            <div className="px-4 py-4 border-b border-gray-100">
-              <SearchBar
-                onResultClick={(result) => {
-                  handleSearchResultSelection(result);
-                  closeMobileMenu();
-                }}
-                placeholder="Search stories, athletes..."
-                variant="mobile-menu"
-              />
-            </div>
-
-            {/* Scrollable Menu Items */}
-            <div className="flex-1 overflow-y-auto overscroll-contain">
-              <div className="px-4 py-4 space-y-1">
-                {navigationData.map((item) => (
-                  <MobileNavItem
-                    key={item.name}
-                    item={item}
-                    activeMobileMenu={activeMobileMenu}
-                    toggleMobileSubmenu={toggleMobileSubmenu}
-                    closeMobileMenu={closeMobileMenu}
-                    level={0}
-                  />
-                ))}
+          {/* Brand */}
+          <a href="/" className="flex items-center gap-3" style={{ textDecoration: "none" }} aria-label="Eagle Sports home">
+            <img src={eagleLogo} alt="Eagle Sports" style={{ height: "52px", width: "auto" }} />
+            <div className="hidden sm:block">
+              <div
+                className="font-black leading-none"
+                style={{ fontSize: "27px", letterSpacing: "-1.2px", color: NAVY }}
+              >
+                EAGLE <span style={{ color: RED }}>SPORTS</span>
+              </div>
+              <div
+                className="font-extrabold uppercase"
+                style={{ fontSize: "10px", letterSpacing: "2px", color: NAVY2, marginTop: "6px" }}
+              >
+                Beyond the Finish Line
               </div>
             </div>
+          </a>
+
+          {/* Brand note — desktop only */}
+          <div className="hidden lg:block text-right" style={{ fontSize: "12px", color: MUTED }}>
+            <strong className="block" style={{ color: RED, fontSize: "13px" }}>THE JOURNALISM THAT MATTERS</strong>
+            Stories. Results. People.
           </div>
         </div>
       </div>
+
+      {/* ═══════════════ STICKY NAV SHELL ═══════════════ */}
+      <div
+        className="sticky top-0 z-50"
+        style={{ background: NAVY, boxShadow: "0 4px 16px rgba(16,40,74,0.22)" }}
+      >
+        <div style={{ width: "min(1180px, 92%)", margin: "0 auto" }}>
+
+          {/* ── Desktop nav ── */}
+          <nav
+            className="hidden md:flex items-center"
+            style={{ minHeight: "51px" }}
+            aria-label="Main navigation"
+          >
+            {navigationData.map(item => (
+              <DesktopItem
+                key={item.name}
+                item={item}
+                open={openDesktopDD === item.name}
+                onEnter={() => ddEnter(item.name)}
+                onLeave={ddLeave}
+              />
+            ))}
+
+            {/* Search — right side */}
+            <div className="ml-auto pl-4 flex items-center">
+              <SearchBar
+                onResultClick={handleSearchResult}
+                placeholder="Search…"
+                variant="desktop"
+              />
+            </div>
+          </nav>
+
+          {/* ── Mobile bar (logo + hamburger) ── */}
+          <div className="flex md:hidden items-center justify-between" style={{ minHeight: "51px" }}>
+            <a href="/" className="flex items-center gap-2" style={{ textDecoration: "none" }}>
+              <img src={eagleLogo} alt="Eagle Sports" style={{ height: "34px", width: "auto" }} />
+              <span className="font-black" style={{ fontSize: "17px", color: "#fff", letterSpacing: "-0.5px" }}>
+                EAGLE <span style={{ color: RED }}>SPORTS</span>
+              </span>
+            </a>
+            <button
+              onClick={() => setMobileOpen(v => !v)}
+              className="flex items-center gap-2 font-bold text-white text-sm px-3 py-2"
+              style={{ background: RED, border: "none", cursor: "pointer" }}
+              aria-expanded={mobileOpen}
+              aria-label="Toggle navigation"
+            >
+              {mobileOpen ? <X size={16} /> : "☰"} MENU
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══════════════ MOBILE FULL-SCREEN MENU ═══════════════ */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 overflow-y-auto"
+          style={{ background: "#fff", top: 0, paddingTop: "51px" }}
+        >
+          {/* Sticky close bar */}
+          <div
+            className="sticky top-0 flex items-center justify-between px-4 py-3"
+            style={{ background: NAVY, zIndex: 10 }}
+          >
+            <a href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+              <img src={eagleLogo} alt="" style={{ height: "30px" }} />
+              <span className="font-black text-white text-base" style={{ letterSpacing: "-0.5px" }}>
+                EAGLE <span style={{ color: RED }}>SPORTS</span>
+              </span>
+            </a>
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="text-white p-2"
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+              aria-label="Close menu"
+            >
+              <X size={22} />
+            </button>
+          </div>
+
+          {/* Search in mobile menu */}
+          <div className="px-4 py-3 border-b border-gray-100">
+            <SearchBar
+              onResultClick={result => { handleSearchResult(result); setMobileOpen(false); }}
+              placeholder="Search stories, athletes, events…"
+              variant="mobile-menu"
+            />
+          </div>
+
+          {/* Nav items */}
+          <div className="px-2 py-3">
+            {navigationData.map(item => (
+              <MobileItem
+                key={item.name}
+                item={item}
+                openItems={openMobileItems}
+                toggle={toggleMobileItem}
+                close={() => setMobileOpen(false)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
 
-
-// Desktop Navigation Item Component
-interface DesktopNavItemProps {
+/* ═══════════════════════════════════════════════
+   DESKTOP NAV ITEM
+════════════════════════════════════════════════ */
+const DesktopItem = ({
+  item,
+  open,
+  onEnter,
+  onLeave,
+}: {
   item: NavItem;
-  activeDropdown: string | null;
-  onMouseEnter: (name: string) => void;
-  onMouseLeave: () => void;
-  onClick: (name: string) => void;
-}
-
-const DesktopNavItem = ({ item, activeDropdown, onMouseEnter, onMouseLeave, onClick }: DesktopNavItemProps) => {
+  open: boolean;
+  onEnter: () => void;
+  onLeave: () => void;
+}) => {
   const hasChildren = item.children && item.children.length > 0;
-  const isActive = activeDropdown === item.name;
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [dropdownPosition, setDropdownPosition] = useState<'left' | 'right'>('left');
 
-  useEffect(() => {
-    if (isActive && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const dropdownWidth = 256;
+  const linkStyle: React.CSSProperties = {
+    display: "block",
+    padding: "15px 11px",
+    fontSize: "13px",
+    fontWeight: 700,
+    whiteSpace: "nowrap",
+    color: "white",
+    background: open ? RED : "none",
+    border: "none",
+    cursor: "pointer",
+    textDecoration: "none",
+    fontFamily: "inherit",
+    transition: "background 0.12s",
+  };
 
-      if (rect.left + dropdownWidth > viewportWidth - 20) {
-        setDropdownPosition('right');
-      } else {
-        setDropdownPosition('left');
-      }
-    }
-  }, [isActive]);
+  const hoverStyle: React.CSSProperties = { background: RED };
 
   if (!hasChildren) {
     return (
       <a
-        href={item.href || "#"}
-        className="block px-4 py-2 text-gray-700 hover:text-accent-orange font-medium rounded-lg hover:bg-gray-50/80 transition-all duration-200 text-[15px]"
+        href={item.href || "/"}
+        style={linkStyle}
+        onMouseEnter={e => Object.assign((e.currentTarget as HTMLElement).style, hoverStyle)}
+        onMouseLeave={e => Object.assign((e.currentTarget as HTMLElement).style, { background: "none" })}
       >
-        {item.name}
-      </a>
-    );
-  }
-
-  return (
-    <div className="relative">
-      <button
-        ref={buttonRef}
-        className="flex items-center gap-1.5 px-4 py-2 text-gray-700 hover:text-accent-orange font-medium rounded-lg hover:bg-gray-50/80 transition-all duration-200 text-[15px]"
-        onMouseEnter={() => onMouseEnter(item.name)}
-        onMouseLeave={onMouseLeave}
-        onClick={() => onClick(item.name)}
-      >
-        {item.name}
-        <ChevronDown
-          size={16}
-          className={`transition-transform duration-200 ${isActive ? 'rotate-180' : ''}`}
-        />
-      </button>
-
-      {/* Dropdown Menu */}
-      {isActive && (
-        <div
-          className={`absolute top-full mt-1 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 ${dropdownPosition === 'right' ? 'right-0' : 'left-0'
-            }`}
-          onMouseEnter={() => onMouseEnter(item.name)}
-          onMouseLeave={onMouseLeave}
-        >
-          {item.children?.map((child) => (
-            <DropdownItem
-              key={child.name}
-              item={child}
-              onClose={() => onClick(item.name)}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Dropdown Item Component
-interface DropdownItemProps {
-  item: NavItem;
-  onClose: () => void;
-}
-
-const DropdownItem = ({ item, onClose }: DropdownItemProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const hasChildren = item.children && item.children.length > 0;
-  const itemRef = useRef<HTMLDivElement>(null);
-  const [nestedPosition, setNestedPosition] = useState<'right' | 'left'>('right');
-  const nestedTimeoutRef = useRef<NodeJS.Timeout>();
-
-  useEffect(() => {
-    if (isHovered && itemRef.current && hasChildren) {
-      const rect = itemRef.current.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const nestedWidth = 224;
-
-      if (rect.right + nestedWidth > viewportWidth - 20) {
-        setNestedPosition('left');
-      } else {
-        setNestedPosition('right');
-      }
-    }
-  }, [isHovered, hasChildren]);
-
-  const handleMouseEnter = () => {
-    if (nestedTimeoutRef.current) {
-      clearTimeout(nestedTimeoutRef.current);
-    }
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    nestedTimeoutRef.current = setTimeout(() => {
-      setIsHovered(false);
-    }, 150);
-  };
-
-  if (!hasChildren) {
-    return (
-      <a
-        href={item.href || "#"}
-        className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-accent-orange/5 hover:text-accent-orange transition-colors font-medium"
-        onClick={onClose}
-      >
-        {item.name}
+        {item.name.toUpperCase()}
       </a>
     );
   }
 
   return (
     <div
-      ref={itemRef}
       className="relative"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
     >
-      <button className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:bg-accent-orange/5 hover:text-accent-orange transition-colors font-medium">
-        <span>{item.name}</span>
-        <ChevronRight size={14} className={nestedPosition === 'left' ? 'rotate-180' : ''} />
+      <button
+        style={{ ...linkStyle, display: "flex", alignItems: "center", gap: "5px" }}
+        onMouseEnter={e => Object.assign((e.currentTarget as HTMLElement).style, { background: RED })}
+        onMouseLeave={e => !open && Object.assign((e.currentTarget as HTMLElement).style, { background: "none" })}
+      >
+        {item.name.toUpperCase()}
+        <ChevronDown size={13} style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "none" }} />
       </button>
 
-      {isHovered && (
+      {open && (
         <div
-          className={`absolute top-0 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 ${nestedPosition === 'right' ? 'left-full ml-1' : 'right-full mr-1'
-            }`}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          className="absolute top-full left-0 z-50 overflow-y-auto"
+          style={{
+            minWidth: "230px",
+            maxWidth: "280px",
+            maxHeight: "75vh",
+            background: "white",
+            color: INK,
+            boxShadow: "0 12px 28px rgba(7,23,43,0.18)",
+            borderTop: `3px solid ${RED}`,
+            padding: "8px 0",
+          }}
         >
-          {item.children?.map((subChild) => (
-            <a
-              key={subChild.name}
-              href={subChild.href || "#"}
-              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-accent-orange/5 hover:text-accent-orange transition-colors"
-              onClick={onClose}
-            >
-              {subChild.name}
-            </a>
+          {item.children!.map(child => (
+            <DropdownItem key={child.name} item={child} />
           ))}
         </div>
       )}
@@ -407,33 +289,79 @@ const DropdownItem = ({ item, onClose }: DropdownItemProps) => {
   );
 };
 
-// Mobile Navigation Item Component
-interface MobileNavItemProps {
-  item: NavItem;
-  activeMobileMenu: string[];
-  toggleMobileSubmenu: (name: string) => void;
-  closeMobileMenu: () => void;
-  level: number;
-}
+/* ═══════════════════════════════════════════════
+   DROPDOWN ITEM
+════════════════════════════════════════════════ */
+const DropdownItem = ({ item }: { item: NavItem }) => {
+  if (item.isGroupLabel) {
+    return (
+      <div
+        style={{
+          padding: "9px 16px 5px",
+          fontSize: "10px",
+          letterSpacing: "1.1px",
+          textTransform: "uppercase",
+          color: RED,
+          fontWeight: 900,
+        }}
+      >
+        {item.name}
+      </div>
+    );
+  }
 
-const MobileNavItem = ({
+  const [hovered, setHovered] = useState(false);
+  return (
+    <a
+      href={item.href || "#"}
+      style={{
+        display: "block",
+        padding: "9px 16px",
+        fontSize: "13px",
+        fontWeight: 600,
+        color: hovered ? "white" : INK,
+        background: hovered ? RED : "transparent",
+        textDecoration: "none",
+        transition: "background 0.1s, color 0.1s",
+        whiteSpace: "normal",
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {item.name}
+    </a>
+  );
+};
+
+/* ═══════════════════════════════════════════════
+   MOBILE NAV ITEM
+════════════════════════════════════════════════ */
+const MobileItem = ({
   item,
-  activeMobileMenu,
-  toggleMobileSubmenu,
-  closeMobileMenu,
-  level
-}: MobileNavItemProps) => {
+  openItems,
+  toggle,
+  close,
+  level = 0,
+}: {
+  item: NavItem;
+  openItems: string[];
+  toggle: (name: string) => void;
+  close: () => void;
+  level?: number;
+}) => {
+  if (item.isGroupLabel) return null;
+
   const hasChildren = item.children && item.children.length > 0;
-  const isActive = activeMobileMenu.includes(item.name);
-  const paddingLeft = level * 12 + 12;
+  const isOpen = openItems.includes(item.name);
+  const pl = 16 + level * 16;
 
   if (!hasChildren) {
     return (
       <a
         href={item.href || "#"}
-        onClick={closeMobileMenu}
-        className="block py-3 px-3 text-gray-700 hover:text-accent-orange hover:bg-accent-orange/5 rounded-lg transition-all duration-150 font-medium text-[15px]"
-        style={{ paddingLeft: `${paddingLeft}px` }}
+        onClick={close}
+        className="block py-3 font-semibold border-b border-gray-50"
+        style={{ paddingLeft: pl, paddingRight: 16, fontSize: "15px", color: INK, textDecoration: "none" }}
       >
         {item.name}
       </a>
@@ -441,39 +369,38 @@ const MobileNavItem = ({
   }
 
   return (
-    <div className="overflow-hidden">
+    <div>
       <button
-        onClick={() => toggleMobileSubmenu(item.name)}
-        className="w-full flex items-center justify-between py-3 px-3 text-gray-700 hover:text-accent-orange hover:bg-accent-orange/5 rounded-lg transition-all duration-150 font-medium text-[15px]"
-        style={{ paddingLeft: `${paddingLeft}px` }}
+        onClick={() => toggle(item.name)}
+        className="w-full flex items-center justify-between py-3 font-semibold border-b border-gray-100"
+        style={{ paddingLeft: pl, paddingRight: 16, fontSize: "15px", color: INK, background: "none", border: "none", borderBottom: "1px solid #f3f4f6", cursor: "pointer", width: "100%", textAlign: "left" }}
       >
-        <span>{item.name}
-        </span>
+        {item.name}
         <ChevronDown
           size={18}
-          className={`flex-shrink-0 transition-transform duration-300 ${isActive ? 'rotate-180 text-accent-orange' : 'text-gray-400'
-            }`}
+          style={{
+            transition: "transform 0.25s",
+            transform: isOpen ? "rotate(180deg)" : "none",
+            color: isOpen ? RED : "#9ca3af",
+            flexShrink: 0,
+          }}
         />
       </button>
 
-      {/* Submenu with smooth animation */}
-      <div
-        className={`transition-all duration-300 ease-in-out ${isActive ? 'max-h-[1000px] opacity-100 mt-0.5' : 'max-h-0 opacity-0'
-          }`}
-      >
-        <div className="space-y-0.5">
-          {item.children?.map((child) => (
-            <MobileNavItem
+      {isOpen && (
+        <div style={{ background: "#f9fafb", borderBottom: "1px solid #e5e7eb" }}>
+          {item.children!.map(child => (
+            <MobileItem
               key={child.name}
               item={child}
-              activeMobileMenu={activeMobileMenu}
-              toggleMobileSubmenu={toggleMobileSubmenu}
-              closeMobileMenu={closeMobileMenu}
+              openItems={openItems}
+              toggle={toggle}
+              close={close}
               level={level + 1}
             />
           ))}
         </div>
-      </div>
+      )}
     </div>
   );
 };

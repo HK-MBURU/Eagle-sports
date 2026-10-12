@@ -10,9 +10,9 @@ const Footer = () => {
     "name": "Eagle Sports",
     "alternateName": "Eagle Sports — Beyond the Finish Line",
     "description": "Celebrating Kenyan athletes' journeys beyond competition, inspiring the next generation through stories of resilience, leadership, and community impact.",
-    "url": "https://eaglesports.beyondfinishline.com",
-    "logo": "https://eaglesports.beyondfinishline.com/images/eagle-sports-logo.png",
-    "email": "info@beyondfinishline.com",
+    "url": "https://eaglesports.co.ke",
+    "logo": "https://eaglesports.co.ke/images/eagle-sports-logo.png",
+    "email": "info@eaglesports.co.ke",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Nairobi",
@@ -120,7 +120,7 @@ const Footer = () => {
                 <Twitter size={20} className="group-hover:text-accent-gold-foreground" />
               </a>
               <a
-                href="https://instagram.com/beyondfinishline"
+                href="https://instagram.com/eaglesports.ke"
                 className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-accent-gold flex items-center justify-center transition-colors group"
                 aria-label="Follow us on Instagram"
                 rel="noopener noreferrer"
@@ -218,11 +218,11 @@ const Footer = () => {
               <div>
                 <div className="font-semibold mb-1">Email Us</div>
                 <a 
-                  href="mailto:info@beyondfinishline.com" 
+                  href="mailto:info@eaglesports.co.ke" 
                   className="text-sm text-primary-foreground/80 hover:text-accent-gold transition-colors"
-                  aria-label="Send email to info@beyondfinishline.com"
+                  aria-label="Send email to info@eaglesports.co.ke"
                 >
-                  info@beyondfinishline.com
+                  info@eaglesports.co.ke
                 </a>
               </div>
             </div>

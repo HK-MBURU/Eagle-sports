@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { WomenRunningEntry, ApiResponse, PaginatedResponse } from '@/types/womenRunning';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://admin.beyondfinishline.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://eaglesports.co.ke/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

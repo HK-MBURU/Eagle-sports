@@ -116,7 +116,7 @@ class MetaTagController extends Controller
      */
     private function getFrontendStoryUrl(string $slug): string
     {
-        $frontendDomain = config('app.frontend_url', env('FRONTEND_DOMAIN', 'https://beyondfinishline.com'));
+        $frontendDomain = config('app.frontend_url', env('FRONTEND_DOMAIN', 'https://eaglesports.co.ke'));
         return rtrim($frontendDomain, '/') . "/stories/{$slug}";
     }
 
@@ -130,8 +130,8 @@ class MetaTagController extends Controller
         $image = $this->absoluteUrl(env('DEFAULT_OG_IMAGE', url('/images/default-story.jpg')));
 
         return response()->view('meta-tags.fallback', [
-            'title' => 'Beyond the Finish Line',
-            'description' => 'Read inspiring athlete stories on Beyond the Finish Line.',
+            'title' => 'Eagle Sports',
+            'description' => 'Read inspiring athlete stories on Eagle Sports.',
             'image' => $image,
             'url' => $url,
         ])->header('Content-Type', 'text/html; charset=utf-8');

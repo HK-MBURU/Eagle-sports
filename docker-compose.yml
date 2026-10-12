@@ -33,11 +33,11 @@ services:
       APP_ENV: production
       APP_KEY: ${APP_KEY}
       APP_DEBUG: "false"
-      APP_URL: https://eaglesports.beyondfinishline.com
-      FRONTEND_URL: https://eaglesports.beyondfinishline.com
-      APP_FRONTEND_URL: https://eaglesports.beyondfinishline.com
-      APP_CLIENT_URL: https://eaglesports.beyondfinishline.com
-      FRONTEND_DOMAIN: https://eaglesports.beyondfinishline.com
+      APP_URL: https://eaglesports.co.ke
+      FRONTEND_URL: https://eaglesports.co.ke
+      APP_FRONTEND_URL: https://eaglesports.co.ke
+      APP_CLIENT_URL: https://eaglesports.co.ke
+      FRONTEND_DOMAIN: https://eaglesports.co.ke
 
       DB_CONNECTION: mysql
       DB_HOST: mysql
@@ -74,8 +74,8 @@ services:
       context: ./client
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: https://eaglesports.beyondfinishline.com/api
-        VITE_SITE_URL: https://eaglesports.beyondfinishline.com
+        VITE_API_URL: https://eaglesports.co.ke/api
+        VITE_SITE_URL: https://eaglesports.co.ke
     restart: unless-stopped
     ports:
       - "127.0.0.1:8121:80"

@@ -75,7 +75,7 @@ const StorySEO = ({ story }: StorySEOProps) => {
       <meta property="og:image" content={image} />
       <meta property="og:url" content={url} />
       <meta property="og:type" content="article" />
-      <meta property="og:site_name" content="Beyond the Finish Line" />
+      <meta property="og:site_name" content="Eagle Sports" />
       
       {/* Article Specific OG Tags */}
       <meta property="article:published_time" content={story.published_date} />
@@ -88,7 +88,7 @@ const StorySEO = ({ story }: StorySEOProps) => {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
-      <meta name="twitter:creator" content="@beyondfinishline" />
+      <meta name="twitter:creator" content="@bfline001" />
       
       {/* Canonical URL */}
       <link rel="canonical" href={canonicalUrl} />
@@ -107,10 +107,10 @@ const StorySEO = ({ story }: StorySEOProps) => {
           },
           "publisher": {
             "@type": "Organization",
-            "name": "Beyond the Finish Line",
+            "name": "Eagle Sports",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://beyondfinishline.com/logo.png"
+              "url": "https://eaglesports.co.ke/images/eagle-sports-logo.png"
             }
           },
           "datePublished": story.published_date,
