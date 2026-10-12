@@ -66,7 +66,6 @@ class StoryController extends Controller
                     'title' => $story->title,
                     'slug' => $story->slug,
                     'excerpt' => $story->excerpt,
-                    'content' => $story->content,
                     'image_url' => $story->image_url,
                     'image_attribution' => $story->image_attribution,
                     'category' => $story->category,
@@ -77,16 +76,13 @@ class StoryController extends Controller
                     'formatted_date' => $story->formatted_date,
                     'likes_count' => $story->likes()->count(),
                     'is_liked' => $user ? $story->isLikedBy($user) : false,
-                    // SEO fields
                     'meta_title' => $story->meta_title,
                     'meta_description' => $story->meta_description,
                     'meta_keywords' => $story->meta_keywords,
                     'og_image_url' => $story->og_image_url,
-                    // Media field
                     'youtube_url' => $story->youtube_url,
                     'youtube_embed_url' => $story->youtube_embed_url,
                     'youtube_video_id' => $story->youtube_video_id,
-                    // Social media hashtags
                     'hashtags' => $story->hashtags,
                     'hashtags_array' => $story->hashtags_array,
                     'formatted_hashtags' => $story->formatted_hashtags,
