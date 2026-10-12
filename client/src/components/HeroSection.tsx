@@ -127,10 +127,6 @@ const HeroSection = () => {
                   {main.title}
                 </h1>
 
-                <p style={{ color: "#e5ebf4", maxWidth: "540px", margin: "0 0 18px", fontSize: "15px", lineHeight: 1.5 }}>
-                  {main.excerpt.length > 160 ? main.excerpt.slice(0, 160) + "…" : main.excerpt}
-                </p>
-
                 <span
                   style={{
                     display: "inline-block",
