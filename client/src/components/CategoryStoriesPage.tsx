@@ -1,28 +1,19 @@
 // src/components/CategoryStoriesPage.tsx
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PageTemplate from "@/components/PageTemplate";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { storiesAPI } from "@/services/api";
 import type { Story, StoriesResponse } from "@/types/story";
 import { useStories } from "@/contexts/StoriesContext";
-import { 
-  Search, 
-  Loader2, 
-  ArrowRight, 
-  ChevronLeft, 
-  ChevronRight, 
-  Clock,
-  User,
-  Heart,
-  BookOpen,
-  Filter,
-  X
+import {
+  Search, Loader2, ArrowRight,
+  Clock, User, Heart, BookOpen, X,
 } from "lucide-react";
+
+const RED = "#d62835";
 
 interface CategoryStoriesPageProps {
   defaultCategory?: string;
@@ -31,124 +22,164 @@ interface CategoryStoriesPageProps {
   showAllCategories?: boolean;
 }
 
-const CategoryStoriesPage = ({ 
-  defaultCategory, 
+const PER_PAGE = 12;
+
+const CategoryStoriesPage = ({
+  defaultCategory,
   title,
   description,
-  showAllCategories = false 
+  showAllCategories = false,
 }: CategoryStoriesPageProps) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { categories: allCategories } = useStories();
-  
-  const [stories, setStories] = useState<Story[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || "");
-  const [selectedCategory, setSelectedCategory] = useState(
-    searchParams.get('category') || defaultCategory || "All"
-  );
-  const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get('page') || '1')
-  );
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalStories, setTotalStories] = useState(0);
 
-  // Determine which categories to show
-  const categoriesToShow = showAllCategories 
+  const [stories, setStories]           = useState<Story[]>([]);
+  const [loading, setLoading]           = useState(true);   // initial / filter-change load
+  const [loadingMore, setLoadingMore]   = useState(false);  // appending pages
+  const [hasMore, setHasMore]           = useState(false);
+  const [totalStories, setTotalStories] = useState(0);
+  const [error, setError]               = useState<string | null>(null);
+
+  const [searchQuery, setSearchQuery]       = useState(searchParams.get("search") || "");
+  const [selectedCategory, setSelectedCategory] = useState(
+    searchParams.get("category") || defaultCategory || "All"
+  );
+
+  // Track current page in a ref so the IntersectionObserver closure stays fresh
+  const pageRef    = useRef(1);
+  const hasMoreRef = useRef(false);
+  const busyRef    = useRef(false);   // prevents concurrent fetches
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const categoriesToShow = showAllCategories
     ? ["All", ...allCategories]
-    : defaultCategory 
+    : defaultCategory
     ? [defaultCategory]
     : ["All", ...allCategories];
 
-  useEffect(() => {
-    fetchStories();
-  }, [currentPage, selectedCategory]);
+  /* ─────────────────────────────────────────
+     Core fetch — append=false resets the list
+  ───────────────────────────────────────── */
+  const fetchPage = useCallback(
+    async (pageNum: number, append: boolean) => {
+      if (busyRef.current) return;
+      busyRef.current = true;
 
+      try {
+        if (append) setLoadingMore(true);
+        else         setLoading(true);
+        setError(null);
+
+        const cat = selectedCategory === "All" ? undefined : selectedCategory;
+        const response: StoriesResponse = await storiesAPI.getStories({
+          category:  cat,
+          search:    searchQuery || undefined,
+          per_page:  PER_PAGE,
+          page:      pageNum,
+        });
+
+        if (response.success) {
+          const newStories = response.data;
+          const lastPage   = response.meta.last_page;
+
+          setStories((prev) => append ? [...prev, ...newStories] : newStories);
+          setTotalStories(response.meta.total);
+
+          const more = pageNum < lastPage;
+          setHasMore(more);
+          hasMoreRef.current = more;
+          pageRef.current    = pageNum;
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load stories");
+      } finally {
+        if (append) setLoadingMore(false);
+        else         setLoading(false);
+        busyRef.current = false;
+      }
+    },
+    [selectedCategory, searchQuery]
+  );
+
+  /* ── Reset + initial fetch when filters change ── */
   useEffect(() => {
-    // Update URL params when filters change
+    pageRef.current    = 1;
+    hasMoreRef.current = false;
+    setStories([]);
+    setHasMore(false);
+    fetchPage(1, false);
+  }, [selectedCategory, searchQuery, fetchPage]);   // eslint-disable-line
+
+  /* ── Update URL params ── */
+  useEffect(() => {
     const params: Record<string, string> = {};
     if (selectedCategory && selectedCategory !== "All") params.category = selectedCategory;
     if (searchQuery) params.search = searchQuery;
-    if (currentPage > 1) params.page = currentPage.toString();
-    setSearchParams(params);
-  }, [selectedCategory, searchQuery, currentPage]);
+    setSearchParams(params, { replace: true });
+  }, [selectedCategory, searchQuery]); // eslint-disable-line
 
-  const fetchStories = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  /* ── IntersectionObserver sentinel ── */
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
 
-      const categoryParam = selectedCategory === "All" ? undefined : selectedCategory;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          hasMoreRef.current &&
+          !busyRef.current
+        ) {
+          fetchPage(pageRef.current + 1, true);
+        }
+      },
+      { rootMargin: "200px" }   // start loading 200px before hitting bottom
+    );
 
-      const response: StoriesResponse = await storiesAPI.getStories({
-        category: categoryParam,
-        search: searchQuery || undefined,
-        per_page: 12,
-        page: currentPage,
-      });
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [fetchPage]);
 
-      if (response.success) {
-        setStories(response.data);
-        setTotalPages(response.meta.last_page);
-        setTotalStories(response.meta.total);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load stories");
-      console.error("Error fetching stories:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  /* ── Handlers ── */
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentPage(1);
-    fetchStories();
+    // searchQuery state already set; useEffect above will fire
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
   };
 
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedCategory(defaultCategory || "All");
-    setCurrentPage(1);
   };
 
-  // Auto-generate title and description if not provided
-  const pageTitle = title || (
-    defaultCategory && defaultCategory !== "All" 
-      ? `${defaultCategory} Stories` 
-      : "All Stories"
-  );
+  const pageTitle = title || (defaultCategory && defaultCategory !== "All"
+    ? `${defaultCategory} Stories`
+    : "All Stories");
 
-  const pageDescription = description || (
-    defaultCategory && defaultCategory !== "All"
-      ? `Explore inspiring ${defaultCategory.toLowerCase()} stories from athletes and the community.`
-      : "Discover inspiring stories from athletes, communities, and changemakers in athletics."
-  );
+  const pageDescription = description || (defaultCategory && defaultCategory !== "All"
+    ? `Explore inspiring ${defaultCategory.toLowerCase()} stories.`
+    : "Discover inspiring stories from athletes and the community.");
 
-  const hasActiveFilters = searchQuery || (selectedCategory !== "All" && selectedCategory !== defaultCategory);
+  const hasActiveFilters = searchQuery ||
+    (selectedCategory !== "All" && selectedCategory !== defaultCategory);
 
   return (
     <PageTemplate title={pageTitle} description={pageDescription}>
       <div className="max-w-7xl mx-auto">
-        {/* Search Bar */}
+
+        {/* Search */}
         <div className="mb-6">
           <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
               <Input
                 type="text"
-                placeholder={`Search ${defaultCategory ? defaultCategory.toLowerCase() : ''} stories...`}
+                placeholder={`Search ${defaultCategory ? defaultCategory.toLowerCase() : ""} stories...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-12 pr-24 py-6 text-base border border-gray-300"
@@ -156,11 +187,8 @@ const CategoryStoriesPage = ({
               {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setCurrentPage(1);
-                  }}
-                  className="absolute right-20 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-20 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
                   <X size={18} />
                 </button>
@@ -168,7 +196,8 @@ const CategoryStoriesPage = ({
               <Button
                 type="submit"
                 size="sm"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#D43028] text-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-white"
+                style={{ background: RED }}
               >
                 Search
               </Button>
@@ -176,250 +205,236 @@ const CategoryStoriesPage = ({
           </form>
         </div>
 
-        {/* Category Filter - Only show if multiple categories available */}
+        {/* Category filter */}
         {categoriesToShow.length > 1 && (
-          <div className="mb-6">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Filter size={18} className="text-gray-600" />
-              <span className="text-sm font-medium text-gray-600">Filter by category:</span>
-            </div>
-            <div className="flex flex-wrap justify-center gap-2">
-              {categoriesToShow.map((category) => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleCategoryChange(category)}
-                  disabled={loading}
-                  className={
-                    selectedCategory === category
-                      ? "bg-[#D43028] text-white border-0"
-                      : "bg-white text-gray-700 border border-gray-300 hover:border-[#D43028]"
-                  }
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
+          <div className="mb-6 flex flex-wrap justify-center gap-2">
+            {categoriesToShow.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleCategoryChange(cat)}
+                disabled={loading}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: 20,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  border: `1px solid ${selectedCategory === cat ? RED : "#d1d5db"}`,
+                  background: selectedCategory === cat ? RED : "#fff",
+                  color: selectedCategory === cat ? "#fff" : "#374151",
+                  cursor: "pointer",
+                  transition: "all .15s",
+                }}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
         )}
 
-        {/* Active Filters & Results Count */}
+        {/* Count + clear */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <BookOpen size={18} className="text-[#D43028]" />
+            <BookOpen size={16} style={{ color: RED }} />
             {!loading && (
               <span>
-                Showing <span className="font-bold text-[#D43028]">{stories.length}</span> of{" "}
-                <span className="font-bold text-[#D43028]">{totalStories}</span> {totalStories === 1 ? 'story' : 'stories'}
+                <span style={{ color: RED, fontWeight: 700 }}>{stories.length}</span>
+                {" "}of{" "}
+                <span style={{ color: RED, fontWeight: 700 }}>{totalStories}</span>
+                {" "}{totalStories === 1 ? "story" : "stories"}
               </span>
             )}
           </div>
-
           {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={clearFilters}
-              className="text-gray-600 hover:text-[#D43028]"
+              style={{ background: "none", border: "none", cursor: "pointer", color: "#6b7280", fontSize: 13, display: "flex", alignItems: "center", gap: 4 }}
             >
-              <X size={16} className="mr-1" />
-              Clear filters
-            </Button>
+              <X size={14} /> Clear filters
+            </button>
           )}
         </div>
 
-        {/* Loading State */}
+        {/* Initial loading */}
         {loading && (
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
-              <Loader2 className="w-12 h-12 animate-spin text-[#D43028] mx-auto mb-4" />
-              <p className="text-gray-600">Loading stories...</p>
+              <Loader2 className="w-10 h-10 animate-spin mx-auto mb-3" style={{ color: RED }} />
+              <p className="text-gray-500 text-sm">Loading stories...</p>
             </div>
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {error && !loading && (
-          <div className="text-center py-12 bg-red-50 rounded-lg border border-red-200">
-            <p className="text-red-600 mb-4 font-medium">{error}</p>
-            <Button onClick={fetchStories} className="bg-[#D43028] text-white hover:bg-[#B52820]">
+          <div className="text-center py-10 bg-red-50 rounded-lg border border-red-200">
+            <p className="text-red-600 mb-4 font-medium text-sm">{error}</p>
+            <Button onClick={() => fetchPage(1, false)} style={{ background: RED, color: "#fff" }}>
               Try Again
             </Button>
           </div>
         )}
 
-        {/* Stories Grid */}
+        {/* Stories grid */}
         {!loading && !error && stories.length > 0 && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {stories.map((story) => (
-                <Card
-                  key={story.id}
-                  className="group overflow-hidden border border-gray-200 bg-white hover:shadow-xl transition-all duration-300 cursor-pointer"
-                  onClick={() => navigate(`/stories/${story.slug}`)}
-                >
-                  {/* Image Container */}
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={story.image_url}
-                      alt={story.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {stories.map((story) => (
+              <div
+                key={story.id}
+                onClick={() => navigate(`/stories/${story.slug}`)}
+                className="story-card"
+                style={{
+                  border: "1px solid #e5e7eb",
+                  borderRadius: 10,
+                  overflow: "hidden",
+                  background: "#fff",
+                  cursor: "pointer",
+                  transition: "border-color .15s",
+                }}
+              >
+                {/* Image */}
+                <div style={{ position: "relative", height: 210, overflow: "hidden" }}>
+                  <img
+                    src={story.image_url}
+                    alt={story.title}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                  />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.35) 50%, transparent 100%)" }} />
 
-                    {/* Category Badge */}
-                    <Badge className="absolute top-3 left-3 bg-[#D43028] text-white border-0 text-xs">
-                      {story.category}
-                    </Badge>
+                  {/* Category badge */}
+                  <span style={{
+                    position: "absolute", top: 10, left: 10,
+                    background: RED, color: "#fff",
+                    padding: "3px 9px", borderRadius: 20,
+                    fontSize: 10, fontWeight: 800, letterSpacing: ".3px",
+                  }}>
+                    {story.category}
+                  </span>
 
-                    {/* Featured Badge */}
-                    {story.is_featured && (
-                      <Badge className="absolute top-3 right-3 bg-[#FFBF00] text-gray-900 border-0 text-xs">
-                        ⭐ Featured
-                      </Badge>
-                    )}
-
-                    {/* Title Overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="text-lg font-bold text-white line-clamp-2 group-hover:text-[#FFBF00] transition-colors">
-                        {story.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {story.image_attribution && (
-                    <p className="px-5 pt-2 text-[11px] italic text-gray-500">
-                      {story.image_attribution}
-                    </p>
+                  {/* Featured badge */}
+                  {story.is_featured && (
+                    <span style={{
+                      position: "absolute", top: 10, right: 10,
+                      background: "#f0b429", color: "#1a1a1a",
+                      padding: "3px 9px", borderRadius: 20,
+                      fontSize: 10, fontWeight: 800,
+                    }}>
+                      ⭐ Featured
+                    </span>
                   )}
 
-                  {/* Content */}
-                  <CardContent className={`p-5 ${story.image_attribution ? "pt-3" : ""}`}>
-                    {/* Excerpt */}
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
-                      {story.excerpt}
-                    </p>
-
-                    {/* Meta Info */}
-                    <div className="flex items-center justify-between text-xs text-gray-500 mb-4 pb-4 border-b border-gray-100">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-1">
-                          <User size={14} className="text-[#D43028]" />
-                          <span className="font-medium">{story.author_name}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock size={14} className="text-[#D43028]" />
-                          <span>{story.read_time} min</span>
-                        </div>
-                      </div>
-                      {story.likes_count > 0 && (
-                        <div className="flex items-center gap-1 text-[#D43028]">
-                          <Heart size={14} fill="currentColor" />
-                          <span className="font-semibold">{story.likes_count}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* CTA Button */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full text-[#D43028] border-[#D43028] hover:bg-[#D43028] hover:text-white font-semibold transition-colors"
-                    >
-                      Read Full Story
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="disabled:opacity-50 border-gray-300"
-                >
-                  <ChevronLeft size={18} />
-                  Previous
-                </Button>
-
-                <div className="flex gap-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-
-                    return (
-                      <Button
-                        key={pageNum}
-                        variant={currentPage === pageNum ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handlePageChange(pageNum)}
-                        className={
-                          currentPage === pageNum
-                            ? "bg-[#D43028] text-white border-0 min-w-[40px]"
-                            : "border-gray-300 hover:border-[#D43028] min-w-[40px]"
-                        }
-                      >
-                        {pageNum}
-                      </Button>
-                    );
-                  })}
+                  {/* Title overlay */}
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "14px 16px" }}>
+                    <h3 style={{
+                      margin: 0, fontSize: 16, fontWeight: 800, color: "#fff",
+                      lineHeight: 1.3,
+                      overflow: "hidden", display: "-webkit-box",
+                      WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
+                    }}>
+                      {story.title}
+                    </h3>
+                  </div>
                 </div>
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="disabled:opacity-50 border-gray-300"
-                >
-                  Next
-                  <ChevronRight size={18} />
-                </Button>
+                {story.image_attribution && (
+                  <p style={{ padding: "6px 16px 0", fontSize: 11, color: "#9ca3af", fontStyle: "italic", margin: 0 }}>
+                    {story.image_attribution}
+                  </p>
+                )}
+
+                {/* Body */}
+                <div style={{ padding: story.image_attribution ? "10px 16px 16px" : "14px 16px 16px" }}>
+                  <p style={{
+                    margin: "0 0 12px", fontSize: 13, color: "#6b7280", lineHeight: 1.6,
+                    overflow: "hidden", display: "-webkit-box",
+                    WebkitLineClamp: 3, WebkitBoxOrient: "vertical",
+                  }}>
+                    {story.excerpt}
+                  </p>
+
+                  {/* Meta */}
+                  <div style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    fontSize: 11, color: "#9ca3af",
+                    paddingBottom: 12, marginBottom: 12,
+                    borderBottom: "1px solid #f3f4f6",
+                  }}>
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <User size={12} style={{ color: RED }} />
+                        <span style={{ fontWeight: 600, color: "#374151" }}>{story.author_name}</span>
+                      </span>
+                      <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <Clock size={12} style={{ color: RED }} />
+                        {story.read_time} min
+                      </span>
+                    </div>
+                    {story.likes_count > 0 && (
+                      <span style={{ display: "flex", alignItems: "center", gap: 3, color: RED, fontWeight: 700 }}>
+                        <Heart size={12} fill={RED} />
+                        {story.likes_count}
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    style={{
+                      width: "100%", padding: "8px 0", borderRadius: 5,
+                      border: `1px solid #e5e7eb`, background: "#fff",
+                      color: "#374151", fontWeight: 700, fontSize: 12,
+                      cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                      transition: "border-color .15s",
+                    }}
+                    className="story-read-btn"
+                  >
+                    Read Full Story <ArrowRight size={13} />
+                  </button>
+                </div>
               </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
 
-        {/* No Results */}
+        {/* Sentinel — IntersectionObserver target */}
+        <div ref={sentinelRef} style={{ height: 1 }} />
+
+        {/* Loading more spinner */}
+        {loadingMore && (
+          <div style={{ display: "flex", justifyContent: "center", padding: "32px 0" }}>
+            <Loader2 size={28} style={{ color: RED }} className="animate-spin" />
+          </div>
+        )}
+
+        {/* End of list */}
+        {!loading && !loadingMore && !hasMore && stories.length > 0 && (
+          <p style={{ textAlign: "center", padding: "32px 0 8px", fontSize: 12, color: "#9ca3af" }}>
+            All {totalStories} {totalStories === 1 ? "story" : "stories"} loaded.
+          </p>
+        )}
+
+        {/* No results */}
         {!loading && !error && stories.length === 0 && (
           <div className="text-center py-20 bg-gray-50 rounded-lg">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white shadow-sm mb-6">
-              <BookOpen size={48} className="text-[#D43028]" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">No Stories Found</h3>
-            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            <BookOpen size={40} style={{ color: RED, margin: "0 auto 16px" }} />
+            <h3 className="text-xl font-bold text-gray-900 mb-2">No Stories Found</h3>
+            <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">
               {searchQuery
-                ? `No results found for "${searchQuery}". Try a different search term or category.`
-                : selectedCategory !== "All"
-                ? `No stories available in the "${selectedCategory}" category yet.`
-                : "No stories available at the moment."}
+                ? `No results for "${searchQuery}". Try a different term or category.`
+                : `No stories in "${selectedCategory}" yet.`}
             </p>
             {hasActiveFilters && (
-              <Button
-                onClick={clearFilters}
-                className="bg-[#D43028] text-white hover:bg-[#B52820]"
-              >
+              <Button onClick={clearFilters} style={{ background: RED, color: "#fff" }}>
                 View All Stories
               </Button>
             )}
           </div>
         )}
+
       </div>
+
+      <style>{`
+        .story-card:hover { border-color: ${RED} !important; }
+        .story-read-btn:hover { border-color: #374151 !important; }
+      `}</style>
     </PageTemplate>
   );
 };
