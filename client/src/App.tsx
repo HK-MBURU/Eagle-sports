@@ -66,16 +66,16 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const queryClient = new QueryClient();
 
-// Separate component for analytics tracking
 const AnalyticsTracker = () => {
   const location = useLocation();
-  
+
   useEffect(() => {
-    // Only track if analytics is loaded
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
     if (typeof window !== 'undefined' && window.gtag) {
       pageview(location.pathname + location.search);
     }
-  }, [location]);
+  }, [location.pathname, location.search]);
 
   return null;
 };
@@ -88,9 +88,9 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <AnalyticsTracker />
             <AuthProvider>
               <StoriesProvider>
+                <AnalyticsTracker />
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/login" element={<Login />} />
