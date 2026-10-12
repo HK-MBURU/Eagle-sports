@@ -65,7 +65,7 @@ const Navigation = () => {
       </div>
 
       {/* ═══════════════ MASTHEAD ═══════════════ */}
-      <div className="bg-white border-b border-gray-100">
+      <div className="hidden md:block bg-white border-b border-gray-100">
         <div
           className="flex items-center justify-between gap-5"
           style={{ width: "min(1180px, 92%)", margin: "0 auto", padding: "14px 0" }}
