@@ -1,214 +1,238 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Sparkles, Loader2, Play, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Play, ArrowRight, Loader2 } from "lucide-react";
 import femaleAthlete from "@/assets/female-athlete.jpg";
 import { useWomenRunning } from "@/hooks/useWomenRunning";
 import { getIconComponent } from "@/utils/iconMapper";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { VideoModal } from "./VideoModal";
+
+const NAVY = "#10284a";
+const RED  = "#d62835";
+const LINE = "#e2e7ef";
 
 const WomenSpotlight = () => {
   const { entries, featuredEntry, loading, error } = useWomenRunning();
   const navigate = useNavigate();
 
-  // Video modal state
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState<{
-    url: string;
-    title: string;
-    name: string;
-  } | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string; name: string } | null>(null);
 
-  const handleStoryClick = (storyId: number) => {
-    navigate(`/women-stories/${storyId}`);
-  };
-
-  const handleWatchVideo = (videoUrl: string, title: string, name: string) => {
-    setSelectedVideo({ url: videoUrl, title, name });
+  const handleWatchVideo = (url: string, title: string, name: string) => {
+    setSelectedVideo({ url, title, name });
     setIsVideoModalOpen(true);
   };
 
   const closeVideoModal = () => {
     setIsVideoModalOpen(false);
-    // Small delay before clearing to allow smooth closing animation
     setTimeout(() => setSelectedVideo(null), 300);
   };
 
-  // Show loading state
+  /* ── Loading ── */
   if (loading) {
     return (
-      <section id="women" className="py-24 bg-gradient-to-b from-accent to-background">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <Loader2 className="w-12 h-12 animate-spin text-accent-orange mx-auto mb-4" />
-              <p className="text-muted-foreground">Loading inspiring stories...</p>
-            </div>
-          </div>
+      <section id="women" style={{ background: "#fff", padding: "48px 0" }}>
+        <div style={{ width: "min(1180px,92%)", margin: "0 auto", display: "flex", justifyContent: "center", padding: "48px 0" }}>
+          <Loader2 size={28} style={{ color: RED }} className="animate-spin" />
         </div>
       </section>
     );
   }
 
-  // Show error state
+  /* ── Error ── */
   if (error) {
     return (
-      <section id="women" className="py-24 bg-gradient-to-b from-accent to-background">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <p className="text-red-500 mb-4">Failed to load content</p>
-              <Button
-                onClick={() => window.location.reload()}
-                className="bg-accent-orange text-accent-orange-foreground hover:bg-accent-terracotta"
-              >
-                Retry
-              </Button>
-            </div>
-          </div>
+      <section id="women" style={{ background: "#fff", padding: "48px 0" }}>
+        <div style={{ width: "min(1180px,92%)", margin: "0 auto", textAlign: "center", color: "#667085", fontSize: 13 }}>
+          Failed to load content —{" "}
+          <button onClick={() => window.location.reload()} style={{ color: RED, fontWeight: 700, background: "none", border: "none", cursor: "pointer" }}>
+            Retry
+          </button>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="women" className="pt-24 pb-10 bg-gradient-to-b from-accent to-background">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16 animate-fade-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Women <span className="text-accent-orange">Breaking Barriers</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Celebrating female athletes who are reshaping the landscape of Kenyan athletics
-          </p>
+    <section id="women" style={{ background: "#fff", padding: "48px 0" }}>
+      <div style={{ width: "min(1180px,92%)", margin: "0 auto" }}>
+
+        {/* Section header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 14, marginBottom: 20 }}>
+          <div>
+            <h2 style={{ margin: 0, color: NAVY, fontSize: 22, fontWeight: 900, letterSpacing: "-.5px", lineHeight: 1.1 }}>
+              Women Breaking Barriers
+            </h2>
+            <p style={{ margin: "5px 0 0", fontSize: 12, color: "#667085" }}>
+              Celebrating female athletes reshaping the landscape of Kenyan athletics.
+            </p>
+          </div>
+          <a
+            href="/impact/women"
+            style={{ fontSize: 12, color: RED, fontWeight: 900, whiteSpace: "nowrap", textDecoration: "none" }}
+          >
+            EXPLORE →
+          </a>
         </div>
 
-        {/* Featured Story */}
+        {/* Featured story panel */}
         {featuredEntry && (
-          <div className="max-w-6xl mx-auto mb-16">
-            <Card className="overflow-hidden border-0 shadow-strong hover:shadow-2xl transition-shadow duration-300">
-              <div className="grid md:grid-cols-2 gap-0">
-                <div className="relative h-80 md:h-auto group overflow-hidden">
-                  <img
-                    src={featuredEntry.image || femaleAthlete}
-                    alt={featuredEntry.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = femaleAthlete;
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-accent-orange/20 to-transparent" />
+          <div style={{
+            border: `1px solid ${LINE}`,
+            borderRadius: 10,
+            overflow: "hidden",
+            background: "#fff",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            marginBottom: 18,
+          }} className="women-hero">
 
-                  {/* Play button overlay for featured video */}
-                  {featuredEntry.video_url && (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleWatchVideo(featuredEntry.video_url!, featuredEntry.title, featuredEntry.name);
-                        }}
-                        className="w-20 h-20 rounded-full bg-accent-orange/90 hover:bg-accent-orange flex items-center justify-center text-white shadow-xl transform hover:scale-110 transition-all duration-300"
-                        aria-label="Play video"
-                      >
-                        <Play size={32} className="ml-1" fill="currentColor" />
-                      </button>
-                    </div>
-                  )}
+            {/* Image */}
+            <div style={{ position: "relative", minHeight: 300 }}>
+              <img
+                src={featuredEntry.image || femaleAthlete}
+                alt={featuredEntry.name}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                onError={(e) => { (e.target as HTMLImageElement).src = femaleAthlete; }}
+              />
+              {/* Play overlay */}
+              {featuredEntry.video_url && (
+                <div
+                  style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                    background: "rgba(7,23,43,.2)", cursor: "pointer" }}
+                  onClick={() => handleWatchVideo(featuredEntry.video_url!, featuredEntry.title, featuredEntry.name)}
+                >
+                  <div style={{
+                    width: 52, height: 52, borderRadius: "50%", background: RED,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <Play size={22} fill="#fff" color="#fff" style={{ marginLeft: 3 }} />
+                  </div>
                 </div>
-                <CardContent className="p-8 md:p-12 flex flex-col justify-center bg-card">
-                  <div className="inline-block bg-accent-orange/10 text-accent-orange px-4 py-2 rounded-full text-sm font-semibold mb-4 w-fit">
-                    Featured Story
-                  </div>
-                  <h3 className="text-3xl font-bold text-foreground mb-4">
-                    {featuredEntry.title}
-                  </h3>
-                  <p className="text-muted-foreground mb-6 text-lg leading-relaxed line-clamp-4">
-                    {featuredEntry.description}
-                  </p>
-                  <div className="flex gap-4 flex-wrap">
-                    <Button
-                      className="bg-accent-orange text-accent-orange-foreground hover:bg-accent-terracotta"
-                      onClick={() => handleStoryClick(featuredEntry.id)}
-                    >
-                      Read Full Story
-                    </Button>
-                    {featuredEntry.video_url && (
-                      <Button
-                        variant="outline"
-                        className="border-accent-orange text-accent-orange hover:bg-accent-orange hover:text-accent-orange-foreground"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleWatchVideo(featuredEntry.video_url!, featuredEntry.title, featuredEntry.name);
-                        }}
-                      >
-                        <Play size={18} className="mr-2" />
-                        Watch Interview
-                      </Button>
-                    )}
-                  </div>
-                </CardContent>
+              )}
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: "32px 36px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+              <span style={{
+                display: "inline-block",
+                background: "#fcecee", color: RED,
+                padding: "4px 12px", borderRadius: 20,
+                fontSize: 10, fontWeight: 900, letterSpacing: ".5px",
+                textTransform: "uppercase", marginBottom: 14, alignSelf: "flex-start",
+              }}>
+                Featured Story
+              </span>
+
+              <h3 style={{ margin: "0 0 12px", fontSize: 20, fontWeight: 900, color: NAVY, lineHeight: 1.25 }}>
+                {featuredEntry.title}
+              </h3>
+              <p style={{ margin: "0 0 20px", fontSize: 13, color: "#667085", lineHeight: 1.7,
+                overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical" }}>
+                {featuredEntry.description}
+              </p>
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <button
+                  onClick={() => navigate(`/women-stories/${featuredEntry.id}`)}
+                  style={{
+                    padding: "9px 18px", borderRadius: 5,
+                    background: RED, color: "#fff",
+                    border: "none", fontWeight: 800, fontSize: 12, cursor: "pointer",
+                    transition: "background .15s",
+                  }}
+                  className="women-btn-primary"
+                >
+                  Read Full Story
+                </button>
+                {featuredEntry.video_url && (
+                  <button
+                    onClick={() => handleWatchVideo(featuredEntry.video_url!, featuredEntry.title, featuredEntry.name)}
+                    style={{
+                      padding: "9px 16px", borderRadius: 5,
+                      background: "#fff", color: NAVY,
+                      border: `1px solid ${LINE}`, fontWeight: 800, fontSize: 12, cursor: "pointer",
+                      display: "flex", alignItems: "center", gap: 7,
+                      transition: "border-color .15s",
+                    }}
+                    className="women-btn-outline"
+                  >
+                    <Play size={13} /> Watch Interview
+                  </button>
+                )}
               </div>
-            </Card>
+            </div>
           </div>
         )}
 
-        {/* Stories Grid */}
+        {/* Stories grid */}
         {entries.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {entries.map((entry, index) => {
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }} className="women-grid">
+            {entries.map((entry) => {
               const Icon = getIconComponent(entry.icon);
               return (
-                <Card
+                <div
                   key={entry.id}
-                  className="group hover:shadow-medium transition-all duration-300 hover:-translate-y-1 border-border animate-fade-up cursor-pointer relative overflow-hidden"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => handleStoryClick(entry.id)}
+                  onClick={() => navigate(`/women-stories/${entry.id}`)}
+                  className="women-card"
+                  style={{
+                    border: `1px solid ${LINE}`,
+                    borderRadius: 10,
+                    background: "#fff",
+                    padding: "20px 22px",
+                    cursor: "pointer",
+                    transition: "border-color .15s",
+                  }}
                 >
-
-
-                  <CardContent className="p-6">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-orange/10 text-accent-orange mb-4 group-hover:bg-accent-orange group-hover:text-accent-orange-foreground transition-colors">
-                      <Icon size={24} />
-                    </div>
-                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-accent-orange transition-colors">
-                      {entry.title}
-                    </h3>
-                    <p className="text-sm text-accent-orange font-semibold mb-3">{entry.name}</p>
-                    <p className="text-muted-foreground line-clamp-3">{entry.description}</p>
-                  </CardContent>
-                </Card>
+                  <div style={{
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                    width: 42, height: 42, borderRadius: "50%",
+                    background: "#f4f6f9", color: NAVY, marginBottom: 14,
+                  }}>
+                    <Icon size={20} />
+                  </div>
+                  <h3 style={{ margin: "0 0 4px", fontSize: 15, fontWeight: 900, color: NAVY, lineHeight: 1.3 }}>
+                    {entry.title}
+                  </h3>
+                  <p style={{ margin: "0 0 8px", fontSize: 11, fontWeight: 800, color: RED }}>
+                    {entry.name}
+                  </p>
+                  <p style={{ margin: 0, fontSize: 12, color: "#667085", lineHeight: 1.6,
+                    overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" }}>
+                    {entry.description}
+                  </p>
+                </div>
               );
             })}
           </div>
         )}
 
-        {/* Empty State */}
+        {/* Empty state */}
         {!loading && entries.length === 0 && !featuredEntry && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">
-              No stories available at the moment. Check back soon!
-            </p>
+          <div style={{ padding: "32px 0", color: "#667085", fontSize: 13, textAlign: "center" }}>
+            No stories available at the moment. Check back soon.
           </div>
         )}
 
-        {/* Call to Action */}
-        <div className="text-center mt-8">
-          <p className="text-lg text-muted-foreground mb-6">
-            More Stories about women in athletics
-          </p>
-          <Button size="lg" className="bg-accent-orange text-accent-orange-foreground hover:bg-accent-terracotta px-8"
-          onClick={() => window.location.href = '/impact/women'}
+        {/* CTA */}
+        <div style={{ textAlign: "center", marginTop: 24 }}>
+          <p style={{ fontSize: 13, color: "#667085", margin: "0 0 12px" }}>More stories about women in athletics</p>
+          <button
+            onClick={() => window.location.href = "/impact/women"}
+            style={{
+              padding: "10px 24px", borderRadius: 5,
+              background: "#fff", color: NAVY,
+              border: `1px solid ${LINE}`, fontWeight: 800, fontSize: 12,
+              cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 7,
+              transition: "border-color .15s",
+            }}
+            className="women-btn-outline"
           >
-            Explore
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+            Explore <ArrowRight size={14} />
+          </button>
         </div>
+
       </div>
 
-      {/* Video Modal */}
       {selectedVideo && (
         <VideoModal
           isOpen={isVideoModalOpen}
@@ -218,6 +242,19 @@ const WomenSpotlight = () => {
           athleteName={selectedVideo.name}
         />
       )}
+
+      <style>{`
+        .women-card:hover { border-color: ${RED} !important; }
+        .women-btn-primary:hover { background: #b51e2a !important; }
+        .women-btn-outline:hover { border-color: ${NAVY} !important; }
+        @media (max-width: 760px) {
+          .women-hero { grid-template-columns: 1fr !important; }
+          .women-grid { grid-template-columns: 1fr 1fr !important; }
+        }
+        @media (max-width: 480px) {
+          .women-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   );
 };
