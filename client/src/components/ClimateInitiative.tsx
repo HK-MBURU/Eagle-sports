@@ -35,9 +35,6 @@ const ClimateInitiative = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-up">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-6">
-            <Leaf size={32} />
-          </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Running for <span className="text-primary">Our Planet</span>
           </h2>
