@@ -30,14 +30,14 @@ class FlagshipEventSeeder extends Seeder
             'is_active'            => true,
             'art_image_url'        => 'https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&w=1200&q=85',
             'art_caption'          => 'ROAD TO DAKAR · TEAM KENYA',
-            'quick_links'          => json_encode([
+            'quick_links'          => [
                 ['label' => 'Team Kenya & Profiles', 'href' => '/stories/profiles'],
                 ['label' => 'Schedule & Results',    'href' => '/races/results'],
                 ['label' => 'Videos & Interviews',   'href' => '/media/interviews'],
                 ['label' => 'Photo Gallery',          'href' => '/media/photos'],
                 ['label' => 'Event Calendar',         'href' => '/races/calendar'],
                 ['label' => 'Post-Games Legacy',      'href' => '/stories/inspire'],
-            ]),
+            ],
             'created_by' => 1,
         ]);
 
