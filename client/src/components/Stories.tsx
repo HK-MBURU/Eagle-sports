@@ -90,10 +90,11 @@ const Stories = () => {
   return (
     <section id="stories" style={{ background: "#f4f6f9", padding: "48px 0" }}>
       <style>{`
-        .es-card { transition: transform .15s, box-shadow .15s; }
-        .es-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(20,39,71,0.08); }
-        .es-featured { transition: box-shadow .15s; }
-        .es-featured:hover { box-shadow: 0 12px 32px rgba(20,39,71,0.1); }
+        .es-card { transition: border-color .15s, background .15s; }
+        .es-card:hover { border-color: ${RED} !important; background: #fafbfc !important; }
+        .es-card:hover .es-card-readmore { color: ${NAVY} !important; }
+        .es-featured { transition: border-left-color .15s; }
+        .es-featured:hover { border-left-color: ${NAVY} !important; }
         @media (max-width: 900px) {
           .es-cards-grid { grid-template-columns: repeat(2,1fr) !important; }
         }
@@ -224,7 +225,7 @@ const StoryCard = ({ story }: { story: Story }) => (
       className="es-card"
       style={{
         border: `1px solid ${LINE}`,
-        borderRadius: 10,
+        borderRadius: 6,
         overflow: "hidden",
         background: "#fff",
         height: "100%",
@@ -232,7 +233,7 @@ const StoryCard = ({ story }: { story: Story }) => (
         flexDirection: "column",
       }}
     >
-      <div style={{ height: 180, overflow: "hidden", background: "#dde3eb", flexShrink: 0 }}>
+      <div style={{ height: 186, overflow: "hidden", background: "#dde3eb", flexShrink: 0 }}>
         <img
           src={story.image_url}
           alt={story.title}
@@ -241,19 +242,16 @@ const StoryCard = ({ story }: { story: Story }) => (
         />
       </div>
 
-      <div style={{ padding: "16px 18px", flex: 1, display: "flex", flexDirection: "column" }}>
-        <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "1px", color: RED, fontWeight: 900, marginBottom: 6 }}>
+      <div style={{ padding: "14px 16px", flex: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "1.2px", color: RED, fontWeight: 900, marginBottom: 6 }}>
           {story.category}
         </div>
-        <h3 style={{ fontSize: 17, lineHeight: 1.25, color: NAVY, margin: "0 0 8px", fontWeight: 800 }}>
+        <h3 style={{ fontSize: 16, lineHeight: 1.3, color: NAVY, margin: "0 0 auto", fontWeight: 800 }}>
           {story.title.length > 80 ? story.title.slice(0, 80) + "…" : story.title}
         </h3>
-        <p style={{ fontSize: 13, color: "#667085", lineHeight: 1.55, margin: "0 0 14px", flex: 1 }}>
-          {story.excerpt.length > 110 ? story.excerpt.slice(0, 110) + "…" : story.excerpt}
-        </p>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11, color: "#8896a5", borderTop: `1px solid ${LINE}`, paddingTop: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 11, color: "#8896a5", borderTop: `1px solid ${LINE}`, paddingTop: 10, marginTop: 14 }}>
           {story.read_time ? <span>{story.read_time} min read</span> : <span />}
-          <span style={{ color: RED, fontWeight: 800 }}>READ MORE →</span>
+          <span className="es-card-readmore" style={{ color: RED, fontWeight: 800, fontSize: 11 }}>READ MORE →</span>
         </div>
       </div>
     </article>
