@@ -77,9 +77,6 @@ const WomenSpotlight = () => {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-up">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent-orange/10 text-accent-orange mb-6">
-            <Sparkles size={32} />
-          </div>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             Women <span className="text-accent-orange">Breaking Barriers</span>
           </h2>
