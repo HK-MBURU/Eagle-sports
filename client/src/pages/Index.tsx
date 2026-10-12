@@ -3,9 +3,11 @@ import HeroSection from "@/components/HeroSection";
 import FeaturedAthletes from "@/components/FeaturedAthletes";
 import Stories from "@/components/Stories";
 import FlagshipEvent from "@/components/FlagshipEvent";
+import ResultsCentre from "@/components/ResultsCentre";
 import WomenSpotlight from "@/components/WomenSpotlight";
 import ClimateInitiative from "@/components/ClimateInitiative";
 import UpcomingRaces from "@/components/UpcomingRaces";
+import CompetitionCalendar from "@/components/CompetitionCalendar";
 import VideoGallery from "@/components/VideoGallery";
 import GetInvolved from "@/components/GetInvolved";
 import Partners from "@/components/Partners";
@@ -20,9 +22,11 @@ const Index = () => {
         <FeaturedAthletes />
         <Stories />
         <FlagshipEvent />
+        <ResultsCentre />
         <WomenSpotlight />
         <ClimateInitiative />
         <UpcomingRaces />
+        <CompetitionCalendar />
         <VideoGallery />
         <GetInvolved />
         <Partners />

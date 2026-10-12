@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\RaceEventApiController;
 use App\Http\Controllers\Api\RaceResultsApiController;
 use App\Http\Controllers\Api\VideoApiController;
 use App\Http\Controllers\Api\WomenRunningApiController;
+use App\Http\Controllers\Api\ResultEntryApiController;
 use App\Http\Controllers\EnvironmentInitiativeController;
 use App\Models\Story;
 
@@ -269,6 +270,7 @@ Route::prefix('race-results')->group(function () {
 Route::apiResource('quotes', QuoteApiController::class);
 Route::get('/quotes/random/one', [QuoteApiController::class, 'random']);
 
+Route::get('/race-events/calendar/featured', [RaceEventApiController::class, 'calendarFeatured']);
 Route::get('/race-events/flagship/current', [RaceEventApiController::class, 'flagship']);
 Route::get('/race-events/featured/all', [RaceEventApiController::class, 'featured']);
 Route::get('/race-events/upcoming/list', [RaceEventApiController::class, 'upcoming']);
@@ -289,3 +291,8 @@ Route::post('/partners/{id}/toggle-featured', [PartnerApiController::class, 'tog
 Route::post('/partners/search/query', [PartnerApiController::class, 'search']);
 
 Route::get('/stories/{slug}/share-data', [StoryController::class, 'shareData']);
+
+// Result Entries — individual performance data
+Route::get('/result-entries/latest', [ResultEntryApiController::class, 'latest']);
+Route::get('/result-entries/series/{series}', [ResultEntryApiController::class, 'bySeries']);
+Route::apiResource('result-entries', ResultEntryApiController::class)->only(['index', 'show']);

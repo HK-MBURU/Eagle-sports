@@ -37,6 +37,8 @@ class DatabaseSeeder extends Seeder
             VideoSeeder::class,
             WomenRunningSeeder::class,
             FlagshipEventSeeder::class,
+            CalendarEventSeeder::class,
+            ResultsCentreSeeder::class,
         ]);
     }
 }

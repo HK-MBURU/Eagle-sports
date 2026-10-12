@@ -1117,3 +1117,19 @@ export const raceResultsAPI = {
     return response.json();
   },
 };
+
+export const calendarAPI = {
+  getFeatured: async () => {
+    return enhancedFetch(`${API_BASE_URL}/race-events/calendar/featured`, {
+      headers: getAuthHeaders(),
+    }, true);
+  },
+};
+
+export const resultEntriesAPI = {
+  getLatest: async (limit = 8) => {
+    return enhancedFetch(`${API_BASE_URL}/result-entries/latest?limit=${limit}`, {
+      headers: getAuthHeaders(),
+    }, true);
+  },
+};

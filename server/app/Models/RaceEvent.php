@@ -30,15 +30,20 @@ class RaceEvent extends Model
         'art_image_url',
         'art_caption',
         'quick_links',
+        'cal_top',
+        'cal_bottom',
+        'cal_note',
+        'is_calendar_event',
     ];
 
     protected $casts = [
-        'event_date'  => 'date',
-        'start_time'  => 'datetime:H:i',
-        'is_featured' => 'boolean',
-        'is_active'   => 'boolean',
-        'is_flagship' => 'boolean',
-        'quick_links' => 'array',
+        'event_date'        => 'date',
+        'start_time'        => 'datetime:H:i',
+        'is_featured'       => 'boolean',
+        'is_active'         => 'boolean',
+        'is_flagship'       => 'boolean',
+        'quick_links'       => 'array',
+        'is_calendar_event' => 'boolean',
     ];
 
     /**

@@ -106,6 +106,41 @@ class RaceEventApiController extends Controller
     }
 
     /**
+     * Return calendar events (is_calendar_event = true), ordered by event_date.
+     */
+    public function calendarFeatured(): JsonResponse
+    {
+        try {
+            $events = RaceEvent::where('is_calendar_event', true)
+                ->where('is_active', true)
+                ->orderBy('event_date', 'asc')
+                ->get()
+                ->map(function ($event) {
+                    return [
+                        'id'          => $event->id,
+                        'title'       => $event->title,
+                        'subtitle'    => $event->subtitle,
+                        'location'    => $event->location,
+                        'description' => $event->description,
+                        'cal_top'     => $event->cal_top,
+                        'cal_bottom'  => $event->cal_bottom,
+                        'cal_note'    => $event->cal_note,
+                        'event_date'  => $event->event_date->format('Y-m-d'),
+                        'is_featured' => $event->is_featured,
+                    ];
+                });
+
+            return response()->json(['success' => true, 'data' => $events]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch calendar events',
+                'error'   => config('app.debug') ? $e->getMessage() : null,
+            ], 500);
+        }
+    }
+
+    /**
      * Return the single active flagship/coverage event.
      */
     public function flagship(): JsonResponse
