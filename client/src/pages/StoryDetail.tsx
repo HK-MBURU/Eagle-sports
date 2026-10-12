@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Helmet } from 'react-helmet-async';
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import Navigation from "@/components/Navigation";
 import StorySEO from "@/components/StorySEO";
 import CommentSection from "@/components/CommentSection";
 import {
@@ -356,6 +357,7 @@ const StoryDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
+        <Navigation />
         <div className="animate-pulse">
           <div className="h-[300px] sm:h-[400px] md:h-[500px] bg-muted" />
           <div className="container mx-auto px-4 py-10">
@@ -375,14 +377,17 @@ const StoryDetail = () => {
 
   if (error || !story) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <div className="text-center max-w-md">
-          <h2 className="text-2xl font-bold mb-4">Story Not Found</h2>
-          <p className="text-muted-foreground mb-6">{error || "The story you're looking for doesn't exist."}</p>
-          <Button onClick={() => navigate("/")} variant="default">
-            <ArrowLeft className="mr-2 w-4 h-4" />
-            Back to Home
-          </Button>
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="flex items-center justify-center px-4 py-24">
+          <div className="text-center max-w-md">
+            <h2 className="text-2xl font-bold mb-4">Story Not Found</h2>
+            <p className="text-muted-foreground mb-6">{error || "The story you're looking for doesn't exist."}</p>
+            <Button onClick={() => navigate("/")} variant="default">
+              <ArrowLeft className="mr-2 w-4 h-4" />
+              Back to Home
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -390,6 +395,7 @@ const StoryDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Navigation />
 
       <Helmet>
         <title>{story.meta_title || story.title}</title>
@@ -421,126 +427,21 @@ const StoryDetail = () => {
         <link rel="canonical" href={window.location.href} />
       </Helmet>
 
-      {/* Header Navigation */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Stories
-            </Button>
-
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowShareMenu(!showShareMenu)}
-                  className="gap-2"
-                >
-                  <Share2 className="w-4 h-4" />
-                  Share
-                </Button>
-
-                {showShareMenu && (
-                  <>
-                    {/* Backdrop to close menu when clicking outside */}
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setShowShareMenu(false)}
-                    />
-
-                    {/* Share Menu */}
-                    <div className="absolute right-0 mt-2 w-56 bg-card border rounded-lg p-2 shadow-lg z-50">
-                      <div className="px-3 py-2 border-b mb-2">
-                        <p className="text-xs font-semibold text-muted-foreground uppercase">
-                          Share this story
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => handleShare("facebook")}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors"
-                      >
-                        <Facebook className="w-4 h-4 text-blue-600" />
-                        <span>Facebook</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleShare("twitter")}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors"
-                      >
-                        <Twitter className="w-4 h-4 text-sky-500" />
-                        <span>Twitter</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleShare("whatsapp")}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors"
-                      >
-                        <svg
-                          className="w-4 h-4 text-green-500"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                        </svg>
-                        <span>WhatsApp</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleShare("linkedin")}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors"
-                      >
-                        <Linkedin className="w-4 h-4 text-blue-700" />
-                        <span>LinkedIn</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleShare("email")}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors"
-                      >
-                        <Mail className="w-4 h-4 text-gray-600" />
-                        <span>Email</span>
-                      </button>
-
-                      <div className="border-t my-2" />
-
-                      <button
-                        onClick={() => handleShare("copy")}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors"
-                      >
-                        {copied ? (
-                          <>
-                            <Check className="w-4 h-4 text-green-600" />
-                            <span className="text-green-600">Copied!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Link2 className="w-4 h-4" />
-                            <span>Copy Link</span>
-                          </>
-                        )}
-                      </button>
-
-                      {/* Share URL Display */}
-                      {shareData && (
-                        <div className="mt-2 pt-2 border-t">
-                          <p className="text-xs text-muted-foreground px-3 py-1 break-all">
-                            {shareData.share_url}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+      {/* Breadcrumb bar */}
+      <div style={{ background: "#f4f6f9", borderBottom: "1px solid #e2e7ef" }}>
+        <div style={{ width: "min(1180px,92%)", margin: "0 auto", padding: "10px 0", display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#667085" }}>
+          <button
+            onClick={() => navigate("/")}
+            style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, color: "#10284a", fontWeight: 700, fontSize: 13, padding: 0 }}
+          >
+            <ArrowLeft size={14} />
+            Home
+          </button>
+          <span>/</span>
+          <span style={{ color: "#d62835", fontWeight: 600 }}>{story.category}</span>
         </div>
-      </header>
+      </div>
 
-      {/* Rest of your component remains exactly the same */}
       {/* Hero Section */}
       <div className="relative">
         {/* Image Container */}
@@ -659,6 +560,59 @@ const StoryDetail = () => {
                 />
                 <span className="text-xs font-medium">Save</span>
               </button>
+
+              {/* Share */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowShareMenu(!showShareMenu)}
+                  className="flex flex-col items-center gap-1 p-3 rounded-lg border w-full hover:bg-accent transition-colors"
+                >
+                  <Share2 className="w-5 h-5" />
+                  <span className="text-xs font-medium">Share</span>
+                </button>
+
+                {showShareMenu && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setShowShareMenu(false)} />
+                    <div className="absolute left-full ml-2 top-0 w-52 bg-card border rounded-lg p-2 shadow-lg z-50">
+                      <div className="px-3 py-2 border-b mb-2">
+                        <p className="text-xs font-semibold text-muted-foreground uppercase">Share this story</p>
+                      </div>
+                      <button onClick={() => handleShare("facebook")} className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors">
+                        <Facebook className="w-4 h-4 text-blue-600" /><span>Facebook</span>
+                      </button>
+                      <button onClick={() => handleShare("twitter")} className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors">
+                        <Twitter className="w-4 h-4 text-sky-500" /><span>Twitter</span>
+                      </button>
+                      <button onClick={() => handleShare("whatsapp")} className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors">
+                        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                        </svg>
+                        <span>WhatsApp</span>
+                      </button>
+                      <button onClick={() => handleShare("linkedin")} className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors">
+                        <Linkedin className="w-4 h-4 text-blue-700" /><span>LinkedIn</span>
+                      </button>
+                      <button onClick={() => handleShare("email")} className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors">
+                        <Mail className="w-4 h-4 text-gray-600" /><span>Email</span>
+                      </button>
+                      <div className="border-t my-2" />
+                      <button onClick={() => handleShare("copy")} className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent rounded text-sm transition-colors">
+                        {copied ? (
+                          <><Check className="w-4 h-4 text-green-600" /><span className="text-green-600">Copied!</span></>
+                        ) : (
+                          <><Link2 className="w-4 h-4" /><span>Copy Link</span></>
+                        )}
+                      </button>
+                      {shareData && (
+                        <div className="mt-2 pt-2 border-t">
+                          <p className="text-xs text-muted-foreground px-3 py-1 break-all">{shareData.share_url}</p>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </aside>
 
