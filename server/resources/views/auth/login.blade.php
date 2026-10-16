@@ -4,21 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Beyond Finish Line</title>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>Login — Eagle Sports Admin</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --bfl-gold: #E2B34A;
-            --bfl-brown: #997557;
-            --bfl-orange: #FF6600;
-            --bfl-dark: #333A12;
-            --bfl-yellow: #FFBF00;
-            --bfl-green: #0F3D22;
+            --es-navy:  #10284a;
+            --es-red:   #d62835;
+            --es-line:  #e2e7ef;
+            --es-paper: #f4f6f9;
+            --es-muted: #667085;
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            background: linear-gradient(135deg, var(--bfl-green) 0%, var(--bfl-dark) 100%);
+            background: var(--es-navy);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -27,224 +32,209 @@
             padding: 20px;
         }
 
-        .login-container {
-            max-width: 480px;
+        .login-wrap {
             width: 100%;
+            max-width: 420px;
         }
 
+        /* Card */
         .login-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid var(--es-line);
             overflow: hidden;
         }
 
-        .card-header-custom {
-            background: var(--bfl-gold);
-            padding-top: 30px;
+        /* Top stripe */
+        .card-top {
+            background: var(--es-navy);
+            padding: 32px 36px 28px;
             text-align: center;
+            border-bottom: 3px solid var(--es-red);
         }
 
-        .logo-container {
-            width: 140px;
-            height: 140px;
-            background: var(--bfl-green);
-            border-radius: 50%;
-            margin: 0 auto 25px;
+        .logo-wrap {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 18px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255,255,255,.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            padding: 15px;
         }
 
-        .logo-container img {
+        .logo-wrap img {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
 
-        .card-header-custom h3 {
-            color: white;
-            margin: 0 0 8px 0;
-            font-weight: 700;
-            font-size: 1.9rem;
+        .card-top h2 {
+            color: #fff;
+            margin: 0 0 4px;
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: -.3px;
         }
 
-        .card-header-custom p {
-            color: var(--bfl-gold);
+        .card-top p {
+            color: rgba(255,255,255,.55);
             margin: 0;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 0.8rem;
         }
 
-        .card-body-custom {
-            padding: 45px 35px;
+        /* Body */
+        .card-body-inner {
+            padding: 32px 36px 36px;
         }
 
         .form-label {
-            color: var(--bfl-dark);
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            color: var(--es-navy);
+            font-weight: 700;
+            font-size: 0.82rem;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
         }
 
         .form-control {
-            border: 2px solid #e5e5e5;
-            border-radius: 10px;
-            padding: 13px 16px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            border: 1px solid var(--es-line);
+            border-radius: 7px;
+            padding: 11px 14px;
+            font-size: 0.95rem;
+            color: #1a1a1a;
+            background: var(--es-paper);
+            transition: border-color .15s;
         }
 
         .form-control:focus {
-            border-color: var(--bfl-orange);
-            box-shadow: 0 0 0 0.15rem rgba(255, 102, 0, 0.1);
+            border-color: var(--es-red);
+            box-shadow: 0 0 0 3px rgba(214,40,53,.08);
+            background: #fff;
             outline: none;
         }
 
-        .form-control::placeholder {
-            color: #aaa;
-        }
+        .form-control::placeholder { color: #aab0bc; }
 
-        .btn-primary-custom {
-            background: linear-gradient(135deg, var(--bfl-orange), var(--bfl-yellow));
+        .btn-login {
+            background: var(--es-red);
             border: none;
-            border-radius: 10px;
-            padding: 14px 30px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            color: white;
+            border-radius: 7px;
+            padding: 12px 0;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #fff;
             width: 100%;
-            transition: all 0.3s ease;
+            cursor: pointer;
+            letter-spacing: .5px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-        }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 102, 0, 0.35);
-        }
-
-        .btn-primary-custom:active {
-            transform: translateY(0);
-        }
-
-        .form-check-input {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #d0d0d0;
-            cursor: pointer;
-        }
-
-        .form-check-input:checked {
-            background-color: var(--bfl-orange);
-            border-color: var(--bfl-orange);
-        }
-
-        .form-check-input:focus {
-            border-color: var(--bfl-orange);
-            box-shadow: 0 0 0 0.15rem rgba(255, 102, 0, 0.1);
-        }
-
-        .form-check-label {
-            color: #555;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-left: 5px;
-        }
-
-        .forgot-link {
-            color: var(--bfl-brown);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .forgot-link:hover {
-            color: var(--bfl-orange);
-        }
-
-        .alert-custom {
-            border-radius: 10px;
-            border: none;
-            padding: 14px 16px;
-            background-color: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .invalid-feedback {
-            font-size: 0.875rem;
+            transition: background .15s;
             margin-top: 6px;
         }
 
+        .btn-login:hover { background: #b51e2a; }
+        .btn-login:active { background: #a01a25; }
+
+        .form-check-input {
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--es-line);
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--es-red);
+            border-color: var(--es-red);
+        }
+
+        .form-check-input:focus {
+            border-color: var(--es-red);
+            box-shadow: 0 0 0 3px rgba(214,40,53,.08);
+        }
+
+        .form-check-label {
+            color: var(--es-muted);
+            font-size: 0.82rem;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+        .forgot-link {
+            color: var(--es-muted);
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: color .15s;
+        }
+
+        .forgot-link:hover { color: var(--es-red); }
+
+        .alert-status {
+            border-radius: 7px;
+            border: 1px solid #c3e6cb;
+            padding: 12px 14px;
+            background: #f0fff4;
+            color: #1a6b35;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .invalid-feedback {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: var(--es-red);
+        }
+
         .is-invalid {
-            border-color: #dc3545;
+            border-color: var(--es-red) !important;
+            background: #fff;
         }
 
         .is-invalid:focus {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.1);
+            box-shadow: 0 0 0 3px rgba(214,40,53,.08) !important;
         }
 
-        @media (max-width: 576px) {
-            .login-container {
-                padding: 0;
-            }
+        /* Footer note */
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,.35);
+        }
 
-            .card-header-custom {
-                padding: 40px 25px;
-            }
-
-            .logo-container {
-                width: 120px;
-                height: 120px;
-                padding: 12px;
-            }
-
-            .card-header-custom h3 {
-                font-size: 1.65rem;
-            }
-
-            .card-body-custom {
-                padding: 35px 25px;
-            }
-
-            .btn-primary-custom {
-                font-size: 1rem;
-            }
+        @media (max-width: 480px) {
+            .card-top { padding: 26px 24px 22px; }
+            .card-body-inner { padding: 26px 24px 30px; }
         }
     </style>
 </head>
 
 <body>
-    <div class="login-container">
+    <div class="login-wrap">
         <div class="login-card">
-            <!-- Header with Logo -->
-            <div class="card-header-custom">
-                <div class="logo-container">
-                    <img src="{{ asset('images/logo4.png') }}" alt="Beyond Finish Line Logo">
-                </div>
-                <h3>Welcome Back</h3>
 
+            <!-- Header -->
+            <div class="card-top">
+                <div class="logo-wrap">
+                    <img src="{{ asset('images/es-logo.png') }}" alt="Eagle Sports Logo">
+                </div>
+                <h2>Eagle Sports</h2>
+                <p>Administration Portal</p>
             </div>
 
-            <!-- Body -->
-            <div class="card-body-custom">
-                <!-- Session Status -->
+            <!-- Form -->
+            <div class="card-body-inner">
+
                 @if (session('status'))
-                    <div class="alert alert-custom mb-4">
-                        {{ session('status') }}
-                    </div>
+                    <div class="alert-status">{{ session('status') }}</div>
                 @endif
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
-                    <!-- Email Address -->
                     <div class="mb-4">
                         <label for="email" class="form-label">Email Address</label>
                         <input
@@ -256,15 +246,12 @@
                             required
                             autofocus
                             autocomplete="username"
-                            placeholder="your.email@example.com">
+                            placeholder="admin@eaglesports.co.ke">
                         @error('email')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Password -->
                     <div class="mb-4">
                         <label for="password" class="form-label">Password</label>
                         <input
@@ -276,42 +263,29 @@
                             autocomplete="current-password"
                             placeholder="Enter your password">
                         @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
                         <div class="form-check">
-                            <input
-                                class="form-check-input"
-                                type="checkbox"
-                                id="remember_me"
-                                name="remember">
-                            <label class="form-check-label" for="remember_me">
-                                Remember me
-                            </label>
+                            <input class="form-check-input" type="checkbox" id="remember_me" name="remember">
+                            <label class="form-check-label" for="remember_me">Remember me</label>
                         </div>
-
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="forgot-link">
-                                Forgot password?
-                            </a>
+                            <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
                         @endif
                     </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary-custom">
-                        Log In
-                    </button>
+                    <button type="submit" class="btn-login">Sign In</button>
                 </form>
+
             </div>
         </div>
+
+        <p class="login-footer">Eagle Sports &copy; {{ date('Y') }} — Restricted Access</p>
     </div>
 
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
