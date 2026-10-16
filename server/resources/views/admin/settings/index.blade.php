@@ -53,7 +53,7 @@
     <div class="tab-pane fade {{ $activeTab === 'site' ? 'show active' : '' }}" id="tab-site">
         <div class="card border" style="max-width:640px;">
             <div class="card-body p-4">
-                <form method="POST" action="{{ route('settings.update') }}">
+                <form method="POST" action="{{ route('admin.settings.update') }}">
                     @csrf
                     <input type="hidden" name="tab" value="site">
 
@@ -103,7 +103,7 @@
     <div class="tab-pane fade {{ $activeTab === 'social' ? 'show active' : '' }}" id="tab-social">
         <div class="card border" style="max-width:640px;">
             <div class="card-body p-4">
-                <form method="POST" action="{{ route('settings.update') }}">
+                <form method="POST" action="{{ route('admin.settings.update') }}">
                     @csrf
                     <input type="hidden" name="tab" value="social">
 
@@ -137,7 +137,7 @@
     <div class="tab-pane fade {{ $activeTab === 'content' ? 'show active' : '' }}" id="tab-content">
         <div class="card border" style="max-width:640px;">
             <div class="card-body p-4">
-                <form method="POST" action="{{ route('settings.update') }}">
+                <form method="POST" action="{{ route('admin.settings.update') }}">
                     @csrf
                     <input type="hidden" name="tab" value="content">
 
@@ -163,7 +163,7 @@
     <div class="tab-pane fade {{ $activeTab === 'account' ? 'show active' : '' }}" id="tab-account">
         <div class="card border" style="max-width:560px;">
             <div class="card-body p-4">
-                <form method="POST" action="{{ route('settings.update') }}">
+                <form method="POST" action="{{ route('admin.settings.update') }}">
                     @csrf
                     <input type="hidden" name="tab" value="account">
 
