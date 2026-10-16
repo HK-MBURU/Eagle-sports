@@ -12,13 +12,38 @@ class RaceEventController extends Controller
     /**
      * Display a listing of the race events.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events = RaceEvent::with('creator')
-            ->latest()
-            ->paginate(15);
+        $filter = $request->get('filter', 'all');
+        $search = $request->get('search');
 
-        return view('admin.race-events.index', compact('events'));
+        $query = RaceEvent::with('creator');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        match ($filter) {
+            'upcoming' => $query->where('event_date', '>=', now()->toDateString())->orderBy('event_date'),
+            'past'     => $query->where('event_date', '<',  now()->toDateString())->orderByDesc('event_date'),
+            'featured' => $query->where('is_featured', true)->latest(),
+            'flagship' => $query->where('is_flagship', true)->latest(),
+            default    => $query->latest(),
+        };
+
+        $events = $query->paginate(12)->withQueryString();
+
+        $stats = [
+            'total'    => RaceEvent::count(),
+            'upcoming' => RaceEvent::where('event_date', '>=', now()->toDateString())->count(),
+            'past'     => RaceEvent::where('event_date', '<',  now()->toDateString())->count(),
+            'flagship' => RaceEvent::where('is_flagship', true)->count(),
+        ];
+
+        return view('admin.race-events.index', compact('events', 'filter', 'search', 'stats'));
     }
 
     /**
