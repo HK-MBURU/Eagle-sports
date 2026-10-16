@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Beyond Finish Line</title>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>Eagle Sports — Admin</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0F3D22 0%, #333A12 100%);
+            background: #10284a;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -21,178 +21,105 @@
             padding: 20px;
         }
 
-        .container {
-            background: #FFFFFF;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e2e7ef;
+            max-width: 420px;
             width: 100%;
-            padding: 60px 40px;
-            text-align: center;
-            position: relative;
             overflow: hidden;
         }
 
-        .container::before {
+        /* Red top stripe */
+        .card::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background: linear-gradient(90deg, #FF6600, #FFBF00, #E2B34A);
+            display: block;
+            height: 4px;
+            background: #d62835;
         }
 
-        .logo-section {
-            margin-bottom: 40px;
+        .card-inner {
+            padding: 48px 40px 44px;
+            text-align: center;
         }
 
-        .logo-placeholder {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #163C1E, #000);
-            border-radius: 50%;
+        .logo-wrap {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 22px;
+            border-radius: 10px;
+            background: #f4f6f9;
+            border: 1px solid #e2e7ef;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
-            font-weight: bold;
-            color: #FFFFFF;
-            box-shadow: 0 8px 20px rgba(226, 179, 74, 0.3);
-            transition: transform 0.3s ease;
+            overflow: hidden;
         }
 
-        .logo-placeholder:hover {
-            transform: scale(1.05);
-        }
-
-        /* Replace the .logo-placeholder with an actual image if you have a logo */
-        .logo-placeholder img {
+        .logo-wrap img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 50%;
+            padding: 8px;
         }
 
         h1 {
-            color: #333A12;
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-            line-height: 1.2;
+            color: #10284a;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -.4px;
+            margin-bottom: 6px;
         }
 
         .subtitle {
-            color: #997557;
-            font-size: 1.1rem;
-            margin-bottom: 50px;
-            font-weight: 400;
+            color: #667085;
+            font-size: 0.82rem;
+            margin-bottom: 36px;
         }
 
-        .cta-button {
+        .cta-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #FF6600, #FFBF00);
-            color: #FFFFFF;
+            background: #d62835;
+            color: #fff;
             text-decoration: none;
-            padding: 18px 60px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(255, 102, 0, 0.4);
-            border: none;
-            cursor: pointer;
+            padding: 12px 40px;
+            border-radius: 7px;
+            font-size: 0.85rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: .6px;
+            transition: background .15s;
         }
 
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(255, 102, 0, 0.5);
-        }
+        .cta-btn:hover { background: #b51e2a; }
 
-        .cta-button:active {
-            transform: translateY(-1px);
-        }
-
-        .decorative-line {
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #FF6600, #E2B34A);
-            margin: 30px auto;
-            border-radius: 2px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 40px 30px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .subtitle {
-                font-size: 1rem;
-            }
-
-            .logo-placeholder {
-                width: 120px;
-                height: 120px;
-                font-size: 40px;
-            }
-
-            .cta-button {
-                padding: 16px 50px;
-                font-size: 1.1rem;
-            }
+        .footer-note {
+            margin-top: 32px;
+            font-size: 0.72rem;
+            color: #aab0bc;
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 1.75rem;
-            }
-
-            .subtitle {
-                font-size: 0.95rem;
-                margin-bottom: 40px;
-            }
-
-            .logo-placeholder {
-                width: 100px;
-                height: 100px;
-                font-size: 36px;
-            }
-
-            .cta-button {
-                padding: 14px 40px;
-                font-size: 1rem;
-                width: 100%;
-            }
+            .card-inner { padding: 36px 28px 32px; }
+            h1 { font-size: 1.3rem; }
+            .cta-btn { width: 100%; text-align: center; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo-section">
-            <div class="logo-placeholder">
-
-                 <img src="{{ asset('images/logo3.png') }}" style="padding: 10px;" alt="Beyond Finish Line Logo">
-                {{-- BFL --}}
+    <div class="card">
+        <div class="card-inner">
+            <div class="logo-wrap">
+                <img src="{{ asset('images/es-logo.png') }}" alt="Eagle Sports Logo">
             </div>
-            <div class="decorative-line"></div>
+
+            <h1>Eagle Sports</h1>
+            <p class="subtitle">Administration Portal</p>
+
+            <a href="{{ route('admin.dashboard') }}" class="cta-btn">Get Started</a>
+
+            <p class="footer-note">Restricted access &mdash; authorised personnel only</p>
         </div>
-
-        <h1>Welcome to Admin</h1>
-        <p class="subtitle">Beyond Finish Line</p>
-
-        <a href="{{ route('admin.dashboard') }}" class="cta-button">Get Started</a>
     </div>
 </body>
 </html>
