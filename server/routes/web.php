@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AthleteController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\RaceEventController;
+use App\Http\Controllers\Admin\ResultEntryController;
 use App\Http\Controllers\Admin\ResultsController;
 use App\Http\Controllers\Admin\StoryController;
 use App\Http\Controllers\Admin\VideoController;
@@ -93,7 +94,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Races Management
     Route::resource('races', RaceController::class);
-    // Races Management
+
+    // Result Entries (feeds the frontend Results Centre widget)
+    Route::resource('result-entries', ResultEntryController::class);
+
+    // Race Results (file uploads)
     Route::resource('results', ResultsController::class);
 
     // Additional routes for race results

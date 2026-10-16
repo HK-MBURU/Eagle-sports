@@ -349,6 +349,10 @@
            class="sidebar-link {{ request()->routeIs('admin.events.*') ? 'active' : '' }}">
             <i class="bi bi-calendar-event"></i><span>Race Events</span>
         </a>
+        <a href="{{ route('admin.result-entries.index') }}"
+           class="sidebar-link {{ request()->routeIs('admin.result-entries.*') ? 'active' : '' }}">
+            <i class="bi bi-table"></i><span>Results Centre</span>
+        </a>
         <a href="{{ route('admin.results.index') }}"
            class="sidebar-link {{ request()->routeIs('admin.results.*') ? 'active' : '' }}">
             <i class="bi bi-trophy"></i><span>Race Results</span>
