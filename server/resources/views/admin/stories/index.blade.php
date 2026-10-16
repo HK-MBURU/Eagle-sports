@@ -259,8 +259,13 @@
 </div>
 
 <!-- Pagination -->
-<div class="d-flex justify-content-center">
-    {{ $stories->links() }}
+<div class="d-flex justify-content-between align-items-center mt-2 pt-3 border-top">
+    <p class="text-muted small mb-0">
+        Showing {{ $stories->firstItem() }}–{{ $stories->lastItem() }} of {{ $stories->total() }} stories
+    </p>
+    <div class="es-pagination">
+        {{ $stories->links() }}
+    </div>
 </div>
 
 @else
@@ -287,50 +292,49 @@
 
 @push('styles')
 <style>
-    /* Minimal, flat design with no animations */
-    .card {
-        border-radius: 4px;
-    }
+    .card { border-radius: 6px; }
 
-    .card-title a:hover {
-        color: #FF6600 !important;
-    }
+    .card-title a:hover { color: var(--es-red) !important; }
 
-    .btn-primary {
-        background: linear-gradient(135deg, #FF6600, #FFBF00);
-        border: none;
-    }
+    .badge { font-weight: 600; font-size: 0.72rem; }
 
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #E55A00, #E6AB00);
-    }
-
-    .badge {
-        font-weight: 500;
-        font-size: 0.75rem;
-    }
-
-    /* Simple focus states */
     .form-control:focus,
     .form-select:focus {
-        border-color: #FF6600;
-        box-shadow: 0 0 0 0.2rem rgba(255, 102, 0, 0.15);
+        border-color: var(--es-red);
+        box-shadow: 0 0 0 3px rgba(214,40,53,.08);
     }
 
-    /* Clean button styles */
-    .btn-outline-primary:hover {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
+    /* ── Pagination ── */
+    .es-pagination .pagination {
+        margin: 0;
+        gap: 3px;
     }
-
-    .btn-outline-warning:hover {
-        background-color: #ffc107;
-        border-color: #ffc107;
+    .es-pagination .page-item .page-link {
+        border-radius: 5px !important;
+        border: 1px solid var(--es-line);
+        color: var(--es-navy);
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 5px 11px;
+        line-height: 1.5;
+        min-width: 34px;
+        text-align: center;
+        transition: background .12s, border-color .12s, color .12s;
     }
-
-    .btn-outline-danger:hover {
-        background-color: #dc3545;
-        border-color: #dc3545;
+    .es-pagination .page-item.active .page-link {
+        background: var(--es-red);
+        border-color: var(--es-red);
+        color: #fff;
+    }
+    .es-pagination .page-item .page-link:hover:not(.disabled) {
+        background: var(--es-paper);
+        border-color: var(--es-red);
+        color: var(--es-red);
+    }
+    .es-pagination .page-item.disabled .page-link {
+        color: #b0b8c4;
+        border-color: var(--es-line);
+        background: transparent;
     }
 </style>
 @endpush
