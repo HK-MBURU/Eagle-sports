@@ -40,6 +40,10 @@ Route::get('/', function () {
 });
 
 
+Route::get('/admin', function () {
+    return redirect()->route('admin.dashboard');
+});
+
 Route::get('/admin/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('admin.dashboard');
 
 Route::middleware('auth')->group(function () {
