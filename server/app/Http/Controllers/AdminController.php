@@ -2,69 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Admin $admin)
-    {
-        //
-    }
-
     public function settings()
     {
-        return view('admin.settings.index');
+        $settings = Setting::all()->keyBy('key');
+        $user     = auth()->user();
+
+        return view('admin.settings.index', compact('settings', 'user'));
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $tab = $request->input('tab', 'site');
+
+        if ($tab === 'account') {
+            $data = $request->validate([
+                'name'  => 'required|string|max:255',
+                'email' => ['required', 'email', Rule::unique('users')->ignore(auth()->id())],
+            ]);
+
+            if ($request->filled('password')) {
+                $request->validate(['password' => 'string|min:8|confirmed']);
+                $data['password'] = Hash::make($request->password);
+            }
+
+            auth()->user()->update($data);
+
+            return back()->with('success', 'Account updated successfully.')->with('active_tab', 'account');
+        }
+
+        // Site / Social / Content settings
+        $keys = [
+            'site_name', 'site_tagline', 'contact_email', 'contact_phone',
+            'contact_address', 'about_blurb',
+            'facebook_url', 'twitter_url', 'instagram_url', 'youtube_url',
+            'stories_per_page',
+        ];
+
+        foreach ($keys as $key) {
+            if ($request->has($key)) {
+                Setting::set($key, $request->input($key));
+            }
+        }
+
+        return back()->with('success', 'Settings saved.')->with('active_tab', $tab);
     }
 }
