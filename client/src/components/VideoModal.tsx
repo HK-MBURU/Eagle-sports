@@ -1,6 +1,5 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
 
 interface VideoModalProps {
   isOpen: boolean;
@@ -10,84 +9,115 @@ interface VideoModalProps {
   athleteName?: string;
 }
 
+const getEmbedUrl = (url: string): string | null => {
+  if (!url) return null;
+  // Already an embed URL
+  if (url.includes("youtube.com/embed/")) {
+    const base = url.split("?")[0];
+    return `${base}?autoplay=1&rel=0&modestbranding=1`;
+  }
+  // youtu.be short link
+  const short = url.match(/youtu\.be\/([^?&]+)/);
+  if (short) return `https://www.youtube.com/embed/${short[1]}?autoplay=1&rel=0&modestbranding=1`;
+  // Standard watch URL
+  const watch = url.match(/[?&]v=([^?&#]+)/);
+  if (watch) return `https://www.youtube.com/embed/${watch[1]}?autoplay=1&rel=0&modestbranding=1`;
+  return null;
+};
+
 export const VideoModal = ({ isOpen, onClose, videoUrl, title, athleteName }: VideoModalProps) => {
-  const [videoId, setVideoId] = useState<string | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const embedUrl = getEmbedUrl(videoUrl);
 
+  // Close on Escape key
   useEffect(() => {
-    if (videoUrl) {
-      const id = extractYouTubeVideoId(videoUrl);
-      setVideoId(id);
-    }
-  }, [videoUrl]);
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, onClose]);
 
-  const extractYouTubeVideoId = (url: string): string | null => {
-    if (!url) return null;
-    
-    const patterns = [
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
-      /youtube\.com\/watch\?.*v=([^&\n?#]+)/
-    ];
-
-    for (const pattern of patterns) {
-      const match = url.match(pattern);
-      if (match && match[1]) {
-        return match[1];
-      }
-    }
-    return null;
-  };
+  if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl w-[95vw] p-0 overflow-hidden bg-black border-0">
+    <div
+      ref={overlayRef}
+      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.85)",
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "16px",
+      }}
+    >
+      <div style={{
+        width: "100%",
+        maxWidth: 900,
+        background: "#000",
+        borderRadius: 12,
+        overflow: "hidden",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.7)",
+      }}>
         {/* Header */}
-        <div className="relative bg-accent-orange p-4 md:p-6">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2 transition-colors z-10"
-            aria-label="Close"
-          >
-            <X size={24} />
-          </button>
-          <div className="pr-12">
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-1">{title}</h2>
+        <div style={{ background: "#d62835", padding: "16px 20px", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+          <div style={{ flex: 1 }}>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "#fff", lineHeight: 1.3 }}>{title}</h2>
             {athleteName && (
-              <p className="text-white/90 text-sm md:text-base">{athleteName}</p>
+              <p style={{ margin: "4px 0 0", fontSize: 13, color: "rgba(255,255,255,0.85)" }}>{athleteName}</p>
             )}
           </div>
+          <button
+            onClick={onClose}
+            style={{
+              flexShrink: 0,
+              background: "rgba(255,255,255,0.2)",
+              border: "none",
+              borderRadius: "50%",
+              width: 36,
+              height: 36,
+              cursor: "pointer",
+              display: "grid",
+              placeItems: "center",
+              color: "#fff",
+            }}
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
         </div>
 
-        {/* Video Container */}
-        <div className="relative w-full bg-black" style={{ paddingBottom: '56.25%' }}>
-          {videoId ? (
+        {/* Video */}
+        <div style={{ position: "relative", paddingBottom: "56.25%", background: "#000" }}>
+          {embedUrl ? (
             <iframe
-              className="absolute top-0 left-0 w-full h-full"
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`}
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
+              src={embedUrl}
               title={title}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-            ></iframe>
+            />
           ) : (
-            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-              <p className="text-white">Unable to load video</p>
+            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <p style={{ color: "#fff", fontSize: 14 }}>Unable to load video</p>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="bg-card p-4 md:p-6">
-          <p className="text-sm text-muted-foreground text-center">
-            {athleteName ? (
-              <>
-                Watching with <span className="font-semibold text-accent-orange">{athleteName}</span>
-              </>
-            ) : (
-              "Enjoy the story—right here on Beyond the Finish Line."
-            )}
+        <div style={{ background: "#111", padding: "12px 20px", textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 12, color: "#888" }}>
+            {athleteName ? <>Watching with <strong style={{ color: "#d62835" }}>{athleteName}</strong></> : "Eagle Sports — Beyond the Finish Line"}
           </p>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };

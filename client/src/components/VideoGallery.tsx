@@ -21,6 +21,11 @@ const VideoGallery = () => {
   const getThumbnail = (v: Video): string => {
     if (v.youtube_thumbnail) return v.youtube_thumbnail;
     const id = extractYouTubeId(v.youtube_url);
+    return id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : "";
+  };
+
+  const getFallbackThumbnail = (v: Video): string => {
+    const id = extractYouTubeId(v.youtube_url);
     return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
   };
 
@@ -107,7 +112,7 @@ const VideoGallery = () => {
                 style={{
                   borderRadius: 10,
                   overflow: "hidden",
-                  background: `linear-gradient(0deg,#07172b40,#07172b10), url(${getThumbnail(v)}) center/cover`,
+                  background: NAVY,
                   color: "#fff",
                   position: "relative",
                   minHeight: 205,
@@ -116,6 +121,37 @@ const VideoGallery = () => {
                   cursor: "pointer",
                 }}
               >
+                {/* Thumbnail image */}
+                <img
+                  src={getThumbnail(v)}
+                  alt={v.title}
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    const fallback = getFallbackThumbnail(v);
+                    if (img.src !== fallback && fallback) {
+                      img.src = fallback;
+                    } else {
+                      img.style.display = "none";
+                    }
+                  }}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    zIndex: 0,
+                  }}
+                />
+
+                {/* Dark overlay */}
+                <div style={{
+                  position: "absolute",
+                  inset: 0,
+                  background: "linear-gradient(0deg,#07172bf0 0%,#07172b30 60%,transparent 100%)",
+                  zIndex: 1,
+                }} />
+
                 {/* Play button */}
                 <div style={{
                   position: "absolute",
@@ -133,12 +169,12 @@ const VideoGallery = () => {
                   ▶
                 </div>
 
-                {/* Bottom gradient + text */}
+                {/* Bottom text */}
                 <div style={{
                   position: "relative",
                   width: "100%",
                   padding: 18,
-                  background: "linear-gradient(0deg,#07172bf2,transparent)",
+                  zIndex: 2,
                 }}>
                   <h3 style={{ fontSize: 17, lineHeight: 1.2, margin: 0, fontWeight: 800 }}>
                     {v.title}
