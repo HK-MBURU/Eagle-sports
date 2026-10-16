@@ -10,14 +10,14 @@
         <h2 class="mb-1">Edit User</h2>
         <p class="text-muted mb-0">Update account details for <strong>{{ $user->name }}</strong></p>
     </div>
-    <a href="{{ route('users.index') }}" class="btn btn-outline-secondary btn-sm">
+    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-arrow-left me-1"></i>Back
     </a>
 </div>
 
 <div class="card border" style="max-width:560px;">
     <div class="card-body p-4">
-        <form method="POST" action="{{ route('users.update', $user) }}">
+        <form method="POST" action="{{ route('admin.users.update', $user) }}">
             @csrf @method('PUT')
 
             <div class="mb-3">
@@ -65,7 +65,7 @@
                 <button type="submit" class="btn btn-es-primary">
                     <i class="bi bi-check-lg me-2"></i>Save Changes
                 </button>
-                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>
     </div>

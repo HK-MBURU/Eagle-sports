@@ -11,7 +11,7 @@
         <h2 class="mb-1">Users</h2>
         <p class="text-muted mb-0">{{ $users->total() }} total users</p>
     </div>
-    <a href="{{ route('users.create') }}" class="btn btn-es-primary">
+    <a href="{{ route('admin.users.create') }}" class="btn btn-es-primary">
         <i class="bi bi-person-plus me-2"></i>Add User
     </a>
 </div>
@@ -33,7 +33,7 @@
 {{-- Filters --}}
 <div class="card border mb-4">
     <div class="card-body py-3">
-        <form method="GET" action="{{ route('users.index') }}" class="row g-3 align-items-end">
+        <form method="GET" action="{{ route('admin.users.index') }}" class="row g-3 align-items-end">
             <div class="col-md-5">
                 <label class="form-label fw-semibold small">Search</label>
                 <input type="text" name="search" class="form-control form-control-sm"
@@ -55,7 +55,7 @@
             </div>
             @if(request()->hasAny(['search','role']))
             <div class="col-md-2">
-                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary btn-sm w-100">
+                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary btn-sm w-100">
                     <i class="bi bi-x-circle me-1"></i>Clear
                 </a>
             </div>
@@ -112,7 +112,7 @@
                     </td>
                     <td class="text-muted small">{{ $user->created_at->format('M d, Y') }}</td>
                     <td class="pe-4 text-end">
-                        <a href="{{ route('users.edit', $user) }}"
+                        <a href="{{ route('admin.users.edit', $user) }}"
                            class="btn btn-sm btn-outline-secondary me-1">
                             <i class="bi bi-pencil"></i>
                         </a>
@@ -140,7 +140,7 @@
                             </div>
                             <div class="modal-footer border-0 pt-0">
                                 <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
+                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                 </form>
@@ -154,7 +154,7 @@
                         <i class="bi bi-people fs-2 d-block mb-2"></i>
                         No users found.
                         @if(request()->hasAny(['search','role']))
-                            <a href="{{ route('users.index') }}" class="d-block mt-2 small">Clear filters</a>
+                            <a href="{{ route('admin.users.index') }}" class="d-block mt-2 small">Clear filters</a>
                         @endif
                     </td>
                 </tr>

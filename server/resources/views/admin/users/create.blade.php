@@ -10,14 +10,14 @@
         <h2 class="mb-1">Add User</h2>
         <p class="text-muted mb-0">Create a new admin or editor account</p>
     </div>
-    <a href="{{ route('users.index') }}" class="btn btn-outline-secondary btn-sm">
+    <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-arrow-left me-1"></i>Back
     </a>
 </div>
 
 <div class="card border" style="max-width:560px;">
     <div class="card-body p-4">
-        <form method="POST" action="{{ route('users.store') }}">
+        <form method="POST" action="{{ route('admin.users.store') }}">
             @csrf
 
             <div class="mb-3">
@@ -61,7 +61,7 @@
                 <button type="submit" class="btn btn-es-primary">
                     <i class="bi bi-person-plus me-2"></i>Create User
                 </button>
-                <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>
     </div>
