@@ -4,16 +4,17 @@
 @section('page-title', 'Quotes')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row mb-3">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4>All Quotes</h4>
-                <a href="{{ route('admin.quotes.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Add New Quote
-                </a>
-            </div>
+<div class="container-fluid px-3 px-md-4">
+
+    {{-- Header --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 fw-bold">All Quotes</h4>
+            <small class="text-muted">{{ $quotes->total() }} quote{{ $quotes->total() !== 1 ? 's' : '' }}</small>
         </div>
+        <a href="{{ route('admin.quotes.create') }}" class="btn btn-primary btn-sm px-3">
+            <i class="bi bi-plus-lg me-1"></i> Add New Quote
+        </a>
     </div>
 
     @if(session('success'))
@@ -23,90 +24,149 @@
         </div>
     @endif
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    @if($quotes->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Quote</th>
-                                        <th>Owner</th>
-                                        <th>Title</th>
-                                        <th>Added By</th>
-                                        <th>Date Added</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($quotes as $quote)
-                                        <tr>
-                                            <td>{{ $quote->id }}</td>
-                                            <td>
-                                                <div class="quote-content" style="max-width: 400px;">
-                                                    "{{ Str::limit($quote->content, 100) }}"
-                                                </div>
-                                            </td>
-                                            <td>{{ $quote->owner }}</td>
-                                            <td>
-                                                @if($quote->owner_title)
-                                                    <span class="badge bg-info">{{ $quote->owner_title }}</span>
-                                                @else
-                                                    <span class="text-muted">—</span>
-                                                @endif
-                                            </td>
-                                            <td>{{ $quote->addedBy->name }}</td>
-                                            <td>{{ $quote->created_at->format('M d, Y') }}</td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('admin.quotes.show', $quote) }}"
-                                                       class="btn btn-sm btn-info"
-                                                       title="View">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="{{ route('admin.quotes.edit', $quote) }}"
-                                                       class="btn btn-sm btn-warning"
-                                                       title="Edit">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <form action="{{ route('admin.quotes.destroy', $quote) }}"
-                                                          method="POST"
-                                                          class="d-inline"
-                                                          onsubmit="return confirm('Are you sure you want to delete this quote?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                                class="btn btn-sm btn-danger"
-                                                                title="Delete">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+    @if($quotes->count() > 0)
+
+        {{-- ── MOBILE CARDS (< md) ── --}}
+        <div class="d-md-none">
+            <div class="d-flex flex-column gap-3">
+                @foreach($quotes as $quote)
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body p-3">
+
+                        {{-- Top row: ID + badge --}}
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="text-muted small">#{{ $quote->id }}</span>
+                            @if($quote->owner_title)
+                                <span class="badge rounded-pill text-white fw-semibold"
+                                      style="background:#06b6d4;font-size:11px;">
+                                    {{ Str::limit($quote->owner_title, 30) }}
+                                </span>
+                            @endif
                         </div>
 
-                        <div class="mt-3">
-                            {{ $quotes->links() }}
+                        {{-- Quote text --}}
+                        <p class="mb-2 fw-medium" style="font-style:italic;color:#172235;line-height:1.5;font-size:15px;">
+                            &ldquo;{{ Str::limit($quote->content, 120) }}&rdquo;
+                        </p>
+
+                        {{-- Owner + date --}}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="fw-semibold text-dark" style="font-size:13px;">
+                                <i class="bi bi-person-fill me-1 text-primary"></i>{{ $quote->owner }}
+                            </span>
+                            <span class="text-muted" style="font-size:12px;">
+                                <i class="bi bi-calendar3 me-1"></i>{{ $quote->created_at->format('M d, Y') }}
+                            </span>
                         </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-quote-left fa-3x text-muted mb-3"></i>
-                            <p class="text-muted">No quotes found. Add your first quote!</p>
-                            <a href="{{ route('admin.quotes.create') }}" class="btn btn-primary mt-2">
-                                <i class="fas fa-plus"></i> Add Quote
+
+                        {{-- Action buttons --}}
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('admin.quotes.show', $quote) }}"
+                               class="btn btn-sm btn-outline-info flex-fill">
+                                <i class="bi bi-eye me-1"></i>View
                             </a>
+                            <a href="{{ route('admin.quotes.edit', $quote) }}"
+                               class="btn btn-sm btn-outline-warning flex-fill">
+                                <i class="bi bi-pencil me-1"></i>Edit
+                            </a>
+                            <form action="{{ route('admin.quotes.destroy', $quote) }}"
+                                  method="POST" class="flex-fill"
+                                  onsubmit="return confirm('Delete this quote?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </button>
+                            </form>
                         </div>
-                    @endif
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- ── DESKTOP TABLE (≥ md) ── --}}
+        <div class="d-none d-md-block">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4" style="width:48px">#</th>
+                                    <th>Quote</th>
+                                    <th>Owner</th>
+                                    <th>Title</th>
+                                    <th>Added By</th>
+                                    <th>Date</th>
+                                    <th class="pe-4 text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($quotes as $quote)
+                                <tr>
+                                    <td class="ps-4 text-muted">{{ $quote->id }}</td>
+                                    <td style="max-width:360px">
+                                        <span class="fst-italic">&ldquo;{{ Str::limit($quote->content, 100) }}&rdquo;</span>
+                                    </td>
+                                    <td class="fw-semibold">{{ $quote->owner }}</td>
+                                    <td>
+                                        @if($quote->owner_title)
+                                            <span class="badge rounded-pill text-white" style="background:#06b6d4">
+                                                {{ Str::limit($quote->owner_title, 25) }}
+                                            </span>
+                                        @else
+                                            <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-muted">{{ $quote->addedBy->name }}</td>
+                                    <td class="text-muted text-nowrap">{{ $quote->created_at->format('M d, Y') }}</td>
+                                    <td class="pe-4 text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ route('admin.quotes.show', $quote) }}"
+                                               class="btn btn-outline-info" title="View">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{{ route('admin.quotes.edit', $quote) }}"
+                                               class="btn btn-outline-warning" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="{{ route('admin.quotes.destroy', $quote) }}"
+                                                  method="POST" class="d-inline"
+                                                  onsubmit="return confirm('Delete this quote?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger" title="Delete">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        {{-- Pagination --}}
+        <div class="mt-4">
+            {{ $quotes->links() }}
+        </div>
+
+    @else
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-chat-quote display-4 text-muted mb-3 d-block"></i>
+                <p class="text-muted mb-3">No quotes yet. Add your first one!</p>
+                <a href="{{ route('admin.quotes.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i> Add Quote
+                </a>
+            </div>
+        </div>
+    @endif
+
 </div>
 @endsection
