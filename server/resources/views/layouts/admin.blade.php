@@ -291,6 +291,105 @@
             background: rgba(0,0,0,.45); z-index: 999;
         }
         .sidebar-overlay.open { display: block; }
+
+        /* ── Notification Bell ── */
+        .notif-wrap { position: relative; }
+
+        .notif-btn {
+            position: relative;
+            background: none; border: none; cursor: pointer;
+            width: 38px; height: 38px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--es-muted); font-size: 1.15rem;
+            transition: background .15s, color .15s;
+        }
+        .notif-btn:hover { background: var(--es-line); color: var(--es-navy); }
+        .notif-btn.has-unread { color: var(--es-navy); }
+
+        .notif-badge {
+            position: absolute; top: 4px; right: 4px;
+            min-width: 16px; height: 16px;
+            background: var(--es-red); color: #fff;
+            border-radius: 8px; font-size: .6rem; font-weight: 800;
+            display: none; align-items: center; justify-content: center;
+            padding: 0 3px; line-height: 1;
+            border: 1.5px solid #fff;
+        }
+
+        .notif-dropdown {
+            position: absolute; top: calc(100% + 8px); right: 0;
+            width: 360px; max-width: calc(100vw - 20px);
+            background: #fff; border: 1px solid var(--es-line);
+            border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,.12);
+            z-index: 2000; display: none; flex-direction: column;
+            max-height: 480px; overflow: hidden;
+        }
+        .notif-dropdown.open { display: flex; }
+
+        .notif-hdr {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 13px 16px 11px; border-bottom: 1px solid var(--es-line);
+            flex-shrink: 0;
+        }
+        .notif-hdr-title { font-size: .88rem; font-weight: 800; color: var(--es-navy); }
+
+        .notif-clear-btn {
+            background: none; border: none; cursor: pointer;
+            font-size: .75rem; font-weight: 700; color: var(--es-muted);
+            display: flex; align-items: center; gap: 4px;
+            padding: 4px 8px; border-radius: 5px;
+            transition: background .15s, color .15s;
+        }
+        .notif-clear-btn:hover { background: var(--es-line); color: var(--es-navy); }
+
+        .notif-body { flex: 1; overflow-y: auto; }
+        .notif-body::-webkit-scrollbar { width: 3px; }
+        .notif-body::-webkit-scrollbar-thumb { background: var(--es-line); border-radius: 2px; }
+
+        .notif-item {
+            display: flex; align-items: flex-start; gap: 11px;
+            padding: 11px 14px; border-bottom: 1px solid #f4f6f9;
+            cursor: pointer; transition: background .12s;
+        }
+        .notif-item:last-child { border-bottom: none; }
+        .notif-item:hover { background: #f8fafc; }
+        .notif-item.unread { background: #f0f5ff; }
+        .notif-item.unread:hover { background: #e7effe; }
+
+        .notif-icon {
+            width: 34px; height: 34px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .95rem; flex-shrink: 0;
+        }
+
+        .notif-text { flex: 1; min-width: 0; }
+        .notif-title-t { font-size: .81rem; font-weight: 700; color: var(--es-navy); line-height: 1.3; }
+        .notif-msg-t {
+            font-size: .77rem; color: var(--es-muted); line-height: 1.35;
+            margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .notif-time-t { font-size: .7rem; color: #9ba6b7; margin-top: 3px; }
+
+        .notif-del {
+            background: none; border: none; cursor: pointer;
+            color: #ccc; font-size: .95rem;
+            padding: 2px 4px; border-radius: 4px;
+            transition: color .12s, background .12s;
+            flex-shrink: 0; align-self: center; opacity: 0;
+        }
+        .notif-item:hover .notif-del { opacity: 1; }
+        .notif-del:hover { color: var(--es-red); background: #fff0f1; }
+
+        .notif-empty {
+            text-align: center; padding: 36px 16px; color: var(--es-muted);
+        }
+        .notif-empty i { font-size: 2.2rem; display: block; margin-bottom: 10px; color: #d0d8e4; }
+        .notif-empty p { font-size: .83rem; margin: 0; }
+
+        .notif-loading {
+            display: flex; align-items: center; justify-content: center;
+            padding: 36px; color: var(--es-muted); gap: 8px; font-size: .83rem;
+        }
     </style>
 
     @stack('styles')
@@ -400,6 +499,28 @@
                target="_blank" rel="noopener" class="site-link">
                 <i class="bi bi-box-arrow-up-right"></i> View Site
             </a>
+
+            {{-- Notification Bell --}}
+            <div class="notif-wrap" id="notifWrap">
+                <button class="notif-btn" id="notifBtn" aria-label="Notifications">
+                    <i class="bi bi-bell"></i>
+                    <span class="notif-badge" id="notifBadge"></span>
+                </button>
+                <div class="notif-dropdown" id="notifDropdown">
+                    <div class="notif-hdr">
+                        <span class="notif-hdr-title">Notifications</span>
+                        <button class="notif-clear-btn" id="notifMarkAll">
+                            <i class="bi bi-check2-all"></i> Mark all read
+                        </button>
+                    </div>
+                    <div class="notif-body" id="notifList">
+                        <div class="notif-loading">
+                            <span class="spinner-border spinner-border-sm"></span> Loading…
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="user-chip">
                 <div class="user-avatar">
                     {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
@@ -454,5 +575,117 @@
 </script>
 
 @stack('scripts')
+
+<script>
+// ── Notification Bell ─────────────────────────────────────────────────────────
+(function () {
+    const btn      = document.getElementById('notifBtn');
+    const badge    = document.getElementById('notifBadge');
+    const dropdown = document.getElementById('notifDropdown');
+    const list     = document.getElementById('notifList');
+    const markAll  = document.getElementById('notifMarkAll');
+    const csrf     = document.querySelector('meta[name="csrf-token"]').content;
+    let open       = false;
+
+    function esc(s) {
+        if (s == null) return '';
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function setBadge(n) {
+        if (n > 0) {
+            badge.style.display = 'flex';
+            badge.textContent   = n > 99 ? '99+' : n;
+            btn.classList.add('has-unread');
+        } else {
+            badge.style.display = 'none';
+            btn.classList.remove('has-unread');
+        }
+    }
+
+    function render(data) {
+        setBadge(data.unread_count || 0);
+        const items = data.notifications || [];
+        if (!items.length) {
+            list.innerHTML = `<div class="notif-empty"><i class="bi bi-bell-slash"></i><p>All caught up!</p></div>`;
+            return;
+        }
+        list.innerHTML = items.map(n => `
+            <div class="notif-item ${n.unread ? 'unread' : ''}" data-id="${n.id}"
+                 onclick="window._notifClick(event,${n.id},'${esc(n.link)}')">
+                <div class="notif-icon" style="background:${esc(n.bg||'#eff6ff')};color:${esc(n.color||'#2563eb')}">
+                    <i class="bi bi-${esc(n.icon||'bell')}"></i>
+                </div>
+                <div class="notif-text">
+                    <div class="notif-title-t">${esc(n.title)}</div>
+                    <div class="notif-msg-t" title="${esc(n.message)}">${esc(n.message)}</div>
+                    <div class="notif-time-t">${esc(n.time)}</div>
+                </div>
+                <button class="notif-del" title="Dismiss"
+                        onclick="window._notifDel(event,${n.id})">
+                    <i class="bi bi-x"></i>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    async function poll() {
+        try {
+            const r = await fetch('{{ route("admin.notifications.poll") }}',
+                { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            if (!r.ok) return;
+            render(await r.json());
+        } catch {}
+    }
+
+    function toggle() {
+        open = !open;
+        dropdown.classList.toggle('open', open);
+        if (open) poll();
+    }
+
+    btn.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+    document.addEventListener('click', e => {
+        if (open && !dropdown.contains(e.target) && e.target !== btn) {
+            open = false; dropdown.classList.remove('open');
+        }
+    });
+
+    markAll.addEventListener('click', async () => {
+        await fetch('{{ route("admin.notifications.read-all") }}', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        poll();
+    });
+
+    window._notifClick = async (e, id, link) => {
+        e.stopPropagation();
+        await fetch(`/admin/notifications/${id}/read`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, 'X-Requested-With': 'XMLHttpRequest' }
+        }).catch(() => {});
+        if (link && link !== 'null' && link !== '') window.location.href = link;
+        else poll();
+    };
+
+    window._notifDel = async (e, id) => {
+        e.stopPropagation();
+        const el = document.querySelector(`.notif-item[data-id="${id}"]`);
+        if (el) el.remove();
+        const rem = document.querySelectorAll('.notif-item').length;
+        if (!rem) list.innerHTML = `<div class="notif-empty"><i class="bi bi-bell-slash"></i><p>All caught up!</p></div>`;
+        setBadge(document.querySelectorAll('.notif-item.unread').length);
+        fetch(`/admin/notifications/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': csrf, 'X-Requested-With': 'XMLHttpRequest' }
+        }).catch(() => {});
+    };
+
+    // Initial load + poll every 30 s
+    poll();
+    setInterval(poll, 30000);
+})();
+</script>
 </body>
 </html>
