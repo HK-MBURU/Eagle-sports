@@ -64,12 +64,12 @@ class NotificationController extends Controller
             $link       = $config['link'];
 
             $lastRecord = $modelClass::latest()->first();
-            $isStale = !$lastRecord || $lastRecord->created_at->diffInDays(now()) >= $days;
+            $isStale = !$lastRecord || !$lastRecord->created_at || $lastRecord->created_at->diffInDays(now()) >= $days;
 
             if ($isStale) {
                 // Create only if no unread stale notification of this type exists
                 if (!AdminNotification::where('type', $type)->whereNull('read_at')->exists()) {
-                    $daysSince = $lastRecord
+                    $daysSince = ($lastRecord && $lastRecord->created_at)
                         ? (int) $lastRecord->created_at->diffInDays(now())
                         : null;
 

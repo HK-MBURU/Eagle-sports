@@ -61,9 +61,9 @@ class MetaTagController extends Controller
             'LinkedInBot',
             'Slackbot',
             'TelegramBot',
-            'WhatsApp',         // Keep
-            'WhatsApp/2',       // Add WhatsApp real UAs
-            'instagram',        // Instagram preview bot
+            'WhatsApp',
+            'instagram',
+            'Discordbot',
             'Applebot',
             'Googlebot',
             'bingbot',

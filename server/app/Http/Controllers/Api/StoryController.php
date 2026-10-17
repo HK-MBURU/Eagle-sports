@@ -720,8 +720,8 @@ class StoryController extends Controller
     {
         $story = Story::published()->where('slug', $slug)->firstOrFail();
 
-        // Use the API meta preview URL so every crawler gets static OG/Twitter tags.
-        $shareUrl = route('api.stories.meta', ['slug' => $story->slug], true);
+        // Canonical story page URL — nginx routes social crawlers to Laravel OG handler.
+        $shareUrl = rtrim(config('app.frontend_url', 'https://eaglesports.co.ke'), '/') . "/stories/{$story->slug}";
         $shareTitle = $story->meta_title ?? $story->title;
         $shareDescription = $story->meta_description ?? strip_tags($story->excerpt);
 
