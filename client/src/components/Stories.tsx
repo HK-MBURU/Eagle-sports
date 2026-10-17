@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { storiesAPI } from "@/services/api";
 import type { Story } from "@/types/story";
 import { Link, useNavigate } from "react-router-dom";
+import { useStories } from "@/contexts/StoriesContext";
 
 const RED  = "#d62835";
 const NAVY = "#10284a";
@@ -18,6 +19,8 @@ interface HomepageStoriesResponse {
 
 const Stories = () => {
   const navigate = useNavigate();
+  const { heroStories } = useStories();
+
   const [homepageStories, setHomepageStories] = useState<{
     featured: Story | null;
     regular: Story[];
@@ -25,12 +28,23 @@ const Stories = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState<string | null>(null);
 
+  // Track which set of exclude IDs we last fetched with — avoid redundant re-fetches
+  const lastExcludeKey = useRef<string>('__init__');
+
   useEffect(() => {
+    // Build exclude key from hero story IDs
+    const heroIds = heroStories.map(s => s.id).filter((id): id is number => id != null);
+    const excludeKey = heroIds.sort((a, b) => a - b).join(',');
+
+    // Skip if nothing changed or hero not loaded yet
+    if (excludeKey === lastExcludeKey.current) return;
+    lastExcludeKey.current = excludeKey;
+
     const fetchHomepageStories = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response: HomepageStoriesResponse = await storiesAPI.getHomepageStories();
+        const response: HomepageStoriesResponse = await storiesAPI.getHomepageStories(heroIds);
         if (response.success) setHomepageStories(response.data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load stories");
@@ -39,8 +53,9 @@ const Stories = () => {
         setLoading(false);
       }
     };
+
     fetchHomepageStories();
-  }, []);
+  }, [heroStories]);
 
   /* ── Skeleton ── */
   if (loading) {
@@ -85,7 +100,7 @@ const Stories = () => {
     );
   }
 
-  const { featured, regular } = homepageStories || {};
+  const { featured, regular } = homepageStories || { featured: null, regular: [] };
 
   return (
     <section id="stories" style={{ background: "#f4f6f9", padding: "48px 0" }}>

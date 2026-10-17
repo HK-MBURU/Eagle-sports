@@ -649,18 +649,25 @@ class StoryController extends Controller
     }
 
 
-    public function homepageFeatured(): JsonResponse
+    public function homepageFeatured(Request $request): JsonResponse
     {
         $user = Auth::user();
 
-        // Get the latest featured story
+        // IDs already shown in the hero slider — exclude them so this section shows fresh stories
+        $excludeIds = array_filter(
+            array_map('intval', explode(',', $request->query('exclude_ids', '')))
+        );
+
+        // Get the latest featured story not already in the hero
         $featuredStory = Story::published()
             ->featured()
+            ->when($excludeIds, fn ($q) => $q->whereNotIn('id', $excludeIds))
             ->latest()
             ->first();
 
-        // Get 3 latest regular stories (excluding the featured one if exists)
+        // Get 3 latest regular stories, excluding the hero set and the featured story
         $regularStoriesQuery = Story::published()
+            ->when($excludeIds, fn ($q) => $q->whereNotIn('id', $excludeIds))
             ->latest();
 
         if ($featuredStory) {

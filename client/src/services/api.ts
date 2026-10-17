@@ -105,12 +105,13 @@ export const storiesAPI = {
     }, true);
   },
 
-  // Get optimized homepage stories
-  getHomepageStories: async () => {
-    const url = `${API_BASE_URL}/stories/homepage-featured`;
+  // Get optimized homepage stories (excludeIds = hero slider story IDs to prevent repeats)
+  getHomepageStories: async (excludeIds: number[] = []) => {
+    const query = excludeIds.length ? `?exclude_ids=${excludeIds.join(',')}` : '';
+    const url = `${API_BASE_URL}/stories/homepage-featured${query}`;
     return enhancedFetch(url, {
       headers: getAuthHeaders(),
-    }, true); // Cache aggressively since homepage doesn't change often
+    }, false); // do not cache — exclude list changes per session
   },
 
   // Get all stories with filters

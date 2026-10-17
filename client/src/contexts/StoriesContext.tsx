@@ -59,7 +59,7 @@ export const StoriesProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      const response = await storiesAPI.getStories({ per_page: 4 });
+      const response = await storiesAPI.getStories({ per_page: 7 });
       if (response.success) {
         setHeroStories(response.data);
       }
