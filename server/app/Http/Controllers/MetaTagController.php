@@ -195,6 +195,8 @@ class MetaTagController extends Controller
             SEOMeta::addMeta('article:tag', $keyword, 'property');
         }
 
+        // og:image (plain) is required by WhatsApp/Telegram; og:image:url etc. are supplementary
+        SEOMeta::addMeta('og:image', $image, 'property');
         $openGraph->addImage([
             'url' => $image,
             'secure_url' => $image,
