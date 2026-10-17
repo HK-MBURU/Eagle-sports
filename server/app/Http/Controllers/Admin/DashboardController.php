@@ -87,7 +87,7 @@ class DashboardController extends Controller
         return array_map(function ($s) {
             $last = $s['model']::latest()->first();
             $count = $s['model']::count();
-            $daysSince = $last ? (int) $last->created_at->diffInDays(now()) : null;
+            $daysSince = ($last && $last->created_at) ? (int) $last->created_at->diffInDays(now()) : null;
 
             $status = 'good';
             if ($daysSince === null || $daysSince >= $s['alert']) {
