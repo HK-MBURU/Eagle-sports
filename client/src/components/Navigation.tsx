@@ -20,7 +20,7 @@ const Navigation = () => {
   const [openDesktopDD, setOpenDesktopDD]     = useState<string | null>(null);
   const [openMobileItems, setOpenMobileItems] = useState<string[]>([]);
   const ddTimer = useRef<NodeJS.Timeout>();
-  const eagleLogo = "/images/eagle-sports-logo.png";
+  const eagleLogo = "/images/es-logo.png";
 
   const { handleSearchResultClick } = useSearchNavigation();
   const handleSearchResult = (result: SearchResult) => {
