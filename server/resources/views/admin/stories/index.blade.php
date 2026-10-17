@@ -5,12 +5,12 @@
 
 @section('content')
 <!-- Header with Actions -->
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3 mb-4">
     <div>
-        <h2 class="mb-1">Stories Management</h2>
-        <p class="text-muted mb-0">{{ $stories->total() }} total stories</p>
+        <h2 class="mb-0 fs-4 fw-bold">Stories Management</h2>
+        <p class="text-muted mb-0 small">{{ $stories->total() }} total stories</p>
     </div>
-    <a href="{{ route('admin.stories.create') }}" class="btn btn-primary">
+    <a href="{{ route('admin.stories.create') }}" class="btn btn-primary flex-shrink-0">
         <i class="bi bi-plus-circle me-2"></i>Create New Story
     </a>
 </div>
@@ -25,61 +25,61 @@
 
 <!-- Statistics Cards -->
 <div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card border">
-            <div class="card-body">
+    <div class="col-6 col-md-3">
+        <div class="card border h-100">
+            <div class="card-body py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-muted mb-1">Total Stories</h6>
-                        <h3 class="mb-0">{{ $stories->total() }}</h3>
+                        <p class="text-muted mb-1 small fw-semibold">Total Stories</p>
+                        <h3 class="mb-0 fw-bold">{{ $stories->total() }}</h3>
                     </div>
-                    <div class="text-primary">
-                        <i class="bi bi-file-text fs-1"></i>
+                    <div class="text-primary d-none d-sm-block">
+                        <i class="bi bi-file-text fs-3"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border">
-            <div class="card-body">
+    <div class="col-6 col-md-3">
+        <div class="card border h-100">
+            <div class="card-body py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-muted mb-1">Published</h6>
-                        <h3 class="mb-0 text-success">{{ \App\Models\Story::where('status', 'published')->count() }}</h3>
+                        <p class="text-muted mb-1 small fw-semibold">Published</p>
+                        <h3 class="mb-0 fw-bold text-success">{{ \App\Models\Story::where('status', 'published')->count() }}</h3>
                     </div>
-                    <div class="text-success">
-                        <i class="bi bi-check-circle fs-1"></i>
+                    <div class="text-success d-none d-sm-block">
+                        <i class="bi bi-check-circle fs-3"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border">
-            <div class="card-body">
+    <div class="col-6 col-md-3">
+        <div class="card border h-100">
+            <div class="card-body py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-muted mb-1">Drafts</h6>
-                        <h3 class="mb-0 text-warning">{{ \App\Models\Story::where('status', 'draft')->count() }}</h3>
+                        <p class="text-muted mb-1 small fw-semibold">Drafts</p>
+                        <h3 class="mb-0 fw-bold text-warning">{{ \App\Models\Story::where('status', 'draft')->count() }}</h3>
                     </div>
-                    <div class="text-warning">
-                        <i class="bi bi-pencil-square fs-1"></i>
+                    <div class="text-warning d-none d-sm-block">
+                        <i class="bi bi-pencil-square fs-3"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border">
-            <div class="card-body">
+    <div class="col-6 col-md-3">
+        <div class="card border h-100">
+            <div class="card-body py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <h6 class="text-muted mb-1">Featured</h6>
-                        <h3 class="mb-0 text-warning">{{ \App\Models\Story::where('is_featured', true)->count() }}</h3>
+                        <p class="text-muted mb-1 small fw-semibold">Featured</p>
+                        <h3 class="mb-0 fw-bold text-warning">{{ \App\Models\Story::where('is_featured', true)->count() }}</h3>
                     </div>
-                    <div class="text-warning">
-                        <i class="bi bi-star-fill fs-1"></i>
+                    <div class="text-warning d-none d-sm-block">
+                        <i class="bi bi-star-fill fs-3"></i>
                     </div>
                 </div>
             </div>
@@ -90,19 +90,19 @@
 <!-- Filters -->
 <div class="card border mb-4">
     <div class="card-body">
-        <form method="GET" action="{{ route('admin.stories.index') }}" class="row g-3">
-            <div class="col-md-3">
-                <label for="filter_status" class="form-label fw-semibold">Status</label>
-                <select class="form-select" id="filter_status" name="status">
+        <form method="GET" action="{{ route('admin.stories.index') }}" class="row g-2">
+            <div class="col-6 col-md-3">
+                <label for="filter_status" class="form-label fw-semibold small mb-1">Status</label>
+                <select class="form-select form-select-sm" id="filter_status" name="status">
                     <option value="">All Statuses</option>
                     <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
                     <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="archived" {{ request('status') == 'archived' ? 'selected' : '' }}>Archived</option>
                 </select>
             </div>
-            <div class="col-md-3">
-                <label for="filter_category" class="form-label fw-semibold">Category</label>
-                <select class="form-select" id="filter_category" name="category">
+            <div class="col-6 col-md-3">
+                <label for="filter_category" class="form-label fw-semibold small mb-1">Category</label>
+                <select class="form-select form-select-sm" id="filter_category" name="category">
                     <option value="">All Categories</option>
                     @foreach(\App\Models\Story::CATEGORIES as $category)
                         <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
@@ -111,14 +111,14 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-4">
-                <label for="search" class="form-label fw-semibold">Search</label>
-                <input type="text" class="form-control" id="search" name="search"
+            <div class="col-12 col-md-4">
+                <label for="search" class="form-label fw-semibold small mb-1">Search</label>
+                <input type="text" class="form-control form-control-sm" id="search" name="search"
                        value="{{ request('search') }}" placeholder="Search by title or author...">
             </div>
-            <div class="col-md-2">
-                <label class="form-label d-block">&nbsp;</label>
-                <button type="submit" class="btn btn-primary w-100">
+            <div class="col-12 col-md-2">
+                <label class="form-label d-block small mb-1">&nbsp;</label>
+                <button type="submit" class="btn btn-primary btn-sm w-100">
                     <i class="bi bi-funnel me-2"></i>Filter
                 </button>
             </div>
@@ -207,18 +207,21 @@
                 <div class="mt-auto pt-2 border-top">
                     <div class="d-flex gap-2">
                         <a href="{{ route('admin.stories.show', $story) }}"
-                           class="btn btn-sm btn-outline-primary flex-fill">
-                            <i class="bi bi-eye"></i> View
+                           class="btn btn-sm fw-semibold text-white flex-fill"
+                           style="background:#0891b2;border:none;">
+                            <i class="bi bi-eye-fill me-1"></i>View
                         </a>
                         <a href="{{ route('admin.stories.edit', $story) }}"
-                           class="btn btn-sm btn-outline-warning flex-fill">
-                            <i class="bi bi-pencil"></i> Edit
+                           class="btn btn-sm fw-semibold text-white flex-fill"
+                           style="background:#d97706;border:none;">
+                            <i class="bi bi-pencil-fill me-1"></i>Edit
                         </a>
                         <button type="button"
-                                class="btn btn-sm btn-outline-danger"
+                                class="btn btn-sm fw-semibold text-white"
+                                style="background:#dc2626;border:none;min-width:38px;"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteModal{{ $story->id }}">
-                            <i class="bi bi-trash"></i>
+                            <i class="bi bi-trash-fill"></i>
                         </button>
                     </div>
                 </div>
@@ -259,7 +262,7 @@
 </div>
 
 <!-- Pagination -->
-<div class="d-flex justify-content-between align-items-center mt-2 pt-3 border-top">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 mt-2 pt-3 border-top">
     <p class="text-muted small mb-0">
         Showing {{ $stories->firstItem() }}–{{ $stories->lastItem() }} of {{ $stories->total() }} stories
     </p>
