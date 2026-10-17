@@ -743,7 +743,7 @@ class StoryController extends Controller
                     'facebook' => "https://www.facebook.com/sharer/sharer.php?u=" . urlencode($shareUrl),
                     'twitter' => "https://twitter.com/intent/tweet?url=" . urlencode($shareUrl) . "&text=" . urlencode($shareTitle) . ($hashtags ? "&hashtags={$hashtags}" : ''),
                     'linkedin' => "https://www.linkedin.com/sharing/share-offsite/?url=" . urlencode($shareUrl),
-                    'whatsapp' => "https://wa.me/?text=" . urlencode($shareTitle . "\n\n" . $shareDescription . "\n\n" . $shareUrl),
+                    'whatsapp' => "https://wa.me/?text=" . urlencode($shareUrl),
                     'email' => "mailto:?subject=" . urlencode($shareTitle) . "&body=" . urlencode($shareDescription . "\n\n" . $shareUrl),
                 ]
             ]
