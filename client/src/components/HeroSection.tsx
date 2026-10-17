@@ -57,7 +57,7 @@ const HeroSection = () => {
       id="home"
       style={{
         padding: "26px 0 30px",
-        background: "linear-gradient(180deg,#f4f6f9,#fff)",
+        background: "#fff",
       }}
     >
       <div style={{ width: "min(1180px,92%)", margin: "0 auto" }}>
@@ -80,14 +80,13 @@ const HeroSection = () => {
               className="hero-main group"
               style={{
                 minHeight: "390px",
-                borderRadius: "14px",
+                borderRadius: "4px",
                 overflow: "hidden",
                 position: "relative",
                 display: "flex",
                 alignItems: "flex-end",
                 color: "#fff",
                 background: `${CARD_OVERLAY}, url('${main.image_url}') center/cover no-repeat`,
-                transition: "transform 0.18s, box-shadow 0.18s",
               }}
             >
               <div
@@ -200,14 +199,13 @@ const SideCard = ({ story }: { story: HeroStory }) => (
       style={{
         minHeight: "183px",
         height: "100%",
-        borderRadius: "12px",
+        borderRadius: "4px",
         overflow: "hidden",
         position: "relative",
         color: "white",
         display: "flex",
         alignItems: "flex-end",
         background: `linear-gradient(0deg,#07172bec,#07172b10 85%), url('${story.image_url}') center/cover no-repeat`,
-        transition: "opacity 0.18s",
       }}
     >
       <div style={{ padding: "16px 18px", position: "relative", zIndex: 1 }}>
