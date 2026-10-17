@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Race Result')
-@section('page-title', 'Edit Race Result')
+@section('title', 'Edit Result Document')
+@section('page-title', 'Edit Result Document')
 
 @section('content')
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1">Edit Race Result</h2>
-            <p class="text-muted mb-0">Update race result information</p>
+            <h2 class="mb-1">Edit Result Document</h2>
+            <p class="text-muted mb-0">Update the document details or replace the file</p>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.results.show', $result->id) }}" class="btn btn-outline-primary">

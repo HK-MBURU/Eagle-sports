@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Add Result Entry')
-@section('page-title', 'Add Result Entry')
+@section('title', 'Add Performance Entry')
+@section('page-title', 'Add Performance Entry')
 
 @section('content')
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h2 class="mb-1">Add Result Entry</h2>
-        <p class="text-muted mb-0">Add a performance result to display in the Results Centre widget</p>
+        <h2 class="mb-1">Add Performance Entry</h2>
+        <p class="text-muted mb-0">Add an athlete performance record to display on the homepage Results widget</p>
     </div>
     <a href="{{ route('admin.result-entries.index') }}" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-arrow-left me-1"></i>Back

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Race Results')
-@section('page-title', 'Race Results')
+@section('title', 'Result Documents')
+@section('page-title', 'Result Documents')
 
 @section('content')
 <div class="results-container">
@@ -9,12 +9,12 @@
     <div class="page-header">
         <div class="header-content">
             <div class="header-text">
-                <h1 class="page-title">Race Results</h1>
-                <p class="page-subtitle">Manage all race results and documents</p>
+                <h1 class="page-title">Result Documents</h1>
+                <p class="page-subtitle">Upload and manage downloadable race result files and PDFs</p>
             </div>
             <a href="{{ route('admin.results.create') }}" class="primary-btn">
-                <i class="fas fa-plus"></i>
-                Upload New Result
+                <i class="fas fa-upload"></i>
+                Upload Document
             </a>
         </div>
     </div>

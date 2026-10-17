@@ -1,18 +1,18 @@
 @extends('layouts.admin')
 
-@section('title', 'Upload Race Result')
-@section('page-title', 'Upload New Race Result')
+@section('title', 'Upload Result Document')
+@section('page-title', 'Upload Result Document')
 
 @section('content')
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1">Upload New Race Result</h2>
-            <p class="text-muted mb-0">Add race results and documents</p>
+            <h2 class="mb-1">Upload Result Document</h2>
+            <p class="text-muted mb-0">Upload a race result file (PDF, image, or document) for public download</p>
         </div>
         <a href="{{ route('admin.results.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Results
+            <i class="fas fa-arrow-left me-2"></i>Back to Result Documents
         </a>
     </div>
 

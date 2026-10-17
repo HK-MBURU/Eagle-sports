@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', $result->title)
-@section('page-title', 'Race Result Details')
+@section('page-title', 'Result Document Details')
 
 @section('content')
 <div class="container-fluid">
@@ -9,7 +9,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a href="{{ route('admin.results.index') }}" class="text-muted text-decoration-none mb-2 d-inline-block">
-                <i class="fas fa-arrow-left me-2"></i>Back to Results
+                <i class="fas fa-arrow-left me-2"></i>Back to Result Documents
             </a>
             <h2 class="mb-1">{{ $result->title }}</h2>
             <div class="d-flex align-items-center gap-2 flex-wrap">

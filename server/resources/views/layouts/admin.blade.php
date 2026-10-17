@@ -351,11 +351,11 @@
         </a>
         <a href="{{ route('admin.result-entries.index') }}"
            class="sidebar-link {{ request()->routeIs('admin.result-entries.*') ? 'active' : '' }}">
-            <i class="bi bi-table"></i><span>Results Centre</span>
+            <i class="bi bi-stopwatch"></i><span>Performance Entries</span>
         </a>
         <a href="{{ route('admin.results.index') }}"
            class="sidebar-link {{ request()->routeIs('admin.results.*') ? 'active' : '' }}">
-            <i class="bi bi-trophy"></i><span>Race Results</span>
+            <i class="bi bi-file-earmark-arrow-down"></i><span>Result Documents</span>
         </a>
         <a href="{{ route('admin.partners.index') }}"
            class="sidebar-link {{ request()->routeIs('admin.partners.*') ? 'active' : '' }}">
