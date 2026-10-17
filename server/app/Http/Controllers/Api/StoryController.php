@@ -41,12 +41,11 @@ class StoryController extends Controller
             $query->featured();
         }
 
-        // Search
+        // Search — content column excluded (it's up to 16 MB per row; scan is too slow)
         if ($request->has('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
                     ->orWhere('excerpt', 'like', '%' . $request->search . '%')
-                    ->orWhere('content', 'like', '%' . $request->search . '%')
                     ->orWhere('author_name', 'like', '%' . $request->search . '%')
                     ->orWhere('meta_keywords', 'like', '%' . $request->search . '%');
             });
@@ -54,7 +53,7 @@ class StoryController extends Controller
 
         // Pagination
         $perPage = $request->get('per_page', 9);
-        $stories = $query->paginate($perPage);
+        $stories = $query->withCount('likes')->paginate($perPage);
 
         $user = Auth::user();
 
@@ -74,7 +73,7 @@ class StoryController extends Controller
                     'read_time' => $story->read_time,
                     'published_date' => $story->published_date->format('Y-m-d'),
                     'formatted_date' => $story->formatted_date,
-                    'likes_count' => $story->likes()->count(),
+                    'likes_count' => $story->likes_count,
                     'is_liked' => $user ? $story->isLikedBy($user) : false,
                     'meta_title' => $story->meta_title,
                     'meta_description' => $story->meta_description,
@@ -146,8 +145,8 @@ class StoryController extends Controller
     public function show(string $identifier): JsonResponse
     {
         $story = Story::published()
+            ->withCount('likes')
             ->where('slug', $identifier)
-            ->orWhere('id', $identifier)
             ->first();
 
         if (!$story) {
@@ -166,7 +165,7 @@ class StoryController extends Controller
                 'title' => $story->title,
                 'slug' => $story->slug,
                 'excerpt' => $story->excerpt,
-                'content' => $story->content,
+                'content' => $this->sanitizeContent($story->content),
                 'image_url' => $story->image_url,
                 'image_attribution' => $story->image_attribution,
                 'category' => $story->category,
@@ -175,7 +174,7 @@ class StoryController extends Controller
                 'read_time' => $story->read_time,
                 'published_date' => $story->published_date->format('Y-m-d'),
                 'formatted_date' => $story->formatted_date,
-                'likes_count' => $story->likes()->count(),
+                'likes_count' => $story->likes_count,
                 'is_liked' => $user ? $story->isLikedBy($user) : false,
                 // SEO fields for frontend rendering
                 'meta_title' => $story->meta_title ?? $story->title,
@@ -748,5 +747,19 @@ class StoryController extends Controller
                 ]
             ]
         ]);
+    }
+
+    /**
+     * Strip any base64 image data from HTML content before serving.
+     * Prevents ~16 MB payloads caused by pasted images in the editor.
+     * Run `php artisan stories:extract-images` to permanently fix existing stories.
+     */
+    private function sanitizeContent(string $content): string
+    {
+        return preg_replace(
+            '/src="data:image\/[^;]+;base64,[^"]+"/i',
+            'src="/images/default-story.jpg"',
+            $content
+        );
     }
 }

@@ -497,6 +497,7 @@
                 // Image upload handler
                 images_upload_url: '{{ route('admin.stories.upload-image') }}',
                 automatic_uploads: true,
+                paste_data_images: true,
                 images_upload_handler: function(blobInfo, success, failure) {
                     let xhr = new XMLHttpRequest();
                     xhr.withCredentials = false;
