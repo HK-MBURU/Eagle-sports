@@ -141,6 +141,19 @@ const Login = () => {
               Sign up
             </Link>
           </div>
+
+          {/* Admin Panel separator */}
+          <div className="mt-6 pt-5 border-t border-border">
+            <p className="text-xs text-muted-foreground text-center mb-3">
+              Looking for the admin panel?
+            </p>
+            <a
+              href="/admin/login"
+              className="block w-full text-center px-4 py-2.5 rounded-lg border border-[#10284a] text-[#10284a] text-sm font-semibold hover:bg-[#10284a] hover:text-white transition-colors"
+            >
+              Go to Admin Panel
+            </a>
+          </div>
         </div>
 
         {/* Back to Home */}
