@@ -60,22 +60,26 @@
                         </div>
 
                         {{-- Action buttons --}}
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2 pt-1">
                             <a href="{{ route('admin.quotes.show', $quote) }}"
-                               class="btn btn-sm btn-outline-info flex-fill">
-                                <i class="bi bi-eye me-1"></i>View
+                               class="btn btn-sm flex-fill fw-semibold text-white"
+                               style="background:#0891b2;border:none;">
+                                <i class="bi bi-eye-fill me-1"></i>View
                             </a>
                             <a href="{{ route('admin.quotes.edit', $quote) }}"
-                               class="btn btn-sm btn-outline-warning flex-fill">
-                                <i class="bi bi-pencil me-1"></i>Edit
+                               class="btn btn-sm flex-fill fw-semibold text-white"
+                               style="background:#d97706;border:none;">
+                                <i class="bi bi-pencil-fill me-1"></i>Edit
                             </a>
                             <form action="{{ route('admin.quotes.destroy', $quote) }}"
                                   method="POST" class="flex-fill"
                                   onsubmit="return confirm('Delete this quote?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                                    <i class="bi bi-trash me-1"></i>Delete
+                                <button type="submit"
+                                        class="btn btn-sm w-100 fw-semibold text-white"
+                                        style="background:#dc2626;border:none;">
+                                    <i class="bi bi-trash-fill me-1"></i>Delete
                                 </button>
                             </form>
                         </div>
@@ -99,7 +103,7 @@
                                     <th>Title</th>
                                     <th>Added By</th>
                                     <th>Date</th>
-                                    <th class="pe-4 text-end">Actions</th>
+                                    <th class="pe-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,23 +125,27 @@
                                     </td>
                                     <td class="text-muted">{{ $quote->addedBy->name }}</td>
                                     <td class="text-muted text-nowrap">{{ $quote->created_at->format('M d, Y') }}</td>
-                                    <td class="pe-4 text-end">
-                                        <div class="btn-group btn-group-sm">
+                                    <td class="pe-4">
+                                        <div class="d-flex gap-2 justify-content-end">
                                             <a href="{{ route('admin.quotes.show', $quote) }}"
-                                               class="btn btn-outline-info" title="View">
-                                                <i class="bi bi-eye"></i>
+                                               class="btn btn-sm fw-semibold text-white px-3"
+                                               style="background:#0891b2;border:none;min-width:72px;">
+                                                <i class="bi bi-eye-fill me-1"></i>View
                                             </a>
                                             <a href="{{ route('admin.quotes.edit', $quote) }}"
-                                               class="btn btn-outline-warning" title="Edit">
-                                                <i class="bi bi-pencil"></i>
+                                               class="btn btn-sm fw-semibold text-white px-3"
+                                               style="background:#d97706;border:none;min-width:72px;">
+                                                <i class="bi bi-pencil-fill me-1"></i>Edit
                                             </a>
                                             <form action="{{ route('admin.quotes.destroy', $quote) }}"
                                                   method="POST" class="d-inline"
                                                   onsubmit="return confirm('Delete this quote?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger" title="Delete">
-                                                    <i class="bi bi-trash"></i>
+                                                <button type="submit"
+                                                        class="btn btn-sm fw-semibold text-white px-3"
+                                                        style="background:#dc2626;border:none;min-width:80px;">
+                                                    <i class="bi bi-trash-fill me-1"></i>Delete
                                                 </button>
                                             </form>
                                         </div>
