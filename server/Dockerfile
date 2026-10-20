@@ -28,6 +28,8 @@ RUN apk add --no-cache \
     nginx \
     supervisor \
     libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
     libzip-dev \
     oniguruma-dev \
     icu-dev \
@@ -35,7 +37,7 @@ RUN apk add --no-cache \
     shadow \
     curl
 
-RUN docker-php-ext-configure gd && \
+RUN docker-php-ext-configure gd --with-jpeg --with-webp && \
     docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         mbstring \
