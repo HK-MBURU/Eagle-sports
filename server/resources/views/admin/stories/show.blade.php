@@ -48,7 +48,20 @@
                             </span>
                         @endif
 
-                        <span class="badge bg-primary fs-6 ms-2">{{ $story->category }}</span>
+                        @if($categoryObj && $categoryObj->isSubcategory() && $categoryObj->parent)
+                            <span class="badge bg-secondary fs-6 ms-2" style="background:{{ $categoryObj->parent->color }} !important">
+                                <i class="bi bi-tags me-1"></i>{{ $categoryObj->parent->name }}
+                            </span>
+                            <i class="bi bi-chevron-right text-muted mx-1" style="font-size:.7rem"></i>
+                            <span class="badge fs-6" style="background:{{ $categoryObj->color }}">
+                                <i class="bi bi-tag me-1"></i>{{ $story->category }}
+                            </span>
+                        @else
+                            <span class="badge bg-primary fs-6 ms-2"
+                                @if($categoryObj) style="background:{{ $categoryObj->color }} !important" @endif>
+                                <i class="bi bi-tags me-1"></i>{{ $story->category }}
+                            </span>
+                        @endif
                     </div>
 
                     <!-- Title -->
@@ -429,7 +442,27 @@
                     <!-- Category -->
                     <div class="mb-3">
                         <h6 class="text-muted mb-2">Category</h6>
-                        <span class="badge bg-primary fs-6">{{ $story->category }}</span>
+                        @if($categoryObj && $categoryObj->isSubcategory() && $categoryObj->parent)
+                            <div class="d-flex align-items-center gap-1 flex-wrap">
+                                <span class="badge"
+                                    style="background:{{ $categoryObj->parent->color }};font-size:.8rem">
+                                    {{ $categoryObj->parent->name }}
+                                </span>
+                                <i class="bi bi-chevron-right text-muted" style="font-size:.65rem"></i>
+                                <span class="badge"
+                                    style="background:{{ $categoryObj->color }};font-size:.8rem">
+                                    {{ $story->category }}
+                                </span>
+                            </div>
+                            <div class="text-muted mt-1" style="font-size:.72rem">
+                                <i class="bi bi-diagram-2 me-1"></i>Subcategory of {{ $categoryObj->parent->name }}
+                            </div>
+                        @else
+                            <span class="badge bg-primary fs-6"
+                                @if($categoryObj) style="background:{{ $categoryObj->color }} !important" @endif>
+                                {{ $story->category }}
+                            </span>
+                        @endif
                     </div>
 
                     <hr>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Story;
+use App\Models\StoryCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -260,22 +261,37 @@ class StoryController extends Controller
      */
     public function categories(): JsonResponse
     {
-        $categoriesWithCounts = Story::published()
+        $counts = Story::published()
             ->selectRaw('category, COUNT(*) as count')
             ->groupBy('category')
-            ->get()
             ->pluck('count', 'category');
 
-        $allCategories = collect(Story::CATEGORIES)->map(function ($category) use ($categoriesWithCounts) {
-            return [
-                'name' => $category,
-                'count' => $categoriesWithCounts[$category] ?? 0,
-            ];
-        });
+        // Pull from DB with parent relationship; fall back to hardcoded list
+        try {
+            $dbCategories = StoryCategory::with('parent')
+                ->active()
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get(['id', 'name', 'slug', 'color', 'parent_id']);
+        } catch (\Exception $e) {
+            $dbCategories = collect(Story::CATEGORIES)->map(fn ($n) => (object)[
+                'name' => $n, 'slug' => \Illuminate\Support\Str::slug($n),
+                'color' => '#6366f1', 'parent_id' => null, 'parent' => null,
+            ]);
+        }
+
+        $allCategories = $dbCategories->map(fn ($cat) => [
+            'name'        => $cat->name,
+            'slug'        => $cat->slug,
+            'color'       => $cat->color,
+            'count'       => $counts[$cat->name] ?? 0,
+            'parent'      => $cat->parent?->name,
+            'is_sub'      => !is_null($cat->parent_id),
+        ]);
 
         return response()->json([
             'success' => true,
-            'data' => $allCategories
+            'data'    => $allCategories,
         ]);
     }
 

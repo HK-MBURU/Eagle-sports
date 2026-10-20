@@ -211,14 +211,29 @@
                                 <!-- Category -->
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Category *</label>
-                                    <select class="form-select @error('category') is-invalid @enderror" id="category"
-                                        name="category" required>
-                                        <option value="">Select Category</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category }}"
-                                                {{ old('category', $story->category) == $category ? 'selected' : '' }}>
-                                                {{ $category }}
-                                            </option>
+                                    <select class="form-select @error('category') is-invalid @enderror"
+                                            id="category" name="category" required>
+                                        <option value="">— Select Category —</option>
+                                        @foreach ($categoryTree as $parent)
+                                            @if ($parent->children->isNotEmpty())
+                                                <optgroup label="{{ $parent->name }}">
+                                                    <option value="{{ $parent->name }}"
+                                                        {{ old('category', $story->category) == $parent->name ? 'selected' : '' }}>
+                                                        {{ $parent->name }} — General
+                                                    </option>
+                                                    @foreach ($parent->children as $child)
+                                                        <option value="{{ $child->name }}"
+                                                            {{ old('category', $story->category) == $child->name ? 'selected' : '' }}>
+                                                            ↳ {{ $child->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @else
+                                                <option value="{{ $parent->name }}"
+                                                    {{ old('category', $story->category) == $parent->name ? 'selected' : '' }}>
+                                                    {{ $parent->name }}
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     @error('category')

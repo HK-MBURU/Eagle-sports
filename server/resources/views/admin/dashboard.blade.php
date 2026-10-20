@@ -275,16 +275,17 @@
 <div class="counts-grid">
     @php
     $contentCards = [
-        ['route' => 'admin.athletes.index',       'icon' => 'person-badge',             'bg' => '#2563eb', 'count' => $athletesCount,     'label' => 'Athletes'],
-        ['route' => 'admin.videos.index',          'icon' => 'play-circle',              'bg' => '#0891b2', 'count' => $videosCount,        'label' => 'Videos'],
-        ['route' => 'admin.women-running.index',   'icon' => 'gender-female',            'bg' => '#db2777', 'count' => $womenRunningCount,  'label' => 'Women Running'],
-        ['route' => 'admin.climate.index',         'icon' => 'tree',                     'bg' => '#15803d', 'count' => $climateCount,       'label' => 'Climate'],
-        ['route' => 'admin.partners.index',        'icon' => 'briefcase',                'bg' => '#7c3aed', 'count' => $partnersCount,      'label' => 'Partners'],
-        ['route' => 'admin.quotes.index',          'icon' => 'chat-quote',               'bg' => '#d97706', 'count' => $quotesCount,        'label' => 'Quotes'],
-        ['route' => 'admin.results.index',         'icon' => 'file-earmark-arrow-down',  'bg' => '#6366f1', 'count' => $resultDocsCount,    'label' => 'Result Docs'],
-        ['route' => 'admin.stories.index',         'icon' => 'newspaper',                'bg' => '#d62835', 'count' => $storiesCount,       'label' => 'All Stories'],
-        ['route' => 'admin.events.index',          'icon' => 'calendar-event',           'bg' => '#7c3aed', 'count' => $eventsCount,        'label' => 'Race Events'],
-        ['route' => 'admin.users.index',           'icon' => 'person-gear',              'bg' => '#16a34a', 'count' => $usersCount,         'label' => 'Users'],
+        ['route' => 'admin.athletes.index',         'icon' => 'person-badge',             'bg' => '#2563eb', 'count' => $athletesCount,     'label' => 'Athletes'],
+        ['route' => 'admin.videos.index',           'icon' => 'play-circle',              'bg' => '#0891b2', 'count' => $videosCount,        'label' => 'Videos'],
+        ['route' => 'admin.women-running.index',    'icon' => 'gender-female',            'bg' => '#db2777', 'count' => $womenRunningCount,  'label' => 'Women Running'],
+        ['route' => 'admin.climate.index',          'icon' => 'tree',                     'bg' => '#15803d', 'count' => $climateCount,       'label' => 'Climate'],
+        ['route' => 'admin.partners.index',         'icon' => 'briefcase',                'bg' => '#7c3aed', 'count' => $partnersCount,      'label' => 'Partners'],
+        ['route' => 'admin.quotes.index',           'icon' => 'chat-quote',               'bg' => '#d97706', 'count' => $quotesCount,        'label' => 'Quotes'],
+        ['route' => 'admin.results.index',          'icon' => 'file-earmark-arrow-down',  'bg' => '#6366f1', 'count' => $resultDocsCount,    'label' => 'Result Docs'],
+        ['route' => 'admin.stories.index',          'icon' => 'newspaper',                'bg' => '#d62835', 'count' => $storiesCount,       'label' => 'All Stories'],
+        ['route' => 'admin.story-categories.index', 'icon' => 'tags-fill',                'bg' => '#f97316', 'count' => $categoriesCount,    'label' => 'Categories'],
+        ['route' => 'admin.events.index',           'icon' => 'calendar-event',           'bg' => '#7c3aed', 'count' => $eventsCount,        'label' => 'Race Events'],
+        ['route' => 'admin.users.index',            'icon' => 'person-gear',              'bg' => '#16a34a', 'count' => $usersCount,         'label' => 'Users'],
     ];
     @endphp
     @foreach($contentCards as $c)
@@ -379,8 +380,9 @@
         <div class="qa-grid">
             @php
             $actions = [
-                ['href' => route('admin.stories.create'),       'icon' => 'newspaper',              'bg' => '#d62835', 'label' => 'New Story'],
-                ['href' => route('admin.athletes.create'),      'icon' => 'person-plus',            'bg' => '#2563eb', 'label' => 'Add Athlete'],
+                ['href' => route('admin.stories.create'),         'icon' => 'newspaper',              'bg' => '#d62835', 'label' => 'New Story'],
+                ['href' => route('admin.story-categories.index'),'icon' => 'tags-fill',              'bg' => '#f97316', 'label' => 'Categories'],
+                ['href' => route('admin.athletes.create'),       'icon' => 'person-plus',            'bg' => '#2563eb', 'label' => 'Add Athlete'],
                 ['href' => route('admin.events.create'),        'icon' => 'calendar-plus',          'bg' => '#7c3aed', 'label' => 'Add Event'],
                 ['href' => route('admin.videos.create'),        'icon' => 'camera-video',           'bg' => '#0891b2', 'label' => 'Add Video'],
                 ['href' => route('admin.women-running.create'), 'icon' => 'gender-female',          'bg' => '#db2777', 'label' => 'Women Running'],

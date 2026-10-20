@@ -190,14 +190,29 @@
                                 <!-- Category -->
                                 <div class="mb-3">
                                     <label for="category" class="form-label">Category *</label>
-                                    <select class="form-select @error('category') is-invalid @enderror" id="category"
-                                        name="category" required>
-                                        <option value="">Select Category</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category }}"
-                                                {{ old('category') == $category ? 'selected' : '' }}>
-                                                {{ $category }}
-                                            </option>
+                                    <select class="form-select @error('category') is-invalid @enderror"
+                                            id="category" name="category" required>
+                                        <option value="">— Select Category —</option>
+                                        @foreach ($categoryTree as $parent)
+                                            @if ($parent->children->isNotEmpty())
+                                                <optgroup label="{{ $parent->name }}">
+                                                    <option value="{{ $parent->name }}"
+                                                        {{ old('category') == $parent->name ? 'selected' : '' }}>
+                                                        {{ $parent->name }} — General
+                                                    </option>
+                                                    @foreach ($parent->children as $child)
+                                                        <option value="{{ $child->name }}"
+                                                            {{ old('category') == $child->name ? 'selected' : '' }}>
+                                                            ↳ {{ $child->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @else
+                                                <option value="{{ $parent->name }}"
+                                                    {{ old('category') == $parent->name ? 'selected' : '' }}>
+                                                    {{ $parent->name }}
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     @error('category')
@@ -232,20 +247,50 @@
                         <!-- Featured Image -->
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-header bg-white border-bottom">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-image me-2"></i>Featured Image
-                                </h5>
+                                <h5 class="mb-0"><i class="bi bi-image me-2"></i>Featured Image</h5>
                             </div>
                             <div class="card-body p-4">
+
+                                {{-- Hidden field: path of the AJAX pre-uploaded image --}}
+                                <input type="hidden" name="image_temp" id="imageTempPath" value="{{ old('image_temp') }}">
+
+                                {{-- File input: only used to trigger the AJAX upload --}}
                                 <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                    id="image" name="image" accept="image/*" required
-                                    onchange="previewImage(event, 'imagePreview')">
-                                <small class="text-muted d-block mt-2">1200x600px recommended</small>
+                                    id="image" name="image" accept="image/*"
+                                    {{ !old('image_temp') ? 'required' : '' }}>
+                                <small class="text-muted d-block mt-1">JPEG / PNG / WebP · max 10 MB · 1200×600 px recommended</small>
+
+                                {{-- Upload status indicator --}}
+                                <div id="imageUploadStatus" class="mt-2" style="font-size:.82rem;display:none">
+                                    <span id="imageStatusUploading" style="color:#2563eb;display:none">
+                                        <span class="spinner-border spinner-border-sm me-1"></span>Uploading & compressing…
+                                    </span>
+                                    <span id="imageStatusReady" style="color:#16a34a;display:none">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Image ready — saved, will not be lost on error.
+                                    </span>
+                                    <span id="imageStatusError" style="color:#d62835;display:none"></span>
+                                </div>
+
                                 @error('image')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="text-danger mt-1" style="font-size:.82rem">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>{{ $message }}
+                                    </div>
                                 @enderror
 
-                                <div id="imagePreview" class="mt-3"></div>
+                                {{-- Preview: restored from server after validation error, or shown after AJAX upload --}}
+                                <div id="imagePreview" class="mt-3">
+                                    @if(old('image_temp') && Storage::disk('public')->exists(old('image_temp')))
+                                        <div class="position-relative d-inline-block w-100">
+                                            <img src="{{ asset('storage/' . old('image_temp')) }}"
+                                                 class="img-fluid rounded shadow-sm w-100"
+                                                 style="max-height:260px;object-fit:cover"
+                                                 alt="Featured image preview">
+                                            <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                                                <i class="bi bi-check-circle me-1"></i>Saved
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
 
                                 <div class="mt-3">
                                     <label for="image_attribution" class="form-label">Image Attribution (optional)</label>
@@ -1129,19 +1174,71 @@
                 document.getElementById('meta-desc-count').textContent = this.value.length;
             });
 
-            // Image preview
-            function previewImage(event, previewId) {
-                const file = event.target.files[0];
-                const preview = document.getElementById(previewId);
+            // ── Featured image: instant preview + AJAX upload ──────────────────
+            document.getElementById('image').addEventListener('change', function () {
+                const file = this.files[0];
+                if (!file) return;
 
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" alt="Preview">`;
+                const preview  = document.getElementById('imagePreview');
+                const status   = document.getElementById('imageUploadStatus');
+                const uploading = document.getElementById('imageStatusUploading');
+                const ready    = document.getElementById('imageStatusReady');
+                const errorEl  = document.getElementById('imageStatusError');
+                const tempInput = document.getElementById('imageTempPath');
+
+                // 1. Show local preview immediately
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded shadow-sm w-100"
+                        style="max-height:260px;object-fit:cover" alt="Preview">`;
+                };
+                reader.readAsDataURL(file);
+
+                // 2. Upload to server
+                status.style.display   = '';
+                uploading.style.display = '';
+                ready.style.display    = 'none';
+                errorEl.style.display  = 'none';
+
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
+
+                fetch('{{ route('admin.stories.upload-temp-image') }}', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(r => r.json())
+                .then(data => {
+                    uploading.style.display = 'none';
+                    if (data.success) {
+                        tempInput.value = data.path;
+                        // Swap to server-side URL and add "Saved" badge
+                        preview.innerHTML = `
+                            <div class="position-relative d-inline-block w-100">
+                                <img src="${data.url}" class="img-fluid rounded shadow-sm w-100"
+                                     style="max-height:260px;object-fit:cover" alt="Preview">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                                    <i class="bi bi-check-circle me-1"></i>Saved
+                                </span>
+                            </div>`;
+                        ready.style.display = '';
+                        // File input no longer required — temp image covers it
+                        document.getElementById('image').removeAttribute('required');
+                    } else {
+                        tempInput.value = '';
+                        errorEl.textContent = '⚠ ' + (data.message || 'Upload failed. Try a different image.');
+                        errorEl.style.display = '';
+                        document.getElementById('image').setAttribute('required', '');
                     }
-                    reader.readAsDataURL(file);
-                }
-            }
+                })
+                .catch(() => {
+                    uploading.style.display = 'none';
+                    tempInput.value = '';
+                    errorEl.textContent = '⚠ Network error — check your connection and try again.';
+                    errorEl.style.display = '';
+                });
+            });
 
             // Auto-fill meta fields
             document.getElementById('title').addEventListener('blur', function() {

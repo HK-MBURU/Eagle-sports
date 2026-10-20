@@ -420,6 +420,10 @@
            class="sidebar-link {{ request()->routeIs('admin.stories.*') ? 'active' : '' }}">
             <i class="bi bi-newspaper"></i><span>Stories</span>
         </a>
+        <a href="{{ route('admin.story-categories.index') }}"
+           class="sidebar-link {{ request()->routeIs('admin.story-categories.*') ? 'active' : '' }}">
+            <i class="bi bi-tags"></i><span>Categories</span>
+        </a>
         <a href="{{ route('admin.athletes.index') }}"
            class="sidebar-link {{ request()->routeIs('admin.athletes.*') ? 'active' : '' }}">
             <i class="bi bi-people"></i><span>Athletes</span>

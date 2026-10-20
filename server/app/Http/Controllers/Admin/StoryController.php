@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Story;
+use App\Models\StoryCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -46,64 +47,77 @@ class StoryController extends Controller
 
     public function create()
     {
-        $categories = Story::CATEGORIES;
-        return view('admin.stories.create', compact('categories'));
+        $categoryTree = $this->buildCategoryTree();
+        return view('admin.stories.create', compact('categoryTree'));
     }
 
     public function store(Request $request)
     {
+        $hasTempImage = $request->filled('image_temp')
+            && Storage::disk('public')->exists($request->input('image_temp'));
+
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'excerpt' => 'required|string',
-            'content' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240', // 10MB max
+            'title'             => 'required|string|max:255',
+            'excerpt'           => 'required|string',
+            'content'           => 'required|string',
+            'image'             => $hasTempImage
+                                    ? 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240'
+                                    : 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+            'image_temp'        => 'nullable|string',
             'image_attribution' => 'nullable|string|max:255',
-            'category' => 'required|string',
-            'author_name' => 'required|string|max:255',
-            'read_time' => 'required|integer|min:1',
-            'published_date' => 'required|date',
-            'is_featured' => 'boolean',
-            'status' => 'required|in:draft,published,archived',
-
-            // SEO fields
-            'meta_title' => 'nullable|string|max:60',
-            'meta_description' => 'nullable|string|max:160',
-            'meta_keywords' => 'nullable|string|max:255',
-            'og_image_original' => 'nullable|image|mimes:jpeg,png,jpg|max:10240', // 10MB max
-            'og_image_cropped' => 'nullable|string',
-
-            // Media field
-            'youtube_url' => 'nullable|url',
-
-            // Social media
-            'hashtags' => 'nullable|string|max:500',
+            'category'          => 'required|string',
+            'author_name'       => 'required|string|max:255',
+            'read_time'         => 'required|integer|min:1',
+            'published_date'    => 'required|date',
+            'is_featured'       => 'boolean',
+            'status'            => 'required|in:draft,published,archived',
+            'meta_title'        => 'nullable|string|max:60',
+            'meta_description'  => 'nullable|string|max:160',
+            'meta_keywords'     => 'nullable|string|max:255',
+            'og_image_original' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+            'og_image_cropped'  => 'nullable|string',
+            'youtube_url'       => 'nullable|url',
+            'hashtags'          => 'nullable|string|max:500',
         ]);
 
-        // Handle featured image upload with compression
+        // Featured image: use AJAX pre-uploaded temp file, or process fresh upload
         if ($request->hasFile('image')) {
-            $imagePath = $this->processAndStoreImage($request->file('image'), 'stories', [
-                'max_width' => 1920,
-                'max_height' => 1080,
-                'quality' => 85
-            ]);
-            $validated['image'] = $imagePath;
+            try {
+                $validated['image'] = $this->processAndStoreImage($request->file('image'), 'stories', [
+                    'max_width' => 1920, 'max_height' => 1080, 'quality' => 85,
+                ]);
+            } catch (\Exception $e) {
+                return back()->withInput()
+                    ->withErrors(['image' => 'Image processing failed: ' . $e->getMessage()
+                        . '. Try a smaller file or a different format (JPEG/PNG).']);
+            }
+        } elseif ($hasTempImage) {
+            // Move temp file to permanent stories directory
+            $tempPath = $request->input('image_temp');
+            $newPath  = 'stories/' . basename($tempPath);
+            Storage::disk('public')->move($tempPath, $newPath);
+            $validated['image'] = $newPath;
         }
 
-        // Handle OG image - either uploaded file or cropped base64
+        // OG image: uploaded file or cropped base64
         if ($request->hasFile('og_image_original')) {
-            $ogImagePath = $this->processAndStoreImage($request->file('og_image_original'), 'stories/og', [
-                'width' => 1200,
-                'height' => 630,
-                'quality' => 85
-            ]);
-            $validated['og_image'] = $ogImagePath;
+            try {
+                $validated['og_image'] = $this->processAndStoreImage(
+                    $request->file('og_image_original'), 'stories/og',
+                    ['width' => 1200, 'height' => 630, 'quality' => 85]
+                );
+            } catch (\Exception $e) {
+                // Non-fatal — just skip OG image
+            }
         } elseif ($request->filled('og_image_cropped')) {
-            $ogImagePath = $this->processBase64Image($request->og_image_cropped, 'stories/og', [
-                'width' => 1200,
-                'height' => 630,
-                'quality' => 85
-            ]);
-            $validated['og_image'] = $ogImagePath;
+            try {
+                $validated['og_image'] = $this->processBase64Image(
+                    $request->og_image_cropped, 'stories/og',
+                    ['width' => 1200, 'height' => 630, 'quality' => 85]
+                );
+            } catch (\Exception $e) {
+                // Non-fatal — just skip OG image
+            }
         }
 
         // Generate unique slug
@@ -145,13 +159,42 @@ class StoryController extends Controller
 
     public function show(Story $story)
     {
-        return view('admin.stories.show', compact('story'));
+        $categoryObj = StoryCategory::where('name', $story->category)
+            ->with('parent')
+            ->first();
+        return view('admin.stories.show', compact('story', 'categoryObj'));
+    }
+
+    public function uploadTempImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+        ]);
+
+        try {
+            $path = $this->processAndStoreImage($request->file('image'), 'stories/temp', [
+                'max_width' => 1920,
+                'max_height' => 1080,
+                'quality'   => 85,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'path'    => $path,
+                'url'     => asset('storage/' . $path),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Could not process image: ' . $e->getMessage(),
+            ], 422);
+        }
     }
 
     public function edit(Story $story)
     {
-        $categories = Story::CATEGORIES;
-        return view('admin.stories.edit', compact('story', 'categories'));
+        $categoryTree = $this->buildCategoryTree();
+        return view('admin.stories.edit', compact('story', 'categoryTree'));
     }
 
     public function update(Request $request, Story $story)
@@ -393,5 +436,24 @@ class StoryController extends Controller
 
         return redirect()->route('admin.stories.index')
             ->with('success', 'Story deleted successfully!');
+    }
+
+    private function buildCategoryTree(): \Illuminate\Support\Collection
+    {
+        try {
+            return StoryCategory::with(['children' => fn ($q) => $q->active()->orderBy('sort_order')->orderBy('name')])
+                ->active()
+                ->topLevel()
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get();
+        } catch (\Exception $e) {
+            // Table not yet migrated — wrap hardcoded list as mock objects
+            return collect(Story::CATEGORIES)->map(fn ($name) => (object)[
+                'name'     => $name,
+                'color'    => '#6366f1',
+                'children' => collect(),
+            ]);
+        }
     }
 }

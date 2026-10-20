@@ -9,6 +9,7 @@ use App\Models\WomenRunning;
 use App\Models\Climate;
 use App\Models\Race;
 use App\Models\Story;
+use App\Models\StoryCategory;
 use App\Models\Quote;
 use App\Models\Partner;
 use App\Models\RaceEvent;
@@ -28,6 +29,11 @@ class DashboardController extends Controller
         // ── Core counts ──────────────────────────────────────────
         $storiesCount        = Story::count();
         $publishedStories    = Story::where('status', 'published')->count();
+        try {
+            $categoriesCount = StoryCategory::count();
+        } catch (\Exception $e) {
+            $categoriesCount = count(Story::CATEGORIES);
+        }
         $athletesCount       = Athlete::count();
         $eventsCount         = RaceEvent::count();
         $upcomingEvents      = RaceEvent::where('event_date', '>=', $now)->count();
@@ -51,7 +57,7 @@ class DashboardController extends Controller
         $unreadNotifications = AdminNotification::unread()->count();
 
         return view('admin.dashboard', compact(
-            'storiesCount', 'publishedStories',
+            'storiesCount', 'publishedStories', 'categoriesCount',
             'athletesCount',
             'eventsCount', 'upcomingEvents',
             'videosCount',

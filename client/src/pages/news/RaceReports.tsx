@@ -1,13 +1,13 @@
-import PageTemplate from "@/components/PageTemplate";
+import CategoryStoriesPage from "@/components/CategoryStoriesPage";
 
 const RaceReports = () => {
   return (
-    <PageTemplate
+    <CategoryStoriesPage
+      defaultCategory="Race Reports"
       title="Race Reports"
-      description="Comprehensive coverage and analysis of major athletic competitions."
-    >
-      {/* Add your content here */}
-    </PageTemplate>
+      description="Comprehensive coverage and analysis of road races, marathons, and major athletic competitions."
+      showAllCategories={false}
+    />
   );
 };
 

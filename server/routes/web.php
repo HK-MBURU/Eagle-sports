@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PartnerController;
 use App\Http\Controllers\Admin\RaceEventController;
 use App\Http\Controllers\Admin\ResultEntryController;
 use App\Http\Controllers\Admin\ResultsController;
+use App\Http\Controllers\Admin\StoryCategoryController;
 use App\Http\Controllers\Admin\StoryController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\AdminController;
@@ -125,12 +126,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('results-statistics', [ResultsController::class, 'statistics'])
         ->name('results.statistics');
 
+    // Story Categories Management
+    Route::resource('story-categories', StoryCategoryController::class)->except(['show', 'create', 'edit']);
+    Route::patch('story-categories/{storyCategory}/toggle-active', [StoryCategoryController::class, 'toggleActive'])
+        ->name('story-categories.toggle-active');
+
     // Stories Management
     Route::resource('stories', StoryController::class);
 
     // Image upload route for TinyMCE
     Route::post('stories/upload-image', [StoryController::class, 'uploadImage'])
         ->name('stories.upload-image');
+
+    // AJAX temp image upload — instant upload on file select, survives validation errors
+    Route::post('stories/upload-temp-image', [StoryController::class, 'uploadTempImage'])
+        ->name('stories.upload-temp-image');
 
     // Quotes Management
     Route::resource('quotes', QuoteController::class);

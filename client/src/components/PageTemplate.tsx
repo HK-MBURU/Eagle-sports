@@ -1,6 +1,9 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
+const NAVY = "#10284a";
+const RED  = "#d62835";
+
 interface PageTemplateProps {
   title?: string;
   description?: string;
@@ -9,26 +12,40 @@ interface PageTemplateProps {
   className?: string;
 }
 
-const PageTemplate = ({ 
-  title, 
-  description, 
-  children, 
+const PageTemplate = ({
+  title,
+  description,
+  children,
   showHero = true,
-  className = ""
+  className = "",
 }: PageTemplateProps) => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      
-      {/* Hero Section - Only shows if showHero is true AND title exists */}
+
       {showHero && title && (
-        <section className="pt-24 pb-8 bg-accent-orange/10">
-          <div className="container mx-auto px-4">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
+        <section style={{ background: NAVY, paddingTop: "72px", paddingBottom: "28px" }}>
+          <div style={{ width: "min(1180px,92%)", margin: "0 auto" }}>
+            <div style={{
+              display: "inline-block", background: RED, color: "#fff",
+              fontSize: "10px", fontWeight: 900, letterSpacing: "1.5px",
+              textTransform: "uppercase", padding: "4px 10px", borderRadius: "3px",
+              marginBottom: "12px",
+            }}>
+              Eagle Sports
+            </div>
+            <h1 style={{
+              fontSize: "clamp(22px,4vw,40px)", fontWeight: 900,
+              color: "#fff", lineHeight: 1.1, letterSpacing: "-0.5px",
+              margin: "0 0 10px",
+            }}>
               {title}
             </h1>
             {description && (
-              <p className="text-base md:text-lg text-gray-600 max-w-3xl">
+              <p style={{
+                fontSize: "clamp(13px,1.8vw,16px)", color: "#a8b8cc",
+                maxWidth: "600px", lineHeight: 1.6, margin: 0,
+              }}>
                 {description}
               </p>
             )}
@@ -36,15 +53,10 @@ const PageTemplate = ({
         </section>
       )}
 
-      {/* Main Content - Reduced padding */}
-      <main className={`flex-1 ${showHero && title ? 'py-8' : 'pt-24 pb-8'} ${className}`}>
+      <main className={`flex-1 ${!showHero || !title ? "pt-24" : ""} ${className}`}>
         {children || (
-          <div className="container mx-auto px-4">
-            <div className="text-center py-20">
-              <p className="text-xl text-gray-600">
-                Content coming soon...
-              </p>
-            </div>
+          <div style={{ width: "min(1180px,92%)", margin: "0 auto", padding: "64px 0", textAlign: "center" }}>
+            <p style={{ fontSize: "18px", color: "#8896a5" }}>Content coming soon…</p>
           </div>
         )}
       </main>
