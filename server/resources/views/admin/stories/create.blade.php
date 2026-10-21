@@ -832,35 +832,43 @@
                         document.getElementById('content').removeAttribute('required');
                     });
                 },
-                images_upload_url: '{{ route('admin.stories.upload-image') }}',
                 automatic_uploads: true,
                 paste_data_images: true,
-                images_upload_handler: function(blobInfo, success, failure) {
-                    let xhr = new XMLHttpRequest();
-                    xhr.withCredentials = false;
-                    xhr.open('POST', '{{ route('admin.stories.upload-image') }}');
-                    xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+                images_upload_handler: function(blobInfo, progress) {
+                    return new Promise(function(resolve, reject) {
+                        const xhr = new XMLHttpRequest();
+                        xhr.withCredentials = true;
+                        xhr.open('POST', '{{ route('admin.stories.upload-image') }}');
+                        xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').content);
+                        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-                    xhr.onload = function() {
-                        if (xhr.status != 200) {
-                            failure('HTTP Error: ' + xhr.status);
-                            return;
-                        }
-                        let json = JSON.parse(xhr.responseText);
-                        if (!json || typeof json.location != 'string') {
-                            failure('Invalid JSON: ' + xhr.responseText);
-                            return;
-                        }
-                        success(json.location);
-                    };
+                        xhr.upload.onprogress = function(e) {
+                            if (e.lengthComputable) progress(e.loaded / e.total * 100);
+                        };
 
-                    xhr.onerror = function() {
-                        failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
-                    };
+                        xhr.onload = function() {
+                            if (xhr.status < 200 || xhr.status >= 300) {
+                                reject({ message: 'HTTP error ' + xhr.status, remove: true });
+                                return;
+                            }
+                            let json;
+                            try { json = JSON.parse(xhr.responseText); }
+                            catch(e) { reject({ message: 'Server returned an error — check file size and format', remove: true }); return; }
+                            if (!json || typeof json.location !== 'string') {
+                                reject({ message: json.error || 'Upload failed', remove: true });
+                                return;
+                            }
+                            resolve(json.location);
+                        };
 
-                    let formData = new FormData();
-                    formData.append('file', blobInfo.blob(), blobInfo.filename());
-                    xhr.send(formData);
+                        xhr.onerror = function() {
+                            reject({ message: 'Upload failed — network error', remove: true });
+                        };
+
+                        const formData = new FormData();
+                        formData.append('file', blobInfo.blob(), blobInfo.filename());
+                        xhr.send(formData);
+                    });
                 },
                 file_picker_types: 'image',
                 file_picker_callback: function(callback, value, meta) {

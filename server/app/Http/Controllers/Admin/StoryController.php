@@ -291,22 +291,28 @@ class StoryController extends Controller
 
 
     /**
-     * Upload images from TinyMCE editor
+     * Upload images from TinyMCE editor — always returns JSON (never redirects).
      */
     public function uploadImage(Request $request)
     {
-        $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
         ]);
 
-        if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('stories/content', 'public');
-            $url = asset('storage/' . $path);
-
-            return response()->json(['location' => $url]);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()->first('file')], 422);
         }
 
-        return response()->json(['error' => 'Upload failed'], 400);
+        if (!$request->hasFile('file')) {
+            return response()->json(['error' => 'No file received'], 400);
+        }
+
+        try {
+            $path = $request->file('file')->store('stories/content', 'public');
+            return response()->json(['location' => asset('storage/' . $path)]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Upload failed: ' . $e->getMessage()], 500);
+        }
     }
 
     private function processAndStoreImage($imageFile, $directory, $options = [])
