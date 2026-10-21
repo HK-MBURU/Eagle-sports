@@ -390,6 +390,32 @@
         </div>
     </div>
 
+    <!-- Unsaved Changes Modal -->
+    <div class="modal fade" id="unsavedChangesModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:420px">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:16px;overflow:hidden">
+                <div class="modal-body text-center px-5 py-5">
+                    <div class="mx-auto mb-4 d-flex align-items-center justify-content-center"
+                         style="width:72px;height:72px;background:#fff3cd;border-radius:50%">
+                        <i class="bi bi-exclamation-triangle-fill" style="font-size:2rem;color:#d97706"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2" style="font-size:1.15rem">Leave without saving?</h5>
+                    <p class="text-muted mb-4" style="font-size:.88rem;line-height:1.65">
+                        You have unsaved changes. If you leave now, your edits will be lost and cannot be recovered.
+                    </p>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary py-2" data-bs-dismiss="modal">
+                            <i class="bi bi-pencil-square me-2"></i>Keep Editing
+                        </button>
+                        <button type="button" class="btn btn-outline-danger py-2" id="confirmLeave">
+                            <i class="bi bi-box-arrow-right me-2"></i>Discard &amp; Leave
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('styles')
         <style>
             .form-label {
@@ -493,6 +519,11 @@
             referrerpolicy="origin"></script>
 
         <script>
+            let isDirty       = false;
+            let isSubmitting  = false;
+            let pendingNavUrl = null;
+            function markDirty() { isDirty = true; }
+
             // Initialize TinyMCE
             tinymce.init({
                 selector: '#content',
@@ -575,6 +606,9 @@
 
                         input.click();
                     }
+                },
+                setup: function (editor) {
+                    editor.on('input', markDirty);
                 }
             });
 
@@ -695,6 +729,55 @@
             function updateHiddenInput() {
                 hashtagsHidden.value = hashtagsArray.join(',');
             }
+
+            // ── Unsaved-changes guard ──────────────────────────────────────────────────
+            (function () {
+                // Track dirty state on all visible form fields
+                document.querySelectorAll(
+                    'form input:not([type=hidden]), form textarea, form select'
+                ).forEach(function (el) {
+                    el.addEventListener('input',  markDirty);
+                    el.addEventListener('change', markDirty);
+                });
+
+                // Mark submitting on form submit so beforeunload stays quiet
+                document.querySelector('form').addEventListener('submit', function () {
+                    isSubmitting = true;
+                    isDirty      = false;
+                }, true);
+
+                // Native browser dialog (handles tab close, refresh, address-bar nav)
+                window.addEventListener('beforeunload', function (e) {
+                    if (isDirty && !isSubmitting) {
+                        e.preventDefault();
+                        e.returnValue = '';
+                    }
+                });
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const modal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
+
+                    document.getElementById('confirmLeave').addEventListener('click', function () {
+                        isSubmitting = true;
+                        modal.hide();
+                        window.location.href = pendingNavUrl;
+                    });
+
+                    // Intercept every <a> link when form is dirty
+                    document.addEventListener('click', function (e) {
+                        if (!isDirty || isSubmitting) return;
+                        const link = e.target.closest('a[href]');
+                        if (!link) return;
+                        const href = link.getAttribute('href');
+                        if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
+                        if (link.dataset.bsToggle || link.dataset.bsDismiss) return;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        pendingNavUrl = href;
+                        modal.show();
+                    }, true);
+                });
+            }());
         </script>
     @endpush
 @endsection

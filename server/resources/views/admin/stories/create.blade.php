@@ -473,6 +473,32 @@
         </div>
     </div>
 
+    <!-- Unsaved Changes Modal -->
+    <div class="modal fade" id="unsavedChangesModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:420px">
+            <div class="modal-content border-0 shadow-lg" style="border-radius:16px;overflow:hidden">
+                <div class="modal-body text-center px-5 py-5">
+                    <div class="mx-auto mb-4 d-flex align-items-center justify-content-center"
+                         style="width:72px;height:72px;background:#fff3cd;border-radius:50%">
+                        <i class="bi bi-exclamation-triangle-fill" style="font-size:2rem;color:#d97706"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2" style="font-size:1.15rem">Leave without saving?</h5>
+                    <p class="text-muted mb-4" style="font-size:.88rem;line-height:1.65">
+                        You have unsaved content. If you leave now, everything you've typed or uploaded will be permanently lost.
+                    </p>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary py-2" data-bs-dismiss="modal">
+                            <i class="bi bi-pencil-square me-2"></i>Keep Editing
+                        </button>
+                        <button type="button" class="btn btn-outline-danger py-2" id="confirmLeave">
+                            <i class="bi bi-box-arrow-right me-2"></i>Discard &amp; Leave
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @push('styles')
         <style>
             .form-label {
@@ -806,6 +832,10 @@
             let imageScale = 1;
             let cropperModal = null;
             let formSubmitted = false;
+            let isDirty       = false;
+            let isSubmitting  = false;
+            let pendingNavUrl = null;
+            function markDirty() { isDirty = true; }
 
             // OG Image dimensions (Facebook recommended)
             const OG_WIDTH = 1200;
@@ -831,6 +861,7 @@
                     editor.on('init', function() {
                         document.getElementById('content').removeAttribute('required');
                     });
+                    editor.on('input', markDirty);
                 },
                 automatic_uploads: true,
                 paste_data_images: true,
@@ -923,6 +954,7 @@
 
                 // Check if we already processed the cropper
                 if (formSubmitted) {
+                    isSubmitting = true;
                     this.submit();
                     return;
                 }
@@ -940,8 +972,12 @@
                 } else if (featuredImageInput.files && featuredImageInput.files[0]) {
                     imageFile = featuredImageInput.files[0];
                     imageToProcess = 'featured';
+                } else if (document.getElementById('imageTempPath').value) {
+                    // Image was pre-uploaded via AJAX — submit without cropper
+                    isSubmitting = true;
+                    this.submit();
+                    return;
                 } else {
-                    // No images provided
                     alert('Please upload a featured image.');
                     return false;
                 }
@@ -1157,19 +1193,12 @@
 
             // Apply crop and submit form
             function applyCrop() {
-                // Get cropped image as base64
                 const croppedImageData = previewCanvas.toDataURL('image/jpeg', 0.9);
-
-                // Store in hidden input
                 document.getElementById('og_image_cropped').value = croppedImageData;
-
-                // Mark as submitted
                 formSubmitted = true;
-
-                // Close modal
+                isSubmitting  = true;
+                isDirty       = false;
                 cropperModal.hide();
-
-                // Submit form
                 document.getElementById('storyForm').submit();
             }
 
@@ -1339,7 +1368,49 @@
                 hashtagsHidden.value = hashtagsArray.join(',');
             }
 
-           
+            // ── Unsaved-changes guard ──────────────────────────────────────────────────
+            (function () {
+                // Track dirty state on all visible form fields
+                document.querySelectorAll(
+                    '#storyForm input:not([type=hidden]), #storyForm textarea, #storyForm select'
+                ).forEach(function (el) {
+                    el.addEventListener('input',  markDirty);
+                    el.addEventListener('change', markDirty);
+                });
+
+                // Native browser dialog (handles tab close, refresh, address-bar nav)
+                window.addEventListener('beforeunload', function (e) {
+                    if (isDirty && !isSubmitting) {
+                        e.preventDefault();
+                        e.returnValue = '';
+                    }
+                });
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const modal = new bootstrap.Modal(document.getElementById('unsavedChangesModal'));
+
+                    document.getElementById('confirmLeave').addEventListener('click', function () {
+                        isSubmitting = true; // prevent beforeunload firing
+                        modal.hide();
+                        window.location.href = pendingNavUrl;
+                    });
+
+                    // Intercept every <a> link when form is dirty
+                    document.addEventListener('click', function (e) {
+                        if (!isDirty || isSubmitting) return;
+                        const link = e.target.closest('a[href]');
+                        if (!link) return;
+                        const href = link.getAttribute('href');
+                        if (!href || href === '#' || href.startsWith('javascript:') || href.startsWith('mailto:')) return;
+                        if (link.dataset.bsToggle || link.dataset.bsDismiss) return;
+                        e.preventDefault();
+                        e.stopPropagation();
+                        pendingNavUrl = href;
+                        modal.show();
+                    }, true); // capture phase — intercepts before Bootstrap
+                });
+            }());
+
             document.addEventListener('DOMContentLoaded', function() {
                 const imageInput = document.getElementById('image');
                 const ogImageInput = document.getElementById('og_image');
