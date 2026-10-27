@@ -100,24 +100,24 @@ const Interviews = () => {
 
       const res = await videosAPI.getVideos(params);
 
-      if (res.success !== false) {
-        const data: Video[] = res.data ?? res;
+      if (res.success) {
+        const data: Video[] = res.data?.videos ?? [];
+        const pag = res.data?.pagination;
         setVideos(prev => append ? [...prev, ...data] : data);
-        if (res.meta) {
-          setCurrentPage(res.meta.current_page);
-          setLastPage(res.meta.last_page);
-          setTotal(res.meta.total);
-        } else {
-          setCurrentPage(page);
-          setLastPage(1);
-          setTotal(data.length);
-        }
+        setCurrentPage(pag?.current_page ?? page);
+        setLastPage(pag?.last_page ?? 1);
+        setTotal(pag?.total ?? data.length);
 
-        // Build category list from first load
+        // Build category list from first load using res.data.categories
         if (page === 1 && !append && activeCategory === "All" && !search) {
-          const seen = new Set<string>();
-          data.forEach((v: Video) => { if (v.category_name) seen.add(v.category_name); });
-          if (seen.size > 0) setCategories(Array.from(seen));
+          const cats = res.data?.categories;
+          if (cats && typeof cats === "object") {
+            setCategories(Object.values(cats) as string[]);
+          } else {
+            const seen = new Set<string>();
+            data.forEach((v: Video) => { if (v.category_name) seen.add(v.category_name); });
+            if (seen.size > 0) setCategories(Array.from(seen));
+          }
         }
       }
     } catch {
