@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\PartnerApiController;
 use App\Http\Controllers\Api\QuoteApiController;
 use App\Http\Controllers\Api\RaceEventApiController;
 use App\Http\Controllers\Api\RaceResultsApiController;
+use App\Http\Controllers\Api\PhotoApiController;
 use App\Http\Controllers\Api\VideoApiController;
 use App\Http\Controllers\Api\WomenRunningApiController;
 use App\Http\Controllers\Api\ResultEntryApiController;
@@ -276,6 +277,10 @@ Route::get('/race-events/featured/all', [RaceEventApiController::class, 'feature
 Route::get('/race-events/upcoming/list', [RaceEventApiController::class, 'upcoming']);
 Route::get('/race-events/date-range/filter', [RaceEventApiController::class, 'byDateRange']);
 Route::apiResource('race-events', RaceEventApiController::class);
+
+// Photos / Gallery
+Route::get('/photos', [PhotoApiController::class, 'index']);
+Route::get('/photos/featured', [PhotoApiController::class, 'featured']);
 
 Route::apiResource('videos', VideoApiController::class);
 Route::get('/videos/featured/all', [VideoApiController::class, 'featured']);

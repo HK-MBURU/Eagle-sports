@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ResultEntryController;
 use App\Http\Controllers\Admin\ResultsController;
 use App\Http\Controllers\Admin\StoryCategoryController;
 use App\Http\Controllers\Admin\StoryController;
+use App\Http\Controllers\Admin\PhotoController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClimateController;
@@ -63,6 +64,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Events Management
     Route::resource('events', RaceEventController::class);
+
+    // Photos / Gallery Management
+    Route::get('photos/source-images', [PhotoController::class, 'sourceImages'])->name('photos.sourceImages');
+    Route::post('photos/batch-import', [PhotoController::class, 'batchImport'])->name('photos.batchImport');
+    Route::patch('photos/{photo}/toggle-featured', [PhotoController::class, 'toggleFeatured'])->name('photos.toggleFeatured');
+    Route::resource('photos', PhotoController::class);
 
     // Videos Management
     Route::resource('videos', VideoController::class);

@@ -442,6 +442,10 @@
         </a>
 
         <div class="nav-section-label">Media</div>
+        <a href="{{ route('admin.photos.index') }}"
+           class="sidebar-link {{ request()->routeIs('admin.photos.*') ? 'active' : '' }}">
+            <i class="bi bi-images"></i><span>Photo Gallery</span>
+        </a>
         <a href="{{ route('admin.videos.index') }}"
            class="sidebar-link {{ request()->routeIs('admin.videos.*') ? 'active' : '' }}">
             <i class="bi bi-play-circle"></i><span>Videos</span>
