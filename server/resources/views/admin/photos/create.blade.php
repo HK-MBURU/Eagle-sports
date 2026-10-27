@@ -333,11 +333,18 @@ function toggleSelect(card, key, item) {
     updateImportBtn();
 }
 
-function updateImportBtn() {
+function resetImportBtn(count) {
     const btn = document.getElementById('importBtn');
-    const count = selected.size;
-    document.getElementById('selCount').textContent = count;
+    btn.innerHTML = '<i class="bi bi-download"></i> Import Selected (<span id="selCount">' + count + '</span>)';
     btn.disabled = count === 0;
+}
+
+function updateImportBtn() {
+    const count = selected.size;
+    const el = document.getElementById('selCount');
+    if (el) el.textContent = count;
+    const btn = document.getElementById('importBtn');
+    if (btn) btn.disabled = count === 0;
 }
 
 function importSelected() {
@@ -346,8 +353,8 @@ function importSelected() {
     btn.disabled = true;
     btn.innerHTML = '<i class="bi bi-arrow-clockwise pg-spin"></i> Importing…';
 
-    const items    = Array.from(selected.values());
-    const catOver  = document.getElementById('importCategory').value;
+    const items   = Array.from(selected.values());
+    const catOver = document.getElementById('importCategory').value;
 
     fetch('{{ route('admin.photos.batchImport') }}', {
         method: 'POST',
@@ -358,20 +365,22 @@ function importSelected() {
         },
         body: JSON.stringify({ items, category_override: catOver }),
     })
-    .then(r => r.json())
-    .then(data => {
-        const wrap = document.getElementById('importAlertWrap');
-        wrap.innerHTML = `<div class="pg-alert pg-alert-success"><i class="bi bi-check-circle"></i> ${data.message || 'Imported successfully.'}</div>`;
-        selected.clear();
-        updateImportBtn();
-        fetchSourceImages(true); // refresh to mark imported
-        btn.innerHTML = '<i class="bi bi-download"></i> Import Selected (<span id="selCount">0</span>)';
+    .then(r => {
+        if (!r.ok) throw new Error('Server error ' + r.status);
+        return r.json();
     })
-    .catch(() => {
-        const wrap = document.getElementById('importAlertWrap');
-        wrap.innerHTML = '<div class="pg-alert pg-alert-error"><i class="bi bi-exclamation-circle"></i> Import failed. Please try again.</div>';
-        updateImportBtn();
-        btn.innerHTML = '<i class="bi bi-download"></i> Import Selected (<span id="selCount">0</span>)';
+    .then(data => {
+        document.getElementById('importAlertWrap').innerHTML =
+            `<div class="pg-alert pg-alert-success"><i class="bi bi-check-circle"></i> ${data.message || 'Imported successfully.'}</div>`;
+        selected.clear();
+        resetImportBtn(0);          // restore button first
+        fetchSourceImages(true);    // refresh grid
+    })
+    .catch(err => {
+        console.error('Import error:', err);
+        document.getElementById('importAlertWrap').innerHTML =
+            '<div class="pg-alert pg-alert-error"><i class="bi bi-exclamation-circle"></i> Import failed. Please try again.</div>';
+        resetImportBtn(selected.size); // restore button with current count
     });
 }
 </script>
