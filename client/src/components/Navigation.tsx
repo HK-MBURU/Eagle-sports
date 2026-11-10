@@ -133,7 +133,7 @@ const Navigation = () => {
           {/* ── Mobile bar (logo + hamburger) ── */}
           <div className="flex md:hidden items-center justify-between" style={{ minHeight: "51px" }}>
             <a href="/" className="flex items-center gap-2" style={{ textDecoration: "none" }}>
-              <img src={eagleLogo} alt="Eagle Sports" style={{ height: "34px", width: "auto" }} />
+              <img src={eagleLogo} alt="Eagle Sports" style={{ height: "34px", width: "auto", background: "#fff", borderRadius: "6px", padding: "2px 6px", boxSizing: "content-box" }} />
               <span className="font-black" style={{ fontSize: "17px", color: "#fff", letterSpacing: "-0.5px" }}>
                 EAGLE <span style={{ color: RED }}>SPORTS</span>
               </span>
@@ -163,7 +163,7 @@ const Navigation = () => {
             style={{ background: NAVY, zIndex: 10 }}
           >
             <a href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-              <img src={eagleLogo} alt="" style={{ height: "30px" }} />
+              <img src={eagleLogo} alt="" style={{ height: "30px", background: "#fff", borderRadius: "5px", padding: "2px 5px", boxSizing: "content-box" }} />
               <span className="font-black text-white text-base" style={{ letterSpacing: "-0.5px" }}>
                 EAGLE <span style={{ color: RED }}>SPORTS</span>
               </span>
