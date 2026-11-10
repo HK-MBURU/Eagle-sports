@@ -168,7 +168,7 @@ const WomenStoryDetail = () => {
                             )}
                         </div>
                         <h1
-                            className="text-4xl md:text-6xl font-bold text-white mb-4"
+                            className="es-article-title text-white mb-4"
                             style={{
                                 textShadow: '0 4px 6px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.4)'
                             }}
@@ -215,7 +215,7 @@ const WomenStoryDetail = () => {
 
                                 {/* Description */}
                                 <div className="prose prose-lg max-w-none mb-8">
-                                    <p className="text-xl text-muted-foreground leading-relaxed">
+                                    <p className="es-article-standfirst">
                                         {currentStory.description}
                                     </p>
                                 </div>

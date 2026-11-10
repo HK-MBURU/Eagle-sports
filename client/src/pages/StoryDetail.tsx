@@ -262,8 +262,8 @@ const StoryDetail = () => {
           <div className="hidden md:block absolute bottom-0 left-0 right-0 p-8 lg:p-12">
             <div className="container mx-auto max-w-4xl">
               <Badge className="mb-4 bg-[#D43028] text-white border-[#D43028]">{story.category}</Badge>
-              <h1 className="text-3xl lg:text-5xl font-bold text-white mb-4 leading-tight">{story.title}</h1>
-              <div className="flex flex-wrap items-center gap-4 text-white/90 text-sm">
+              <h1 className="es-article-title text-white mb-4">{story.title}</h1>
+              <div className="es-article-byline flex flex-wrap items-center gap-4 mt-3">
                 <div className="flex items-center gap-2"><User className="w-4 h-4" /><span className="font-medium">{story.author_name}</span></div>
                 <div className="flex items-center gap-2"><Calendar className="w-4 h-4" /><span>{story.formatted_date}</span></div>
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4" /><span>{story.read_time} min read</span></div>
@@ -274,7 +274,7 @@ const StoryDetail = () => {
 
         {story.image_attribution && (
           <div className="bg-white px-4 sm:px-6 py-2 border-b border-gray-100">
-            <p className="text-xs italic text-gray-500">{story.image_attribution}</p>
+            <p className="es-article-caption">{story.image_attribution}</p>
           </div>
         )}
 
@@ -282,8 +282,8 @@ const StoryDetail = () => {
         <div className="block md:hidden bg-white px-4 sm:px-6 py-6">
           <div className="container mx-auto max-w-4xl">
             <Badge className="mb-3 bg-[#D43028] text-white border-[#D43028]">{story.category}</Badge>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">{story.title}</h1>
-            <div className="flex flex-wrap items-center gap-3 text-gray-600 text-xs sm:text-sm">
+            <h1 className="es-article-title mb-4" style={{ color: '#18181b' }}>{story.title}</h1>
+            <div className="es-article-byline-light flex flex-wrap items-center gap-3 mt-3">
               <div className="flex items-center gap-1.5"><User className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span className="font-medium">{story.author_name}</span></div>
               <div className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span>{story.formatted_date}</span></div>
               <div className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /><span>{story.read_time} min read</span></div>
@@ -333,7 +333,7 @@ const StoryDetail = () => {
           {/* Article Content */}
           <article className="lg:col-span-7 order-1 lg:order-2">
             <div className="mb-8 p-6 bg-muted/50 border-l-4 border-[#D43028] rounded-r-lg">
-              <p className="text-lg text-gray-700 italic leading-relaxed font-serif">{story.excerpt}</p>
+              <p className="es-article-standfirst">{story.excerpt}</p>
             </div>
 
             {story.youtube_embed_url && (
