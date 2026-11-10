@@ -34,7 +34,8 @@ const enhancedFetch = async (url: string, options: RequestInit = {}, useCache = 
   }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+  let timedOut = false;
+  const timeoutId = setTimeout(() => { timedOut = true; controller.abort(); }, 15000);
 
   try {
     const response = await fetch(url, {
@@ -50,18 +51,15 @@ const enhancedFetch = async (url: string, options: RequestInit = {}, useCache = 
 
     const data = await response.json();
 
-    // Cache successful responses
     if (useCache) {
-      cache.set(cacheKey, {
-        data,
-        timestamp: Date.now()
-      });
+      cache.set(cacheKey, { data, timestamp: Date.now() });
     }
 
     return data;
   } catch (error) {
     clearTimeout(timeoutId);
-    throw error;
+    if (timedOut) throw new Error(`Request timed out: ${url}`);
+    throw error; // propagate as-is (AbortError from navigation, HTTP errors, etc.)
   }
 };
 

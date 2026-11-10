@@ -47,6 +47,7 @@ const Stories = () => {
         const response: HomepageStoriesResponse = await storiesAPI.getHomepageStories(heroIds);
         if (response.success) setHomepageStories(response.data);
       } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
         setError(err instanceof Error ? err.message : "Failed to load stories");
         console.error("Error fetching homepage stories:", err);
       } finally {

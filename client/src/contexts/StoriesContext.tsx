@@ -49,10 +49,9 @@ export const StoriesProvider = ({ children }: { children: ReactNode }) => {
     try {
       setHeroLoading(true);
       const response = await storiesAPI.getStories({ per_page: 1 });
-      if (response.success) {
-        setHeroStories(response.data);
-      }
+      if (response.success) setHeroStories(response.data);
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
       console.error('Error fetching hero story:', error);
     } finally {
       setHeroLoading(false);
@@ -60,55 +59,49 @@ export const StoriesProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const response = await storiesAPI.getStories({ per_page: 7 });
-      if (response.success) {
-        setHeroStories(response.data);
-      }
+      if (response.success) setHeroStories(response.data);
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
       console.error('Error fetching hero stories:', error);
     }
   };
 
-  // Fetch featured stories
   const fetchFeaturedStories = async () => {
     try {
       setFeaturedLoading(true);
       const response = await storiesAPI.getFeaturedStories();
-      if (response.success) {
-        setFeaturedStories(response.data);
-      }
+      if (response.success) setFeaturedStories(response.data);
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
       console.error('Error fetching featured stories:', error);
     } finally {
       setFeaturedLoading(false);
     }
   };
 
-  // Fetch latest stories
   const fetchLatestStories = async () => {
     try {
       setLatestLoading(true);
       const response = await storiesAPI.getLatestStories();
-      if (response.success) {
-        setLatestStories(response.data);
-      }
+      if (response.success) setLatestStories(response.data);
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
       console.error('Error fetching latest stories:', error);
     } finally {
       setLatestLoading(false);
     }
   };
 
-  // Fetch categories
   const fetchCategories = async () => {
     try {
       setCategoriesLoading(true);
       const response = await storiesAPI.getCategories();
       if (response.success) {
-        // Extract just the category names
         const categoryNames = response.data.map((cat: any) => cat.name || cat);
         setCategories(categoryNames);
       }
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return;
       console.error('Error fetching categories:', error);
     } finally {
       setCategoriesLoading(false);
