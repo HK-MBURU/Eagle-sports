@@ -219,7 +219,7 @@ const StoryDetail = () => {
         <meta property="og:image" content={story.og_image_url || story.image_url} />
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="article" />
-        <meta property="og:site_name" content="Beyond the Finish Line" />
+        <meta property="og:site_name" content="Eagle Sports" />
         <meta property="article:published_time" content={story.published_date} />
         <meta property="article:modified_time" content={story.updated_at || story.created_at} />
         <meta property="article:author" content={story.author_name} />

@@ -84,7 +84,7 @@ const Navigation = () => {
                 className="font-extrabold uppercase"
                 style={{ fontSize: "10px", letterSpacing: "2px", color: NAVY2, marginTop: "6px" }}
               >
-                Beyond the Finish Line
+                Celebrating Champions. Telling their stories.
               </div>
             </div>
           </a>

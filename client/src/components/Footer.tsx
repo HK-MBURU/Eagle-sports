@@ -8,7 +8,7 @@ const Footer = () => {
     "@context": "https://schema.org",
     "@type": "SportsOrganization",
     "name": "Eagle Sports",
-    "alternateName": "Eagle Sports — Beyond the Finish Line",
+    "alternateName": "Eagle Sports — Celebrating Champions. Telling their stories.",
     "description": "Celebrating Kenyan athletes' journeys beyond competition, inspiring the next generation through stories of resilience, leadership, and community impact.",
     "url": "https://eaglesports.co.ke",
     "logo": "https://eaglesports.co.ke/images/eagle-sports-logo.png",
@@ -96,7 +96,7 @@ const Footer = () => {
                 />
               </div>
             </div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent-gold mb-1">Beyond the Finish Line</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent-gold mb-1">Celebrating Champions. Telling their stories.</p>
             <p className="text-primary-foreground/80 mb-6 text-sm leading-relaxed">
               Celebrating Kenyan athletes' journeys beyond competition, inspiring the next generation through stories of resilience, leadership, and community impact.
             </p>

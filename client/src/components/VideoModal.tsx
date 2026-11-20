@@ -114,7 +114,7 @@ export const VideoModal = ({ isOpen, onClose, videoUrl, title, athleteName }: Vi
         {/* Footer */}
         <div style={{ background: "#111", padding: "12px 20px", textAlign: "center" }}>
           <p style={{ margin: 0, fontSize: 12, color: "#888" }}>
-            {athleteName ? <>Watching with <strong style={{ color: "#d62835" }}>{athleteName}</strong></> : "Eagle Sports — Beyond the Finish Line"}
+            {athleteName ? <>Watching with <strong style={{ color: "#d62835" }}>{athleteName}</strong></> : "Eagle Sports — Celebrating Champions. Telling their stories."}
           </p>
         </div>
       </div>

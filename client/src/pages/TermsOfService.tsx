@@ -4,13 +4,13 @@ const TermsOfService = () => {
   return (
     <PageTemplate
       title="Terms of Service"
-      description="The ground rules for using Beyond the Finish Line."
+      description="The ground rules for using Eagle Sports."
     >
       <div className="max-w-4xl mx-auto space-y-8 text-muted-foreground leading-relaxed">
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-foreground">1. Who we are</h2>
           <p>
-            Beyond the Finish Line is a storytelling and community platform for athletes and partners.
+            Eagle Sports is a storytelling and community platform for athletes and partners.
             By accessing our site, you agree to these terms and to any policies referenced here.
           </p>
         </section>

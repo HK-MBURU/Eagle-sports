@@ -24,7 +24,7 @@ const About = () => {
   return (
     <PageTemplate
       title="About Eagle Sports"
-      description="Beyond the Finish Line — Where Every Athlete's Story Matters"
+      description="Celebrating Champions. Telling their stories. — Eagle Sports"
     >
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Introduction Section */}
