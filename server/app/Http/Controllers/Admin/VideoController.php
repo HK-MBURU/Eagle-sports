@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\StoryCategory;
 use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class VideoController extends Controller
 {
@@ -26,7 +28,7 @@ class VideoController extends Controller
      */
     public function create()
     {
-        $categories = Video::getCategories();
+        $categories = Video::getCategoryTree();
         return view('admin.videos.create', compact('categories'));
     }
 
@@ -39,7 +41,7 @@ class VideoController extends Controller
             'youtube_url' => 'required|url',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'required|in:' . implode(',', array_keys(Video::getCategories())),
+            'category' => ['required', 'string', Rule::exists('story_categories', 'slug')->where('is_active', true)],
             'is_featured' => 'boolean',
         ]);
 
@@ -76,7 +78,7 @@ class VideoController extends Controller
      */
     public function edit(Video $video)
     {
-        $categories = Video::getCategories();
+        $categories = Video::getCategoryTree();
         return view('admin.videos.edit', compact('video', 'categories'));
     }
 
@@ -89,7 +91,7 @@ class VideoController extends Controller
             'youtube_url' => 'required|url',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'required|in:' . implode(',', array_keys(Video::getCategories())),
+            'category' => ['required', 'string', Rule::exists('story_categories', 'slug')->where('is_active', true)],
             'is_featured' => 'boolean',
         ]);
 
@@ -152,7 +154,9 @@ class VideoController extends Controller
      */
     public function byCategory($category)
     {
-        if (!array_key_exists($category, Video::getCategories())) {
+        $storyCategory = StoryCategory::active()->where('slug', $category)->first();
+
+        if (!$storyCategory) {
             return redirect()->route('admin.videos.index')
                 ->with('error', 'Invalid category specified.');
         }
@@ -162,7 +166,7 @@ class VideoController extends Controller
             ->latest()
             ->paginate(15);
 
-        $categoryName = Video::getCategories()[$category];
+        $categoryName = $storyCategory->name;
 
         return view('admin.videos.index', compact('videos', 'categoryName'));
     }

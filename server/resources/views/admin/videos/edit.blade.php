@@ -182,12 +182,22 @@
                                     required
                                 >
                                     <option value="">Select a category</option>
-                                    @foreach($categories as $key => $category)
-                                        <option value="{{ $key }}"
-                                            {{ old('category', $video->category) == $key ? 'selected' : '' }}
-                                            data-icon="{{ $key }}">
-                                            {{ $category }}
-                                        </option>
+                                    @foreach($categories as $parent)
+                                        @if($parent->children->isNotEmpty())
+                                            <optgroup label="{{ $parent->name }}">
+                                                @foreach($parent->children as $child)
+                                                    <option value="{{ $child->slug }}"
+                                                        {{ old('category', $video->category) == $child->slug ? 'selected' : '' }}>
+                                                        {{ $child->name }}
+                                                    </option>
+                                                @endforeach
+                                            </optgroup>
+                                        @else
+                                            <option value="{{ $parent->slug }}"
+                                                {{ old('category', $video->category) == $parent->slug ? 'selected' : '' }}>
+                                                {{ $parent->name }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('category')

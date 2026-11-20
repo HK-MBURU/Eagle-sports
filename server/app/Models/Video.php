@@ -37,36 +37,44 @@ class Video extends Model
     ];
 
     /**
-     * Category constants for easy reference
-     */
-    const CATEGORY_ATHLETICS = 'athletics';
-    const CATEGORY_FOOTBALL = 'football';
-    const CATEGORY_RUGBY = 'rugby';
-    const CATEGORY_BASKETBALL = 'basketball';
-    const CATEGORY_VOLLEYBALL = 'volleyball';
-    const CATEGORY_BOXING = 'boxing';
-    const CATEGORY_CRICKET = 'cricket';
-    const CATEGORY_SWIMMING = 'swimming';
-    const CATEGORY_MARTIAL_ARTS = 'martial_arts';
-    const CATEGORY_OTHER = 'other';
-
-    /**
-     * Get all available categories
+     * Flat slug => name map of active story categories, for validation and legacy callers.
+     * Per-request static cache avoids redundant DB hits.
      */
     public static function getCategories(): array
     {
-        return [
-            self::CATEGORY_ATHLETICS => 'Athletics',
-            self::CATEGORY_FOOTBALL => 'Football',
-            self::CATEGORY_RUGBY => 'Rugby',
-            self::CATEGORY_BASKETBALL => 'Basketball',
-            self::CATEGORY_VOLLEYBALL => 'Volleyball',
-            self::CATEGORY_BOXING => 'Boxing',
-            self::CATEGORY_CRICKET => 'Cricket',
-            self::CATEGORY_SWIMMING => 'Swimming',
-            self::CATEGORY_MARTIAL_ARTS => 'Martial Arts',
-            self::CATEGORY_OTHER => 'Other',
-        ];
+        static $cache = null;
+        if ($cache === null) {
+            $cache = StoryCategory::active()
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->pluck('name', 'slug')
+                ->toArray();
+
+            if (empty($cache)) {
+                $cache = [
+                    'athletics' => 'Athletics', 'football' => 'Football',
+                    'rugby' => 'Rugby', 'basketball' => 'Basketball',
+                    'volleyball' => 'Volleyball', 'boxing' => 'Boxing',
+                    'cricket' => 'Cricket', 'swimming' => 'Swimming',
+                    'martial_arts' => 'Martial Arts', 'other' => 'Other',
+                ];
+            }
+        }
+        return $cache;
+    }
+
+    /**
+     * Hierarchical collection of active parent categories with their active children loaded.
+     * Used to build <optgroup> selects in create/edit forms.
+     */
+    public static function getCategoryTree(): \Illuminate\Database\Eloquent\Collection
+    {
+        return StoryCategory::active()
+            ->topLevel()
+            ->with(['children' => fn($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('name')])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
     }
 
     /**
@@ -74,7 +82,8 @@ class Video extends Model
      */
     public function getCategoryDisplayName(): string
     {
-        return self::getCategories()[$this->category] ?? 'Other';
+        $cat = StoryCategory::where('slug', $this->category)->first();
+        return $cat ? $cat->name : ucwords(str_replace('_', ' ', $this->category));
     }
 
     /**

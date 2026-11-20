@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\StoryCategory;
 use App\Models\Video;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class VideoApiController extends Controller
 {
@@ -41,7 +43,7 @@ class VideoApiController extends Controller
             }
 
             // Filter by category
-            if ($category && array_key_exists($category, Video::getCategories())) {
+            if ($category && StoryCategory::active()->where('slug', $category)->exists()) {
                 $query->where('category', $category);
             }
 
@@ -124,7 +126,9 @@ class VideoApiController extends Controller
     public function byCategory($category): JsonResponse
     {
         try {
-            if (!array_key_exists($category, Video::getCategories())) {
+            $storyCategory = StoryCategory::active()->where('slug', $category)->first();
+
+            if (!$storyCategory) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid category specified'
@@ -145,7 +149,7 @@ class VideoApiController extends Controller
                 'data' => [
                     'videos' => $videos,
                     'category' => $category,
-                    'category_name' => Video::getCategories()[$category]
+                    'category_name' => $storyCategory->name,
                 ]
             ]);
         } catch (\Exception $e) {
@@ -191,9 +195,25 @@ class VideoApiController extends Controller
     public function categories(): JsonResponse
     {
         try {
+            $tree = StoryCategory::active()
+                ->topLevel()
+                ->with(['children' => fn($q) => $q->where('is_active', true)->orderBy('sort_order')->orderBy('name')])
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get();
+
             return response()->json([
                 'success' => true,
-                'data' => Video::getCategories()
+                'data' => $tree->map(fn($cat) => [
+                    'slug'     => $cat->slug,
+                    'name'     => $cat->name,
+                    'color'    => $cat->color,
+                    'children' => $cat->children->map(fn($c) => [
+                        'slug'  => $c->slug,
+                        'name'  => $c->name,
+                        'color' => $c->color,
+                    ]),
+                ]),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -214,7 +234,7 @@ class VideoApiController extends Controller
                 'youtube_url' => 'required|url',
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'category' => 'required|in:' . implode(',', array_keys(Video::getCategories())),
+                'category' => ['required', 'string', Rule::exists('story_categories', 'slug')->where('is_active', true)],
                 'is_featured' => 'boolean',
             ]);
 
@@ -266,7 +286,7 @@ class VideoApiController extends Controller
                 'youtube_url' => 'sometimes|required|url',
                 'title' => 'sometimes|required|string|max:255',
                 'description' => 'nullable|string',
-                'category' => 'sometimes|required|in:' . implode(',', array_keys(Video::getCategories())),
+                'category' => ['sometimes', 'required', 'string', Rule::exists('story_categories', 'slug')->where('is_active', true)],
                 'is_featured' => 'boolean',
             ]);
 
@@ -433,7 +453,7 @@ class VideoApiController extends Controller
             'title' => $video->title,
             'description' => $video->description,
             'category' => $video->category,
-            'category_name' => Video::getCategories()[$video->category] ?? $video->category,
+            'category_name' => $video->getCategoryDisplayName(),
             'is_featured' => $video->is_featured,
             'added_by' => $video->added_by,
             'creator' => $video->addedBy ? [
