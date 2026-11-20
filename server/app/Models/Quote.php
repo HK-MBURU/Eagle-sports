@@ -10,29 +10,26 @@ class Quote extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'content',
         'owner',
         'owner_title',
+        'owner_image',
         'added_by',
     ];
 
-    /**
-     * Get the user who added this quote.
-     */
+    protected $appends = ['owner_image_url'];
+
     public function addedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'added_by');
     }
 
-    /**
-     * Get the formatted quote with owner details.
-     */
+    public function getOwnerImageUrlAttribute(): ?string
+    {
+        return $this->owner_image ? url('/images/' . $this->owner_image) : null;
+    }
+
     public function getFormattedQuoteAttribute(): string
     {
         $ownerInfo = $this->owner;

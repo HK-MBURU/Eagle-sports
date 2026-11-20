@@ -3,10 +3,12 @@ export interface Quote {
   content: string;
   owner: string;
   owner_title: string | null;
+  owner_image: string | null;
+  owner_image_url: string | null;
   added_by: number;
   created_at: string;
   updated_at: string;
-  added_by?: {
+  addedBy?: {
     id: number;
     name: string;
     email: string;

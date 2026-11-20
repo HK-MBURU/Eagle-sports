@@ -19,7 +19,7 @@ class QuoteApiController extends Controller
             $page = $request->get('page', 1);
 
             $quotes = Quote::with('addedBy')
-                ->select(['id', 'content', 'owner', 'owner_title', 'added_by', 'created_at', 'updated_at'])
+                ->select(['id', 'content', 'owner', 'owner_title', 'owner_image', 'added_by', 'created_at', 'updated_at'])
                 ->latest()
                 ->paginate($perPage, ['*'], 'page', $page);
 
@@ -53,7 +53,7 @@ class QuoteApiController extends Controller
     {
         try {
             $quote = Quote::with('addedBy')
-                ->select(['id', 'content', 'owner', 'owner_title', 'added_by', 'created_at'])
+                ->select(['id', 'content', 'owner', 'owner_title', 'owner_image', 'added_by', 'created_at'])
                 ->inRandomOrder()
                 ->first();
 
@@ -84,7 +84,7 @@ class QuoteApiController extends Controller
     {
         try {
             $quote = Quote::with('addedBy')
-                ->select(['id', 'content', 'owner', 'owner_title', 'added_by', 'created_at', 'updated_at'])
+                ->select(['id', 'content', 'owner', 'owner_title', 'owner_image', 'added_by', 'created_at', 'updated_at'])
                 ->find($id);
 
             if (!$quote) {
